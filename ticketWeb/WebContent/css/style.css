@@ -1,0 +1,2095 @@
+/* Created by Artisteer v4.0.0.58475 */
+
+#cnfc-main
+{
+   background: #FBFBF8 url('/ticketWeb/images/pageglare.png') top center no-repeat scroll;
+   margin:0 auto;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   position: relative;
+   width: 100%;
+   min-height: 100%;
+   left: 0;
+   top: 0;
+   cursor:default;
+   overflow:hidden;
+}
+table, ul.cnfc-hmenu
+{
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6, p, a, ul, ol, li
+{
+   margin: 0;
+   padding: 0;
+}
+
+/* Reset buttons border. It's important for input and button tags. 
+ * border-collapse should be separate for shadow in IE. 
+ */
+.cnfc-button
+{
+   border: 0;
+   border-collapse: separate;
+   -webkit-background-origin: border !important;
+   -moz-background-origin: border !important;
+   background-origin: border-box !important;
+   background: #BEDA2F;
+   -webkit-border-radius:7px;
+   -moz-border-radius:7px;
+   border-radius:7px;
+   padding:0 10px;
+   margin:0 auto;
+   height:27px;
+}
+
+.cnfc-postcontent,
+.cnfc-postheadericons,
+.cnfc-postfootericons,
+.cnfc-blockcontent,
+ul.cnfc-vmenu a 
+{
+   text-align: left;
+}
+
+.cnfc-postcontent,
+.cnfc-postcontent li,
+.cnfc-postcontent table,
+.cnfc-postcontent a,
+.cnfc-postcontent a:link,
+.cnfc-postcontent a:visited,
+.cnfc-postcontent a.visited,
+.cnfc-postcontent a:hover,
+.cnfc-postcontent a.hovered
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent p
+{
+   margin: 12px 0;
+}
+
+.cnfc-postcontent h1, .cnfc-postcontent h1 a, .cnfc-postcontent h1 a:link, .cnfc-postcontent h1 a:visited, .cnfc-postcontent h1 a:hover,
+.cnfc-postcontent h2, .cnfc-postcontent h2 a, .cnfc-postcontent h2 a:link, .cnfc-postcontent h2 a:visited, .cnfc-postcontent h2 a:hover,
+.cnfc-postcontent h3, .cnfc-postcontent h3 a, .cnfc-postcontent h3 a:link, .cnfc-postcontent h3 a:visited, .cnfc-postcontent h3 a:hover,
+.cnfc-postcontent h4, .cnfc-postcontent h4 a, .cnfc-postcontent h4 a:link, .cnfc-postcontent h4 a:visited, .cnfc-postcontent h4 a:hover,
+.cnfc-postcontent h5, .cnfc-postcontent h5 a, .cnfc-postcontent h5 a:link, .cnfc-postcontent h5 a:visited, .cnfc-postcontent h5 a:hover,
+.cnfc-postcontent h6, .cnfc-postcontent h6 a, .cnfc-postcontent h6 a:link, .cnfc-postcontent h6 a:visited, .cnfc-postcontent h6 a:hover,
+.cnfc-blockheader .t, .cnfc-blockheader .t a, .cnfc-blockheader .t a:link, .cnfc-blockheader .t a:visited, .cnfc-blockheader .t a:hover,
+.cnfc-vmenublockheader .t, .cnfc-vmenublockheader .t a, .cnfc-vmenublockheader .t a:link, .cnfc-vmenublockheader .t a:visited, .cnfc-vmenublockheader .t a:hover,
+.cnfc-headline, .cnfc-headline a, .cnfc-headline a:link, .cnfc-headline a:visited, .cnfc-headline a:hover,
+.cnfc-slogan, .cnfc-slogan a, .cnfc-slogan a:link, .cnfc-slogan a:visited, .cnfc-slogan a:hover,
+.cnfc-postheader, .cnfc-postheader a, .cnfc-postheader a:link, .cnfc-postheader a:visited, .cnfc-postheader a:hover
+{
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   line-height: 120%;
+}
+
+.cnfc-postcontent a, .cnfc-postcontent a:link
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+   color: #8AA01C;
+}
+
+.cnfc-postcontent a:visited, .cnfc-postcontent a.visited
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+   color: #A28E57;
+}
+
+.cnfc-postcontent  a:hover, .cnfc-postcontent a.hover
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: underline;
+   color: #B7D425;
+}
+
+.cnfc-postcontent h1
+{
+   color: #B7D425;
+   margin: 10px 0 0;
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h1
+{
+   margin: 10px 0 0;
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h1 a, .cnfc-postcontent h1 a:link, .cnfc-postcontent h1 a:hover, .cnfc-postcontent h1 a:visited, .cnfc-blockcontent h1 a, .cnfc-blockcontent h1 a:link, .cnfc-blockcontent h1 a:hover, .cnfc-blockcontent h1 a:visited 
+{
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h2
+{
+   color: #B7D425;
+   margin: 10px 0 0;
+   font-size: 22px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h2
+{
+   margin: 10px 0 0;
+   font-size: 22px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h2 a, .cnfc-postcontent h2 a:link, .cnfc-postcontent h2 a:hover, .cnfc-postcontent h2 a:visited, .cnfc-blockcontent h2 a, .cnfc-blockcontent h2 a:link, .cnfc-blockcontent h2 a:hover, .cnfc-blockcontent h2 a:visited 
+{
+   font-size: 22px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h3
+{
+   color: #A28E57;
+   margin: 10px 0 0;
+   font-size: 20px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h3
+{
+   margin: 10px 0 0;
+   font-size: 20px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h3 a, .cnfc-postcontent h3 a:link, .cnfc-postcontent h3 a:hover, .cnfc-postcontent h3 a:visited, .cnfc-blockcontent h3 a, .cnfc-blockcontent h3 a:link, .cnfc-blockcontent h3 a:hover, .cnfc-blockcontent h3 a:visited 
+{
+   font-size: 20px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h4
+{
+   color: #7AB937;
+   margin: 10px 0 0;
+   font-size: 16px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h4
+{
+   margin: 10px 0 0;
+   font-size: 16px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h4 a, .cnfc-postcontent h4 a:link, .cnfc-postcontent h4 a:hover, .cnfc-postcontent h4 a:visited, .cnfc-blockcontent h4 a, .cnfc-blockcontent h4 a:link, .cnfc-blockcontent h4 a:hover, .cnfc-blockcontent h4 a:visited 
+{
+   font-size: 16px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h5
+{
+   color: #1E2306;
+   margin: 10px 0 0;
+   font-size: 14px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h5
+{
+   margin: 10px 0 0;
+   font-size: 14px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h5 a, .cnfc-postcontent h5 a:link, .cnfc-postcontent h5 a:hover, .cnfc-postcontent h5 a:visited, .cnfc-blockcontent h5 a, .cnfc-blockcontent h5 a:link, .cnfc-blockcontent h5 a:hover, .cnfc-blockcontent h5 a:visited 
+{
+   font-size: 14px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h6
+{
+   color: #617114;
+   margin: 10px 0 0;
+   font-size: 13px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent h6
+{
+   margin: 10px 0 0;
+   font-size: 13px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+.cnfc-postcontent h6 a, .cnfc-postcontent h6 a:link, .cnfc-postcontent h6 a:hover, .cnfc-postcontent h6 a:visited, .cnfc-blockcontent h6 a, .cnfc-blockcontent h6 a:link, .cnfc-blockcontent h6 a:hover, .cnfc-blockcontent h6 a:visited 
+{
+   font-size: 13px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+}
+
+header, footer, article, nav, #cnfc-hmenu-bg, .cnfc-sheet, .cnfc-hmenu a, .cnfc-vmenu a, .cnfc-slidenavigator > a, .cnfc-checkbox:before, .cnfc-radiobutton:before
+{
+   -webkit-background-origin: border !important;
+   -moz-background-origin: border !important;
+   background-origin: border-box !important;
+}
+
+header, footer, article, nav, #cnfc-hmenu-bg, .cnfc-sheet, .cnfc-slidenavigator > a, .cnfc-checkbox:before, .cnfc-radiobutton:before
+{
+   display: block;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+ul
+{
+   list-style-type: none;
+}
+
+ol
+{
+   list-style-position: inside;
+}
+
+html, body
+{
+   height: 100%;
+}
+
+body
+{
+   padding: 0;
+   margin:0;
+   min-width: 1000px;
+   color: #50462B;
+}
+
+.clearfix:before, .clearfix:after {
+   content: "";
+   display: table;
+}
+
+.clearfix:after {
+   clear: both;
+}
+
+.cleared {
+   font: 0/0 serif;
+   clear: both;
+}
+
+form
+{
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+table.position
+{
+   position: relative;
+   width: 100%;
+   table-layout: fixed;
+}
+
+li h1, .cnfc-postcontent li h1, .cnfc-blockcontent li h1 
+{
+   margin:1px;
+} 
+li h2, .cnfc-postcontent li h2, .cnfc-blockcontent li h2 
+{
+   margin:1px;
+} 
+li h3, .cnfc-postcontent li h3, .cnfc-blockcontent li h3 
+{
+   margin:1px;
+} 
+li h4, .cnfc-postcontent li h4, .cnfc-blockcontent li h4 
+{
+   margin:1px;
+} 
+li h5, .cnfc-postcontent li h5, .cnfc-blockcontent li h5 
+{
+   margin:1px;
+} 
+li h6, .cnfc-postcontent li h6, .cnfc-blockcontent li h6 
+{
+   margin:1px;
+} 
+li p, .cnfc-postcontent li p, .cnfc-blockcontent li p 
+{
+   margin:1px;
+}
+
+
+.cnfc-shapes
+{
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   overflow: hidden;
+   z-index: 0;
+}
+
+.cnfc-slider-inner {
+   position: relative;
+   overflow: hidden;
+   width: 100%;
+   height: 100%;
+}
+
+.cnfc-slidenavigator > a {
+   display: inline-block;
+   vertical-align: middle;
+   outline-style: none;
+   font-size: 1px;
+}
+
+.cnfc-slidenavigator > a:last-child {
+   margin-right: 0 !important;
+}
+
+.cnfc-object907249093
+{
+    display: block;
+    left: 100%;
+    margin-left: -288px;
+    position: absolute;
+    top: 18px;
+    width: 360px;
+    height: 349px;
+    background-image: url('/ticketWeb/images/object907249093.png');
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+.cnfc-object273897028
+{
+    display: block;
+    left: 0%;
+    margin-left: -58px;
+    position: absolute;
+    top: 85px;
+    width: 221px;
+    height: 228px;
+    background-image: url('/ticketWeb/images/object273897028.png');
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    z-index: 2;
+}
+.cnfc-headline
+{
+  display: inline-block;
+  position: absolute;
+  min-width: 50px;
+  top: -7px;
+  left: 0%;
+  line-height: 100%;
+  margin-left: -43px !important;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  z-index: 99;
+}
+
+.cnfc-headline, 
+.cnfc-headline a, 
+.cnfc-headline a:link, 
+.cnfc-headline a:visited, 
+.cnfc-headline a:hover
+{
+font-size: 72px;
+font-family: 'TH Chakra Petch', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+font-weight: bold;
+font-style: normal;
+text-decoration: none;
+text-align: left;
+  padding: 0;
+  margin: 0;
+  color: #F90B6A !important;
+  white-space: nowrap;
+}
+
+
+
+
+
+
+.cnfc-header
+{
+   margin:0 auto;
+   position:relative;
+   height: 350px;
+   background-image: url('/ticketWeb/images/header.png');
+   background-position: center top;
+   background-repeat: no-repeat;
+}
+
+.responsive .cnfc-header 
+{
+   background-image: url('/ticketWeb/images/header.png');
+   background-position: center center;
+}
+
+.cnfc-header-inner{
+   position: relative;
+   width: 1000px;
+   z-index: auto !important;
+   margin: 0 auto;
+}
+
+.cnfc-header>.widget 
+{
+   position:absolute;
+   z-index:101;
+}
+
+.cnfc-nav
+{
+   background: #F9A4C3 url('/ticketWeb/images/nav.png') scroll;
+   background: rgba(249, 164, 195, 0.4) url('/ticketWeb/images/nav.png') scroll;
+   border-bottom:1px solid #D3D35F;
+   padding:24px 15px 0;
+   z-index: 100;
+   font-size: 0;
+   position: absolute;
+   margin: 0;
+   bottom:   0;
+   width: 100%;
+}
+
+ul.cnfc-hmenu a, ul.cnfc-hmenu a:link, ul.cnfc-hmenu a:visited, ul.cnfc-hmenu a:hover 
+{
+   outline: none;
+   position: relative;
+   z-index: 11;
+}
+
+ul.cnfc-hmenu, ul.cnfc-hmenu ul
+{
+   display: block;
+   margin: 0;
+   padding: 0;
+   border: 0;
+   list-style-type: none;
+}
+
+ul.cnfc-hmenu li
+{
+   position: relative;
+   z-index: 5;
+   display: block;
+   float: left;
+   background: none;
+   margin: 0;
+   padding: 0;
+   border: 0;
+}
+
+ul.cnfc-hmenu li:hover
+{
+   z-index: 10000;
+   white-space: normal;
+}
+
+ul.cnfc-hmenu:after, ul.cnfc-hmenu ul:after
+{
+   content: ".";
+   height: 0;
+   display: block;
+   visibility: hidden;
+   overflow: hidden;
+   clear: both;
+}
+
+ul.cnfc-hmenu, ul.cnfc-hmenu ul 
+{
+   min-height: 0;
+}
+
+ul.cnfc-hmenu 
+{
+   display: inline-block;
+   vertical-align: bottom;
+   padding-left: 20px;
+   padding-right: 20px;
+}
+
+.cnfc-nav-inner:before 
+{
+   content:' ';
+}
+
+.cnfc-nav-inner{
+   text-align: left;
+   margin:0 auto;
+}
+
+.desktop-nav .cnfc-nav-inner{
+   width: 1000px;
+   padding-left: 20px;
+   padding-right: 20px;
+}
+
+.desktop-nav.cnfc-nav
+{
+   padding-left: 0;
+   padding-right: 0;
+}
+
+.cnfc-hmenu-extra1
+{
+   position: relative;
+   display: block;
+   float: left;
+   width: auto;
+   height: auto;
+   background-position: center;
+}
+
+.cnfc-hmenu-extra2
+{
+   position: relative;
+   display: block;
+   float: right;
+   width: auto;
+   height: auto;
+   background-position: center;
+}
+
+.cnfc-hmenu
+{
+   float: left;
+}
+
+.cnfc-menuitemcontainer
+{
+   margin:0 auto;
+}
+ul.cnfc-hmenu>li {
+   margin-left: 6px;
+}
+ul.cnfc-hmenu>li:first-child {
+   margin-left: 3px;
+}
+ul.cnfc-hmenu>li:last-child, ul.cnfc-hmenu>li.last-child {
+   margin-right: 3px;
+}
+
+ul.cnfc-hmenu>li>a
+{
+   background: #BEDA2F;
+   background: rgba(190, 218, 47, 0.8);
+   -webkit-border-radius:9px 9px 0 0;
+   -moz-border-radius:9px 9px 0 0;
+   border-radius:9px 9px 0 0;
+   border:1px solid rgba(142, 165, 29, 0.8);
+   border-bottom:none;
+   padding:0 22px;
+   margin:0 auto;
+   position: relative;
+   display: block;
+   height: 48px;
+   cursor: pointer;
+   text-decoration: none;
+   color: #28280B;
+   line-height: 48px;
+   text-align: center;
+}
+
+.cnfc-hmenu a, 
+.cnfc-hmenu a:link, 
+.cnfc-hmenu a:visited, 
+.cnfc-hmenu a.active, 
+.cnfc-hmenu a:hover
+{
+   font-size: 14px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   text-decoration: none;
+   text-align: left;
+}
+
+ul.cnfc-hmenu>li>a.active
+{
+   background: #FBFBF8;
+   -webkit-border-radius:9px 9px 0 0;
+   -moz-border-radius:9px 9px 0 0;
+   border-radius:9px 9px 0 0;
+   border:1px solid #D3D35F;
+   border-bottom:none;
+   padding:0 22px;
+   margin:0 auto;
+   color: #000000;
+   padding-bottom: 1px;
+   margin-bottom: -1px;
+   text-decoration: none;
+}
+
+ul.cnfc-hmenu>li>a:visited, 
+ul.cnfc-hmenu>li>a:hover, 
+ul.cnfc-hmenu>li:hover>a {
+   text-decoration: none;
+}
+
+ul.cnfc-hmenu>li>a:hover, .desktop ul.cnfc-hmenu>li:hover>a
+{
+   background: #DDEE3F;
+   background: rgba(221, 238, 63, 0.8);
+   -webkit-border-radius:9px 9px 0 0;
+   -moz-border-radius:9px 9px 0 0;
+   border-radius:9px 9px 0 0;
+   border:1px solid rgba(153, 178, 31, 0.8);
+   border-bottom:none;
+   padding:0 22px;
+   margin:0 auto;
+}
+ul.cnfc-hmenu>li>a:hover, 
+.desktop-nav ul.cnfc-hmenu>li:hover>a {
+   color: #352F1D;
+   text-decoration: none;
+}
+ul.cnfc-hmenu>li>a.active:hover {
+   padding-bottom: 0;
+   margin-bottom: 0;
+}
+
+ul.cnfc-hmenu li li a
+{
+   background: #EAE5D7;
+   border:1px solid #D6CDB3;
+   padding:0 8px;
+   margin:0 auto;
+}
+ul.cnfc-hmenu li li 
+{
+   float: none;
+   width: auto;
+   margin-top: 0;
+   margin-bottom: 0;
+}
+
+.desktop-nav ul.cnfc-hmenu li li ul>li:first-child 
+{
+   margin-top: 0;
+}
+
+ul.cnfc-hmenu li li ul>li:last-child 
+{
+   margin-bottom: 0;
+}
+
+.cnfc-hmenu ul a
+{
+   display: block;
+   white-space: nowrap;
+   height: 25px;
+   min-width: 7em;
+   border: 1px solid transparent;
+   text-align: left;
+   line-height: 25px;
+   color: #505016;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+   margin:0;
+}
+
+.cnfc-hmenu li li a 
+{
+   border-top-width: 0 !important;
+}
+.cnfc-hmenu li li:hover a 
+{
+   border-top-width: 1px !important;
+}
+.cnfc-hmenu ul>li:first-child>a 
+{
+   border-top-width: 1px !important;
+}
+
+.cnfc-hmenu ul a:link, 
+.cnfc-hmenu ul a:visited, 
+.cnfc-hmenu ul a.active, 
+.cnfc-hmenu ul a:hover
+{
+   text-align: left;
+   line-height: 25px;
+   color: #505016;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+   margin:0;
+}
+
+ul.cnfc-hmenu ul li a:hover, .desktop ul.cnfc-hmenu ul li:hover>a
+{
+   background: #D6CDB3;
+   border:1px solid #CDE35F;
+   margin:0 auto;
+}
+.cnfc-hmenu ul a:hover
+{
+   text-decoration: none;
+}
+
+.cnfc-hmenu ul li a:hover
+{
+   color: #000000;
+}
+
+.cnfc-hmenu ul li a.cnfc-hmenu-before-hovered 
+{
+   border-bottom-width: 0 !important;
+}
+
+.desktop-nav .cnfc-hmenu ul li:hover>a
+{
+   color: #000000;
+}
+
+ul.cnfc-hmenu ul:before
+{
+   background: #F9A4C3;
+   margin:0 auto;
+   display: block;
+   position: absolute;
+   content: ' ';
+   z-index: 1;
+}
+.desktop-nav ul.cnfc-hmenu li:hover>ul {
+   visibility: visible;
+   top: 100%;
+}
+.desktop-nav ul.cnfc-hmenu li li:hover>ul {
+   top: 0;
+   left: 100%;
+}
+
+ul.cnfc-hmenu ul
+{
+   visibility: hidden;
+   position: absolute;
+   z-index: 10;
+   left: 0;
+   top: 0;
+   background-image: url('/ticketWeb/images/spacer.gif');
+}
+
+.desktop-nav ul.cnfc-hmenu>li>ul
+{
+   padding: 10px 30px 30px 30px;
+   margin: -10px 0 0 -30px;
+}
+
+.desktop-nav ul.cnfc-hmenu ul ul
+{
+   padding: 30px 30px 30px 10px;
+   margin: -30px 0 0 -10px;
+}
+
+.desktop-nav ul.cnfc-hmenu ul.cnfc-hmenu-left-to-right 
+{
+   right: auto;
+   left: 0;
+   margin: -10px 0 0 -30px;
+}
+
+.desktop-nav ul.cnfc-hmenu ul.cnfc-hmenu-right-to-left 
+{
+   left: auto;
+   right: 0;
+   margin: -10px -30px 0 0;
+}
+
+.desktop-nav ul.cnfc-hmenu li li:hover>ul.cnfc-hmenu-left-to-right {
+   right: auto;
+   left: 100%;
+}
+.desktop-nav ul.cnfc-hmenu li li:hover>ul.cnfc-hmenu-right-to-left {
+   left: auto;
+   right: 100%;
+}
+
+.desktop-nav ul.cnfc-hmenu ul ul.cnfc-hmenu-left-to-right
+{
+   right: auto;
+   left: 0;
+   padding: 30px 30px 30px 10px;
+   margin: -30px 0 0 -10px;
+}
+
+.desktop-nav ul.cnfc-hmenu ul ul.cnfc-hmenu-right-to-left
+{
+   left: auto;
+   right: 0;
+   padding: 30px 10px 30px 30px;
+   margin: -30px -10px 0 0;
+}
+
+.desktop-nav ul.cnfc-hmenu li ul>li:first-child {
+   margin-top: 0;
+}
+.desktop-nav ul.cnfc-hmenu li ul>li:last-child {
+   margin-bottom: 0;
+}
+
+.desktop-nav ul.cnfc-hmenu ul ul:before
+{
+   border-radius: 0;
+   top: 30px;
+   bottom: 30px;
+   right: 30px;
+   left: 10px;
+}
+
+.desktop-nav ul.cnfc-hmenu>li>ul:before
+{
+   top: 10px;
+   right: 30px;
+   bottom: 30px;
+   left: 30px;
+}
+
+.desktop-nav ul.cnfc-hmenu>li>ul.cnfc-hmenu-left-to-right:before {
+   right: 30px;
+   left: 30px;
+}
+.desktop-nav ul.cnfc-hmenu>li>ul.cnfc-hmenu-right-to-left:before {
+   right: 30px;
+   left: 30px;
+}
+.desktop-nav ul.cnfc-hmenu ul ul.cnfc-hmenu-left-to-right:before {
+   right: 30px;
+   left: 10px;
+}
+.desktop-nav ul.cnfc-hmenu ul ul.cnfc-hmenu-right-to-left:before {
+   right: 10px;
+   left: 30px;
+}
+
+.cnfc-sheet
+{
+   background: #FBFBF8;
+   background: transparent;
+   -webkit-border-radius:15px;
+   -moz-border-radius:15px;
+   border-radius:15px;
+   padding:5px;
+   margin:20px auto 0;
+   position:relative;
+   cursor:auto;
+   width: 1000px;
+   z-index: auto !important;
+}
+
+.cnfc-layout-wrapper
+{
+   position: relative;
+   margin: 0 auto 0 auto;
+   z-index: auto !important;
+}
+
+.cnfc-content-layout
+{
+   display: table;
+   width: 100%;
+   table-layout: fixed;
+   border-collapse: collapse;
+}
+
+.cnfc-content-layout-row 
+{
+   display: table-row;
+}
+
+.cnfc-layout-cell
+{
+   display: table-cell;
+   vertical-align: top;
+}
+
+.cnfc-block
+{
+   padding:3px;
+   margin:10px;
+}
+div.cnfc-block img
+{
+   border: none;
+   margin: 7px;
+}
+
+.cnfc-blockcontent
+{
+   margin:0 auto;
+   color: #5A6812;
+   font-size: 12px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+.cnfc-blockcontent table,
+.cnfc-blockcontent li, 
+.cnfc-blockcontent a,
+.cnfc-blockcontent a:link,
+.cnfc-blockcontent a:visited,
+.cnfc-blockcontent a:hover
+{
+   color: #5A6812;
+   font-size: 12px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent p
+{
+   margin: 0 5px;
+}
+
+.cnfc-blockcontent a, .cnfc-blockcontent a:link
+{
+   color: #B7D425;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+.cnfc-blockcontent a:visited, .cnfc-blockcontent a.visited
+{
+   color: #A28E57;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: underline;
+}
+
+.cnfc-blockcontent a:hover, .cnfc-blockcontent a.hover
+{
+   color: #C9E052;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: underline;
+}
+.cnfc-block ul>li:before
+{
+   content:url('/ticketWeb/images/blockbullets.png');
+   margin-right:6px;
+   bottom: 2px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   margin-left: -14px;
+}
+.opera .cnfc-block ul>li:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-block li
+{
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   line-height: 125%;
+   color: #1B170E;
+   margin: 5px 0 0 10px;
+}
+
+.cnfc-block ul>li, .cnfc-block ol
+{
+   padding: 0;
+}
+
+.cnfc-block ul>li
+{
+   padding-left: 14px;
+}
+
+.cnfc-breadcrumbs
+{
+   margin:0 auto;
+}
+
+a.cnfc-button,
+a.cnfc-button:link,
+a:link.cnfc-button:link,
+body a.cnfc-button:link,
+a.cnfc-button:visited,
+body a.cnfc-button:visited,
+input.cnfc-button,
+button.cnfc-button
+{
+   text-decoration: none;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   position:relative;
+   display: inline-block;
+   vertical-align: middle;
+   white-space: nowrap;
+   text-align: center;
+   color: #2C2C0C;
+   margin: 0 !important;
+   overflow: visible;
+   cursor: pointer;
+   text-indent: 0;
+   line-height: 27px;
+   -webkit-box-sizing: content-box;
+   -moz-box-sizing: content-box;
+   box-sizing: content-box;
+}
+
+.cnfc-button img
+{
+   margin: 0;
+   vertical-align: middle;
+}
+
+.firefox2 .cnfc-button
+{
+   display: block;
+   float: left;
+}
+
+input, select, textarea
+{
+   vertical-align: middle;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+
+.cnfc-block select 
+{
+   width:96%;
+}
+
+input.cnfc-button
+{
+   float: none !important;
+}
+
+.cnfc-button.active, .cnfc-button.active:hover
+{
+   background: #BEDA2F;
+   -webkit-border-radius:7px;
+   -moz-border-radius:7px;
+   border-radius:7px;
+   padding:0 10px;
+   margin:0 auto;
+}
+.cnfc-button.active, .cnfc-button.active:hover {
+   color: #242014 !important;
+}
+
+.cnfc-button.hover, .cnfc-button:hover
+{
+   background: #A5BF22;
+   -webkit-border-radius:7px;
+   -moz-border-radius:7px;
+   border-radius:7px;
+   padding:0 10px;
+   margin:0 auto;
+}
+.cnfc-button.hover, .cnfc-button:hover {
+   color: #0B0D02 !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="url"], textarea
+{
+   background: #F9FAFB;
+   margin:0 auto;
+}
+input[type="text"], input[type="password"], input[type="email"], input[type="url"], textarea
+{
+   width: 100%;
+   padding: 8px 0;
+   color: #50462B !important;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+input.cnfc-error, textarea.cnfc-error
+{
+   background: #F9FAFB;
+   border:1px solid #E2341D;
+   margin:0 auto;
+}
+input.cnfc-error, textarea.cnfc-error {
+   color: #50462B !important;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+form.cnfc-search input[type="text"]
+{
+   background: #F9FAFB;
+   border-radius: 0;
+   margin:0 auto;
+   width: 100%;
+   padding: 0 0;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+   color: #50462B !important;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+form.cnfc-search 
+{
+   background-image: none;
+   border: 0;
+   display:block;
+   position:relative;
+   top:0;
+   padding:0;
+   margin:5px;
+   left:0;
+   line-height: 0;
+}
+
+form.cnfc-search input
+{
+   top:0;
+   right:0;
+}
+
+form.cnfc-search>input {
+   bottom:0;
+   left:0;
+   vertical-align: middle;
+}
+ 
+form.cnfc-search input[type="submit"]
+{
+   background: #DCEB8E;
+   margin:0 auto;
+   color: #788B18 !important;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   position:absolute;
+   display:block;
+   left: auto;
+   border: 0;
+   top: 0;
+   bottom: 0;
+   right: 	0;
+}
+
+label.cnfc-checkbox:before
+{
+   background: #F9FAFB;
+   -webkit-border-radius:1px;
+   -moz-border-radius:1px;
+   border-radius:1px;
+   margin:0 auto;
+   width:16px;
+   height:16px;
+}
+label.cnfc-checkbox
+{
+   cursor: pointer;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   line-height: 16px;
+   display: inline-block;
+}
+
+.cnfc-checkbox>input[type="checkbox"]
+{
+   margin: 0 5px 0 0;
+}
+
+label.cnfc-checkbox.active:before
+{
+   background: #E5E59F;
+   -webkit-border-radius:1px;
+   -moz-border-radius:1px;
+   border-radius:1px;
+   margin:0 auto;
+   width:16px;
+   height:16px;
+   display: inline-block;
+}
+
+label.cnfc-checkbox.hovered:before
+{
+   background: #F1F1CB;
+   -webkit-border-radius:1px;
+   -moz-border-radius:1px;
+   border-radius:1px;
+   margin:0 auto;
+   width:16px;
+   height:16px;
+   display: inline-block;
+}
+
+label.cnfc-radiobutton:before
+{
+   background: #F9FAFB;
+   -webkit-border-radius:3px;
+   -moz-border-radius:3px;
+   border-radius:3px;
+   margin:0 auto;
+   width:12px;
+   height:12px;
+}
+label.cnfc-radiobutton
+{
+   cursor: pointer;
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+   line-height: 12px;
+   display: inline-block;
+}
+
+.cnfc-radiobutton>input[type="radio"]
+{
+   vertical-align: baseline;
+   margin: 0 5px 0 0;
+}
+
+label.cnfc-radiobutton.active:before
+{
+   background: #E5E59F;
+   -webkit-border-radius:3px;
+   -moz-border-radius:3px;
+   border-radius:3px;
+   margin:0 auto;
+   width:12px;
+   height:12px;
+   display: inline-block;
+}
+
+label.cnfc-radiobutton.hovered:before
+{
+   background: #F1F1CB;
+   -webkit-border-radius:3px;
+   -moz-border-radius:3px;
+   border-radius:3px;
+   margin:0 auto;
+   width:12px;
+   height:12px;
+   display: inline-block;
+}
+
+a img
+{
+   border: 0;
+}
+
+.cnfc-article img, img.cnfc-article, .cnfc-block img, .cnfc-footer img
+{
+   margin: 0 0 0 0;
+}
+
+.cnfc-metadata-icons img
+{
+   border: none;
+   vertical-align: middle;
+   margin: 2px;
+}
+
+.cnfc-article table, table.cnfc-article
+{
+   border-collapse: collapse;
+   margin: 1px;
+}
+
+.cnfc-post .cnfc-content-layout-br
+{
+   height: 0;
+}
+
+.cnfc-article th, .cnfc-article td
+{
+   padding: 2px;
+   border: solid 1px #A28E57;
+   vertical-align: top;
+   text-align: left;
+}
+
+.cnfc-article th
+{
+   text-align: center;
+   vertical-align: middle;
+   padding: 7px;
+}
+
+pre
+{
+   overflow: auto;
+   padding: 0.1em;
+}
+
+.preview-cms-logo
+{
+   border: 0;
+   margin: 1em 1em 0 0;
+   float: left;
+}
+
+.image-caption-wrapper
+{
+   padding: 0 0 0 0;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+.image-caption-wrapper img
+{
+   margin: 0 !important;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+.image-caption-wrapper div.cnfc-collage
+{
+   margin: 0 !important;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+.image-caption-wrapper p
+{
+   font-size: 80%;
+   text-align: right;
+   margin: 0;
+}
+
+.cnfc-postheader
+{
+   color: #3C450C;
+   margin: 5px 0;
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+
+.cnfc-postheader a, 
+.cnfc-postheader a:link, 
+.cnfc-postheader a:visited,
+.cnfc-postheader a.visited,
+.cnfc-postheader a:hover,
+.cnfc-postheader a.hovered
+{
+   font-size: 26px;
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: normal;
+}
+
+.cnfc-postheader a, .cnfc-postheader a:link
+{
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   text-decoration: none;
+   text-align: left;
+   color: #7F931A;
+}
+
+.cnfc-postheader a:visited, .cnfc-postheader a.visited
+{
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   text-decoration: none;
+   text-align: left;
+   color: #92804F;
+}
+
+.cnfc-postheader a:hover,  .cnfc-postheader a.hovered
+{
+   font-family: 'Coming Soon', Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+   text-decoration: none;
+   text-align: left;
+   color: #B7D425;
+}
+
+.cnfc-postmetadataheader
+{
+   background: #EFEBE1;
+   margin:0 auto;
+   position:relative;
+   z-index:1;
+   padding: 1px;
+   margin-top: 5px;
+}
+
+.cnfc-postheadericons,
+.cnfc-postheadericons a,
+.cnfc-postheadericons a:link,
+.cnfc-postheadericons a:visited,
+.cnfc-postheadericons a:hover
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   color: #17140C;
+}
+
+.cnfc-postheadericons
+{
+   display:inline-block;
+   padding: 1px;
+}
+
+.cnfc-postheadericons a, .cnfc-postheadericons a:link
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   color: #7C7C22;
+}
+
+.cnfc-postheadericons a:visited, .cnfc-postheadericons a.visited
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: italic;
+   text-decoration: underline;
+   color: #7C7C22;
+}
+
+.cnfc-postheadericons a:hover, .cnfc-postheadericons a.hover
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   font-weight: normal;
+   font-style: italic;
+   text-decoration: none;
+   color: #000000;
+}
+
+.cnfc-postdateicon:before
+{
+   content:url('/ticketWeb/images/postdateicon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postdateicon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postauthoricon:before
+{
+   content:url('/ticketWeb/images/postauthoricon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postauthoricon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postpdficon:before
+{
+   content:url('/ticketWeb/images/postpdficon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postpdficon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postprinticon:before
+{
+   content:url('/ticketWeb/images/postprinticon.png');
+   margin-right:6px;
+   bottom: 2px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+}
+.opera .cnfc-postprinticon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postemailicon:before
+{
+   content:url('/ticketWeb/images/postemailicon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postemailicon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postediticon:before
+{
+   content:url('/ticketWeb/images/postediticon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postediticon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postcontent ul>li:before,  .cnfc-post ul>li:before,  .cnfc-textblock ul>li:before
+{
+   content:url('/ticketWeb/images/postbullets.png');
+   margin-right:6px;
+   bottom: 2px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+}
+.opera .cnfc-postcontent ul>li:before, .opera   .cnfc-post ul>li:before, .opera   .cnfc-textblock ul>li:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postcontent li, .cnfc-post li, .cnfc-textblock li
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   color: #202009;
+   margin: 5px 0 5px 11px;
+}
+
+.cnfc-postcontent ul>li, .cnfc-post ul>li, .cnfc-textblock ul>li, .cnfc-postcontent ol, .cnfc-post ol, .cnfc-textblock ol
+{
+   padding: 0;
+}
+
+.cnfc-postcontent ul>li, .cnfc-post ul>li, .cnfc-textblock ul>li
+{
+   padding-left: 14px;
+}
+
+.cnfc-postcontent ul>li:before,  .cnfc-post ul>li:before,  .cnfc-textblock ul>li:before
+{
+   margin-left: -14px;
+}
+
+.cnfc-postcontent ol, .cnfc-post ol, .cnfc-textblock ol, .cnfc-postcontent ul, .cnfc-post ul, .cnfc-textblock ul
+{
+   margin: 1em 0 1em 11px;
+}
+
+.cnfc-postcontent li ol, .cnfc-post li ol, .cnfc-textblock li ol, .cnfc-postcontent li ul, .cnfc-post li ul, .cnfc-textblock li ul
+{
+   margin: 0.5em 0 0.5em 11px;
+}
+
+.cnfc-postcontent li, .cnfc-post li, .cnfc-textblock li
+{
+   margin: 5px 0 5px 0;
+}
+
+.cnfc-postcontent ol>li, .cnfc-post ol>li, .cnfc-textblock ol>li
+{
+   /* overrides overflow for "ul li" and sets the default value */
+  overflow: visible;
+}
+
+.cnfc-postcontent ul>li, .cnfc-post ul>li, .cnfc-textblock ul>li
+{
+   /* makes "ul li" not to align behind the image if they are in the same line */
+  overflow-x: visible;
+   overflow-y: hidden;
+}
+
+blockquote
+{
+   background: #DCEB8E url('/ticketWeb/images/postquote.png') no-repeat scroll;
+   padding:4px 4px 4px 41px;
+   margin:10px 10px 10px 50px;
+   color: #0F1103;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   /* makes block not to align behind the image if they are in the same line */
+  overflow: auto;
+   clear:both;
+}
+blockquote a, .cnfc-postcontent blockquote a, .cnfc-blockcontent blockquote a, .cnfc-footer blockquote a,
+blockquote a:link, .cnfc-postcontent blockquote a:link, .cnfc-blockcontent blockquote a:link, .cnfc-footer blockquote a:link,
+blockquote a:visited, .cnfc-postcontent blockquote a:visited, .cnfc-blockcontent blockquote a:visited, .cnfc-footer blockquote a:visited,
+blockquote a:hover, .cnfc-postcontent blockquote a:hover, .cnfc-blockcontent blockquote a:hover, .cnfc-footer blockquote a:hover
+{
+   color: #0F1103;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+/* Override native 'p' margins*/
+blockquote p,
+.cnfc-postcontent blockquote p,
+.cnfc-blockcontent blockquote p,
+.cnfc-footer blockquote p
+{
+   margin: 0;
+   margin:5px;
+}
+
+.cnfc-postfootericons,
+.cnfc-postfootericons a,
+.cnfc-postfootericons a:link,
+.cnfc-postfootericons a:visited,
+.cnfc-postfootericons a:hover
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   color: #1B170E;
+}
+
+.cnfc-postfootericons
+{
+   display:inline-block;
+   padding: 1px;
+}
+
+.cnfc-postfootericons a, .cnfc-postfootericons a:link
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   color: #888825;
+}
+
+.cnfc-postfootericons a:visited, .cnfc-postfootericons a.visited
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: underline;
+   color: #888825;
+}
+
+.cnfc-postfootericons a:hover, .cnfc-postfootericons a.hover
+{
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+   color: #000000;
+}
+
+.cnfc-postcategoryicon:before
+{
+   content:url('/ticketWeb/images/postcategoryicon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postcategoryicon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-posttagicon:before
+{
+   content:url('/ticketWeb/images/posttagicon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-posttagicon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-postcommentsicon:before
+{
+   content:url('/ticketWeb/images/postcommentsicon.png');
+   margin-right:6px;
+   position:relative;
+   display:inline-block;
+   vertical-align:middle;
+   font-size:0;
+   line-height:0;
+   bottom: auto;
+}
+.opera .cnfc-postcommentsicon:before
+{
+   /* Vertical-align:middle in Opera doesn't need additional offset */
+    bottom: 0;
+}
+
+.cnfc-footer
+{
+   background: #191D16;
+   margin:10px auto 0;
+   position: relative;
+   color: #000000;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-align: center;
+   padding: 0;
+}
+
+.cnfc-footer a,
+.cnfc-footer a:link,
+.cnfc-footer a:visited,
+.cnfc-footer a:hover,
+.cnfc-footer td, 
+.cnfc-footer th,
+.cnfc-footer caption
+{
+   color: #000000;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+.cnfc-footer p 
+{
+   padding:0;
+   text-align: center;
+}
+
+.cnfc-footer a,
+.cnfc-footer a:link
+{
+   color: #A1BA21;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+}
+
+.cnfc-footer a:visited
+{
+   color: #817146;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: underline;
+}
+
+.cnfc-footer a:hover
+{
+   color: #C0DC38;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   text-decoration: none;
+}
+
+.cnfc-footer img
+{
+   border: 1px solid #E5E59F;
+   margin: 5px;
+}
+
+.cnfc-footer-inner
+{
+   margin: 0 auto;
+   width:1000px;
+   padding:10px;
+   padding-right: 15px;
+   padding-left: 15px;
+}
+
+.cnfc-rss-tag-icon
+{
+   background:  url('/ticketWeb/images/footerrssicon.png') no-repeat scroll;
+   margin:0 auto;
+   min-height:25px;
+   min-width:25px;
+   display: inline-block;
+   text-indent: 28px;
+   background-position: left center;
+}
+
+.cnfc-rss-tag-icon:empty
+{
+   vertical-align: middle;
+}
+
+.cnfc-footer li
+{
+   font-size: 13px;
+   font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+   line-height: 125%;
+   color: #E4DECD;
+}
+
+.cnfc-page-footer, 
+.cnfc-page-footer a,
+.cnfc-page-footer a:link,
+.cnfc-page-footer a:visited,
+.cnfc-page-footer a:hover
+{
+   font-family: Arial;
+   font-size: 10px;
+   letter-spacing: normal;
+   word-spacing: normal;
+   font-style: normal;
+   font-weight: normal;
+   text-decoration: underline;
+   color: #DDDD83;
+}
+
+.cnfc-page-footer
+{
+   position: relative;
+   z-index: auto !important;
+   padding: 1em;
+   text-align: center !important;
+   text-decoration: none;
+   color: #C8BB98;
+}
+
+img.cnfc-lightbox
+{
+   cursor: pointer;
+}
+
+#cnfc-lightbox-bg *
+{
+   padding: 0;
+   margin: 0;
+}
+
+div#cnfc-lightbox-bg
+{
+   top: 0;
+   left: 0;
+   width: 100%;
+   position: absolute;
+   height: 100%;
+   background-color: #000;
+   opacity: 0.8;
+   filter: alpha(opacity=80);
+   z-index: 9999;
+}
+
+img.cnfc-lightbox-image
+{
+   -webkit-transition: opacity 350ms ease-in-out;
+   -moz-transition: opacity 350ms ease-in-out;
+   -o-transition: opacity 350ms ease-in-out;
+   -ms-transition: opacity 350ms ease-in-out;
+   transition: opacity 350ms ease-in-out;
+   cursor: pointer;
+   z-index: 10000;
+   position: fixed;
+   border: 6px solid #fff;
+   border-radius: 3px;
+   opacity: 0;
+   filter: alpha(opacity=0);
+}
+
+img.cnfc-lightbox-image.active
+{
+   opacity: 1;
+   filter: alpha(opacity=100);
+}
+
+.lightbox-error
+{
+   position: fixed;
+   background: #fff;
+   z-index: 100;
+   opacity: 0.95;
+   padding: 20px;
+   border: 1px solid #b4b4b4;
+   border-radius: 10px;
+   box-shadow: 0 2px 5px #333;
+   width: 300px;
+   height: 80px;
+}
+
+.loading
+{
+   position: fixed;
+   background: #fff url('/ticketWeb/images/preloader-01.gif') center center no-repeat;
+   width: 32px;
+   height: 32px;
+   z-index: 10100;
+   opacity: 0.5;
+   padding: 10px;
+   border: 1px solid #b4b4b4;
+   border-radius: 10px;
+   box-shadow: 0 2px 5px #333;
+}
+
+.arrow
+{
+   height: 100px;
+   width: 82px;
+   z-index: 10003;
+   position: fixed;
+   cursor: pointer;
+   opacity: 0.5;
+   filter: alpha(opacity=50);
+}
+
+.arrow.left
+{
+   left: 9px;
+}
+.arrow.right
+{
+   right: 9px;
+}
+
+.arrow:hover
+{
+   opacity: 1;
+   filter: alpha(opacity=100);
+}
+
+.arrow.disabled 
+{
+   display: none;
+}
+
+.arrow-t, .arrow-b
+{
+   height: 6px;
+   width: 30px;
+   left: 26px;
+   background-color: #fff;
+   position: relative;
+   border-radius: 3px;
+}
+
+.arrow-t
+{
+   top: 38px;
+}
+
+.arrow-b
+{
+   top: 50px;
+}
+
+.close
+{
+   width: 22px;
+   height: 22px;
+   position: fixed;
+   top: 30px;
+   right: 39px;
+   cursor: pointer;
+   opacity: 0.5;
+   filter: alpha(opacity=50);
+}
+
+.close:hover 
+{
+   opacity: 1;
+   filter: alpha(opacity=100);
+}
+
+.close .cw, .close .ccw
+{
+   position: absolute;
+   top: 8px;
+   left: -4px;
+   width: 30px;
+   height: 6px;
+   background-color: #fff;
+   border-radius: 3px;
+}
+
+.cw
+{
+   transform: rotate(45deg);
+   -ms-transform: rotate(45deg);
+   /* IE 9 */
+    -webkit-transform: rotate(45deg);
+   /* Safari and Chrome */
+    -o-transform: rotate(45deg);
+   /* Opera */
+    -moz-transform: rotate(45deg);
+/* Firefox */}
+
+.ccw
+{
+   transform: rotate(-45deg);
+   -ms-transform: rotate(-45deg);
+   /* IE 9 */
+    -webkit-transform: rotate(-45deg);
+   /* Safari and Chrome */
+    -o-transform: rotate(-45deg);
+   /* Opera */
+    -moz-transform: rotate(-45deg);
+/* Firefox */}
+
+.close-alt, .arrow-right-alt, .arrow-left-alt 
+{
+   display: none;
+   color: #fff;
+   font-size: 2.5em;
+}
+
+.ie8 .close-alt, .ie8 .arrow-right-alt, .ie8 .arrow-left-alt {
+   display: block;
+}
+.ie8 .cw, .ie8 .ccw {
+   display: none;
+}
+
+.cnfc-content-layout .cnfc-content
+{
+   margin:0 auto;
+}
+
+/* Begin Additional CSS Styles */
+.cnfc-blockheader .t, .cnfc-vmenublockheader .t {white-space: nowrap;}
+/* End Additional CSS Styles */
+
+
+
+/*fixed header visible */
+.cnfc-header {width: 100% !important;}
+.cnfc-headline{margin-left: 0px !important;}
+.cnfc-object907249093{margin-right: 0px !important;}
+.cnfc-object273897028 {left: 0% !important;margin-left: 0px !important;}
