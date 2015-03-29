@@ -1,25 +1,29 @@
 package th.go.ticket.app.enjoy.bean;
 
+import java.util.ArrayList;
+
 public class UserDetailsBean {
 	
-	private int 	userUniqueId;
-	private String 	flagChangePassword;
-	private String 	userId;
-	private String 	userName;
-	private String 	userPrivilege;
-	private String 	userStatus;
-	private String 	userSurname;
-	private String  currentDate;
+	private int 							userUniqueId;
+	private String 							userId 	 			  = null;
+	private String 							userName 	 		  = null;
+	private String 							userSurname 	 	  = null;
+	private String 							userPrivilege 	 	  = null;
+	private String 							userLevel 	  		  = null;
+	private String 							userStatus 	 		  = null;
+	private String 							flagChangePassword 	  = null;
+	private ArrayList<UserPrivilegeBean> 	userPrivilegeList	  = null;
 	
 	public UserDetailsBean(){
 		this.userUniqueId		= 0;
-		this.flagChangePassword	= "";
 		this.userId				= "";
 		this.userName			= "";
-		this.userPrivilege		= "";
-		this.userStatus			= "";
 		this.userSurname		= "";
-		this.currentDate		= "";
+		this.userPrivilege		= "";
+		this.userLevel			= "";
+		this.userStatus			= "";
+		this.flagChangePassword	= "";
+		this.userPrivilegeList	= new ArrayList<UserPrivilegeBean>();
 	}
 
 	public int getUserUniqueId() {
@@ -78,12 +82,20 @@ public class UserDetailsBean {
 		this.userSurname = userSurname;
 	}
 
-	public String getCurrentDate() {
-		return currentDate;
+	public String getUserLevel() {
+		return userLevel;
 	}
 
-	public void setCurrentDate(String currentDate) {
-		this.currentDate = currentDate;
+	public void setUserLevel(String userLevel) {
+		this.userLevel = userLevel;
+	}
+
+	public ArrayList<UserPrivilegeBean> getUserPrivilegeList() {
+		return userPrivilegeList;
+	}
+
+	public void setUserPrivilegeList(ArrayList<UserPrivilegeBean> userPrivilegeList) {
+		this.userPrivilegeList = userPrivilegeList;
 	}
 	
 }

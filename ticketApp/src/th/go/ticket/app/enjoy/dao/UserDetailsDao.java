@@ -1,8 +1,5 @@
 package th.go.ticket.app.enjoy.dao;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -27,45 +24,50 @@ public class UserDetailsDao {
 		List<Userdetail> 	userdetailList	= null;
 		Userdetail 			userdetail		= null;
 		String				hql				= null;
-		DateFormat 			dateFormat		= null;
-        Date 				date			= null;
         String				passWord		= null;
-		
+		int					maxRecord		= 0;
 		try{
-			passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
-			sessionFactory 	= HibernateUtil.getSessionFactory();
+		    passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
+logger.info("pass ==> " + passWord);
+		    sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			hql				= "from Userdetail where userId = '" + userId + "' and userPassword = '" + passWord + "'";
+			hql				= "from Userdetail where userId = '" + userId + "'";
 			userdetailList 	= session.createQuery(hql).list();
-			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
-		    date 	   		= new Date();
+			maxRecord       = userdetailList.size();
 			
-		    logger.info(passWord);
-			
-			for(int i=0;i<userdetailList.size();i++){
+			for(int i=0;i<maxRecord;i++){
 				userdetail 		= userdetailList.get(i);
 				userDetailsBean	= new UserDetailsBean();
 				
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserUniqueId() 	:: " + userdetail.getUserUniqueId());
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserId() 		:: " + userdetail.getUserId());
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserName() 		:: " + userdetail.getUserName());
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserSurname() 	:: " + userdetail.getUserSurname());
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserPrivilege() :: " + userdetail.getUserPrivilege());
-				logger.info("[UserDetailsDao][userSelect] userdetail.getUserStatus() 	:: " + userdetail.getUserStatus());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserUniqueId() 		:: " + userdetail.getUserUniqueId());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserId() 				:: " + userdetail.getUserId());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserName() 			:: " + userdetail.getUserName());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserSurname() 			:: " + userdetail.getUserSurname());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserPrivilege() 		:: " + userdetail.getUserPrivilege());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserLevel() 			:: " + userdetail.getUserLevel());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserStatus() 			:: " + userdetail.getUserStatus());
+				logger.debug("[UserDetailsDao][userSelect] userdetail.getFlagChangePassword() 	:: " + userdetail.getFlagChangePassword());
 				
 				userDetailsBean.setUserUniqueId(userdetail.getUserUniqueId());
 				userDetailsBean.setUserId(userdetail.getUserId());
 				userDetailsBean.setUserName(userdetail.getUserName());
 				userDetailsBean.setUserSurname(userdetail.getUserSurname());
 				userDetailsBean.setUserPrivilege(userdetail.getUserPrivilege());
+				userDetailsBean.setUserLevel(userdetail.getUserPrivilege());
 				userDetailsBean.setUserStatus(userdetail.getUserStatus());
-				userDetailsBean.setCurrentDate(dateFormat.format(date));
+				userDetailsBean.setFlagChangePassword(userdetail.getFlagChangePassword());
 			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{
 			session.close();
+			sessionFactory	= null;
+			session			= null;
+			userdetailList	= null;
+			userdetail		= null;
+			hql				= null;
+	        passWord		= null;
 			logger.info("[UserDetailsDao][userSelect][End]");
 		}
 		
