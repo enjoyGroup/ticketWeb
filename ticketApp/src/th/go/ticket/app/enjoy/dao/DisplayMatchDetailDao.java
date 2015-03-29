@@ -9,14 +9,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
 
 import th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean;
-import th.go.ticket.app.enjoy.bean.DisplayMachDetailBean;
+import th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
 
-public class DisplayMachDetailDao {
+public class DisplayMatchDetailDao {
 	
-	private static final EnjoyLogger logger = EnjoyLogger.getLogger(DisplayMachDetailDao.class);
+	private static final EnjoyLogger logger = EnjoyLogger.getLogger(DisplayMatchDetailDao.class);
 	
 	public List<String> seasonList() throws EnjoyException{
 		logger.info("[seasonList][Begin]");
@@ -67,24 +67,24 @@ public class DisplayMachDetailDao {
 		return returnList;
 	}
 	
-	public List<DisplayMachDetailBean> matchList(String season) throws EnjoyException{
+	public List<DisplayMatchDetailBean> matchList(String season) throws EnjoyException{
 		logger.info("[matchList][Begin]");
 		
-		List<DisplayMachDetailBean> 	returnList 							= null;
+		List<DisplayMatchDetailBean> 	returnList 							= null;
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
 		String							hql									= null;
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
-		DisplayMachDetailBean			returnObj							= null;
+		DisplayMatchDetailBean			returnObj							= null;
 		
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<DisplayMachDetailBean>();
+			returnList		= new ArrayList<DisplayMatchDetailBean>();
 			
-			hql				= "SELECT b.matchId, b.awayTeamNameTH FROM eventmatch where b.season = '" + season + "' order b.matchId desc";
+			hql				= "SELECT b.matchId, b.awayTeamNameTH FROM eventmatch b where b.season = '" + season + "' order by b.matchId desc";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("matchId"			, new StringType());
@@ -93,7 +93,7 @@ public class DisplayMachDetailDao {
 			list		 	= query.list();
 			
 			for(Object[] row : list){
-				returnObj = new DisplayMachDetailBean();
+				returnObj = new DisplayMatchDetailBean();
 				
 				logger.info("[detailRevenueByYear] matchId 			:: " + row[0].toString());
 				logger.info("[detailRevenueByYear] awayTeamNameTH 	:: " + row[1].toString());
@@ -125,44 +125,48 @@ public class DisplayMachDetailDao {
 		return returnList;
 	}
 	
-	public List<DisplayMachDetailBean> genHeaderTicketType(String matchId) throws EnjoyException{
+	public List<DisplayMatchDetailBean> genHeaderTicketType(String matchId) throws EnjoyException{
 		logger.info("[genHeaderTicketType][Begin]");
 		
-		List<DisplayMachDetailBean> 	returnList 							= null;
+		List<DisplayMatchDetailBean> 	returnList 							= null;
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
 		String							hql									= null;
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
-		DisplayMachDetailBean			returnObj							= null;
+		DisplayMatchDetailBean			returnObj							= null;
 		
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<DisplayMachDetailBean>();
+			returnList		= new ArrayList<DisplayMatchDetailBean>();
 			
-			hql				= "SELECT a.matchId, b.bookingTypeName"
+			hql				= "SELECT a.matchId, b.bookingTypeId, b.bookingTypeName"
 								+ " FROM ticketorder a, bookingtype b, eventmatch s"
 								+ " WHERE a.bookingTypeId 	= b.bookingTypeId"
 									+ " and a.matchId 		= " + matchId
 									+ " and s.matchId 		= a.matchId"
+									+ " and a.ticketStatus 	<> 'R'"
 								+ " GROUP BY a.matchId, b.bookingTypeName";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("matchId"			, new StringType());
+			query.addScalar("bookingTypeId"		, new StringType());
 			query.addScalar("bookingTypeName"	, new StringType());
 			
 			list		 	= query.list();
 			
 			for(Object[] row : list){
-				returnObj = new DisplayMachDetailBean();
+				returnObj = new DisplayMatchDetailBean();
 				
 				logger.info("[detailRevenueByYear] matchId 			:: " + row[0].toString());
-				logger.info("[detailRevenueByYear] bookingTypeName 	:: " + row[1].toString());
+				logger.info("[detailRevenueByYear] bookingTypeId 	:: " + row[1].toString());
+				logger.info("[detailRevenueByYear] bookingTypeName 	:: " + row[2].toString());
 				
 				returnObj.setMatchId			(row[0].toString());
-				returnObj.setBookingTypeName	(row[1].toString());
+				returnObj.setBookingTypeId		(row[1].toString());
+				returnObj.setBookingTypeName	(row[2].toString());
 				
 				returnList.add(returnObj);
 				
@@ -188,22 +192,22 @@ public class DisplayMachDetailDao {
 		return returnList;
 	}
 	
-	public List<DisplayMachDetailBean> detailOfMatch(String matchId) throws EnjoyException{
+	public List<DisplayMatchDetailBean> detailOfMatch(String matchId) throws EnjoyException{
 		logger.info("[detailOfMatch][Begin]");
 		
-		List<DisplayMachDetailBean> 	returnList 							= null;
+		List<DisplayMatchDetailBean> 	returnList 							= null;
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
 		String							hql									= null;
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
-		DisplayMachDetailBean			returnObj							= null;
+		DisplayMatchDetailBean			returnObj							= null;
 		
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<DisplayMachDetailBean>();
+			returnList		= new ArrayList<DisplayMatchDetailBean>();
 			
 			hql				= "SELECT a.matchId"
 								+ ", b.fieldZoneName"
@@ -232,7 +236,7 @@ public class DisplayMachDetailDao {
 			list		 	= query.list();
 			
 			for(Object[] row : list){
-				returnObj = new DisplayMachDetailBean();
+				returnObj = new DisplayMatchDetailBean();
 				
 				logger.info("[detailOfMatch] matchId 			:: " + row[0].toString());
 				logger.info("[detailOfMatch] fieldZoneName 		:: " + row[1].toString());

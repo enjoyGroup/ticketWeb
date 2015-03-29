@@ -9,6 +9,7 @@ public class UserDetailsBean {
 	private String 	userPrivilege;
 	private String 	userStatus;
 	private String 	userSurname;
+	private String  currentDate;
 	
 	public UserDetailsBean(){
 		this.userUniqueId		= 0;
@@ -18,6 +19,7 @@ public class UserDetailsBean {
 		this.userPrivilege		= "";
 		this.userStatus			= "";
 		this.userSurname		= "";
+		this.currentDate		= "";
 	}
 
 	public int getUserUniqueId() {
@@ -74,6 +76,14 @@ public class UserDetailsBean {
 
 	public void setUserSurname(String userSurname) {
 		this.userSurname = userSurname;
+	}
+
+	public String getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(String currentDate) {
+		this.currentDate = currentDate;
 	}
 	
 }

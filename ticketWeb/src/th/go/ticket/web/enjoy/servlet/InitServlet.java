@@ -42,7 +42,7 @@ public class InitServlet extends javax.servlet.http.HttpServlet implements javax
 			realPath  = getServletContext().getRealPath("");  
 			ConfigFile.init(realPath + getServletContext().getInitParameter(Constants.CONFIG_FILE));
 			System.out.println("[InitServlet][init] :: 2");
-			EnjoyLogger.initial(true);
+			EnjoyLogger.initial(false);
 			System.out.println("[InitServlet][init] :: 3");
 			
 		} catch(Exception e){

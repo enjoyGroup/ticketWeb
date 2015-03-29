@@ -8,33 +8,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import th.go.ticket.app.enjoy.bean.SummaryRevenueOfYearBean;
+import th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
-import th.go.ticket.app.enjoy.dao.SummaryRevenueOfYearDao;
+import th.go.ticket.app.enjoy.dao.DisplayMatchDetailDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
-import th.go.ticket.app.enjoy.form.SummaryRevenueOfYearForm;
+import th.go.ticket.app.enjoy.form.DisplayMacthForm;
 import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
 import th.go.ticket.web.enjoy.utils.EnjoyUtil;
 
-public class SummaryRevenueOfYearServlet extends EnjoyStandardSvc {
+public class DisplayMatchServlet extends EnjoyStandardSvc {
 	 
 	static final long serialVersionUID = 1L;
-	private static final EnjoyLogger logger = EnjoyLogger.getLogger(SummaryRevenueOfYearServlet.class);
+	private static final EnjoyLogger logger = EnjoyLogger.getLogger(DisplayMatchServlet.class);
 	
-    private static final String FORM_NAME = "summaryRevenueOfYearForm";
+    private static final String FORM_NAME = "displayMacthForm";
     
-    private EnjoyUtil               	easUtil                     = null;
+    private EnjoyUtil               	enjoyUtil                   = null;
     private HttpServletRequest          request                     = null;
     private HttpServletResponse         response                    = null;
     private HttpSession                 session                     = null;
     private UserDetailsBean             userBean                    = null;
-    private SummaryRevenueOfYearDao		dao							= null;
-    private SummaryRevenueOfYearForm	form						= null;
+    private DisplayMatchDetailDao		dao							= null;
+    private DisplayMacthForm			form						= null;
     
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response)
@@ -50,21 +47,21 @@ public class SummaryRevenueOfYearServlet extends EnjoyStandardSvc {
  		
  		try{
  			 pageAction 				= EnjoyUtil.nullToStr(request.getParameter("pageAction"));
- 			 this.easUtil 				= new EnjoyUtil(request, response);
+ 			 this.enjoyUtil 			= new EnjoyUtil(request, response);
  			 this.request            	= request;
              this.response           	= response;
              this.session            	= request.getSession(false);
              this.userBean           	= (UserDetailsBean)session.getAttribute("userBean");
-             this.form               	= (SummaryRevenueOfYearForm)session.getAttribute(FORM_NAME);
-             this.dao					= new SummaryRevenueOfYearDao();
+             this.form               	= (DisplayMacthForm)session.getAttribute(FORM_NAME);
+             this.dao					= new DisplayMatchDetailDao();
  			
              logger.info("[execute][Begin] : " + pageAction );
              
- 			if(this.form == null || pageAction.equals("new")) this.form = new SummaryRevenueOfYearForm();
+ 			if(this.form == null || pageAction.equals("new")) this.form = new DisplayMacthForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
  				this.onLoad();
- 				request.setAttribute("target", Constants.PAGE_URL +"/SummaryRevenueOfYearScn.jsp");
+ 				request.setAttribute("target", Constants.PAGE_URL +"/DisplayMatchScn.jsp");
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -83,52 +80,55 @@ public class SummaryRevenueOfYearServlet extends EnjoyStandardSvc {
 	private void onLoad() throws EnjoyException{
 		logger.info("[onLoad][Begin]");
 		
-		List<SummaryRevenueOfYearBean> 	resultList 			= null;
-		JSONObject 						obj 				= null;
-		JSONObject 						objDataFlow 		= null;
-		JSONArray 						dataFlowJSONArray 	= null;
-		SummaryRevenueOfYearBean		bean				= null;
-		SummaryRevenueOfYearBean		beanTest				= null;
+		List<String> 					seasonList					= null;
+		String							season						= null;
+		List<DisplayMatchDetailBean> 	matchList					= null;
+		String							matchId						= null;
+		boolean							flag						= false;
+		String							awayTeamName				= null;
 		
 		try{
-			obj 					= new JSONObject();
-			dataFlowJSONArray 		= new JSONArray();
+			seasonList 				= this.dao.seasonList();
 			
-			resultList = this.dao.summaryRevenueOfYear();
-			
-//			beanTest = new SummaryRevenueOfYearBean();
-//			
-//			beanTest.setSeason("2558");
-//			beanTest.setBookingPrice("8500");
-//			
-//			resultList.add(beanTest);
-			
-			
-			for(int i=0;i<resultList.size();i++){
-				bean 			= resultList.get(i);
-				objDataFlow 	= new JSONObject();
-				
-				objDataFlow.put("season", 			bean.getSeason());
-				objDataFlow.put("bookingPrice", 	bean.getBookingPrice());
-				
-				dataFlowJSONArray.add(objDataFlow);
+			if(seasonList!=null && seasonList.size() > 0){
+
+				for(int i=0;i<seasonList.size();i++){
+					season 					= seasonList.get(i);
+					matchList				= this.dao.matchList(season);
+					
+					this.form.getMatchMap().put(season, matchList);
+					
+					if(flag==false){
+						if(matchList!=null && matchList.size() > 0){
+							matchId 				= matchList.get(0).getMatchId();
+							awayTeamName			= matchList.get(0).getAwayTeamNameTH();
+							flag					= true;
+							
+							this.form.setSeason(season);
+							this.form.setMatchId(matchId);
+							this.form.setAwayTeamName(awayTeamName);
+							
+						}
+						
+					}
+				}
 			}
 			
-			obj.put("dataFlow", 		dataFlowJSONArray);
+			this.form.setSeasonList(seasonList);
 			
-			System.out.println(obj.toString());
-			
-			this.form.setDataFlow(obj.toString());
-			
-			this.form.setResultList(resultList);
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new EnjoyException("onLoad :: " + e.getMessage());
 		}finally{
+			seasonList		= null;
+			season			= null;
+			
 			logger.info("[onLoad][End]");
 		}
 		
 	}
+	
 	
 	
 	

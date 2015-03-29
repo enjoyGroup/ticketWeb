@@ -1,5 +1,8 @@
 package th.go.ticket.app.enjoy.dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -7,6 +10,7 @@ import org.hibernate.SessionFactory;
 
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.model.Userdetail;
+import th.go.ticket.app.enjoy.utils.EnjoyEncryptDecrypt;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
 
@@ -23,13 +27,20 @@ public class UserDetailsDao {
 		List<Userdetail> 	userdetailList	= null;
 		Userdetail 			userdetail		= null;
 		String				hql				= null;
+		DateFormat 			dateFormat		= null;
+        Date 				date			= null;
+        String				passWord		= null;
 		
 		try{
+			passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			hql				= "from Userdetail where userId = '" + userId + "'";
+			hql				= "from Userdetail where userId = '" + userId + "' and userPassword = '" + passWord + "'";
 			userdetailList 	= session.createQuery(hql).list();
+			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
+		    date 	   		= new Date();
 			
+		    logger.info(passWord);
 			
 			for(int i=0;i<userdetailList.size();i++){
 				userdetail 		= userdetailList.get(i);
@@ -48,6 +59,7 @@ public class UserDetailsDao {
 				userDetailsBean.setUserSurname(userdetail.getUserSurname());
 				userDetailsBean.setUserPrivilege(userdetail.getUserPrivilege());
 				userDetailsBean.setUserStatus(userdetail.getUserStatus());
+				userDetailsBean.setCurrentDate(dateFormat.format(date));
 			}
 			
 		}catch(Exception e){

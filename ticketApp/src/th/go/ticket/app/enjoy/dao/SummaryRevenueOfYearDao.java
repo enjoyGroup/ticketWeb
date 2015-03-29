@@ -60,6 +60,7 @@ private static final EnjoyLogger logger = EnjoyLogger.getLogger(SummaryRevenueOf
 									+ " WHERE a.fieldZoneId		= b.fieldZoneId"
 										+ " and a.bookingTypeId	= b.bookingTypeId"
 								 		+ " and a.matchId		= c.matchId"
+								 		+ " and a.ticketStatus <> 'R'"
 									+ " group by c.season";
 			query			= session.createSQLQuery(hql);
 			

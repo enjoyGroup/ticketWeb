@@ -1,6 +1,6 @@
 package th.go.ticket.app.enjoy.bean;
 
-public class DisplayMachDetailBean {
+public class DisplayMatchDetailBean {
 	
 	private String season;
 	private String awayTeamNameTH;
@@ -11,7 +11,7 @@ public class DisplayMachDetailBean {
 	private String totalSeating;
 	private String tatalMoney;
 	
-	public DisplayMachDetailBean(){
+	public DisplayMatchDetailBean(){
 		this.season 			= "";
 		this.awayTeamNameTH 	= "";
 		this.matchId			= "";

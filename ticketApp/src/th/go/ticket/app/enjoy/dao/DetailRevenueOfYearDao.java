@@ -126,10 +126,11 @@ public class DetailRevenueOfYearDao {
 									+ ", count(a.matchId) as totalSeating "
 									+ ", SUM(b.bookingPrices) as bookingPrices"
 									+ " FROM ticketorder a, fieldzonedetail b, eventmatch c"
-									+ " WHERE a.fieldZoneId = b.fieldZoneId"
+									+ " WHERE a.fieldZoneId 	= b.fieldZoneId"
 									+ " 	and a.bookingTypeId = b.bookingTypeId"
-									+ " 	and a.matchId = c.matchId"
-									+ " 	and c.season  = '" + season + "'"
+									+ " 	and a.matchId 		= c.matchId"
+									+ " 	and c.season  		= '" + season + "'"
+									+ "		and a.ticketStatus 	<> 'R'"
 									+ " GROUP BY a.matchId, c.awayTeamNameTH, c.awayTeamNameEN"
 									+ " ORDER BY a.matchId";
 			query			= session.createSQLQuery(hql);
