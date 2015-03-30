@@ -13,6 +13,8 @@ public class UserDetailsBean {
 	private String 							userStatus 	 		  = null;
 	private String 							flagChangePassword 	  = null;
 	private ArrayList<UserPrivilegeBean> 	userPrivilegeList	  = null;
+	private String 							pwd 	 		  	  = null;
+	private String  						currentDate			  = null;
 	
 	public UserDetailsBean(){
 		this.userUniqueId		= 0;
@@ -24,6 +26,8 @@ public class UserDetailsBean {
 		this.userStatus			= "";
 		this.flagChangePassword	= "";
 		this.userPrivilegeList	= new ArrayList<UserPrivilegeBean>();
+		this.pwd				= "";
+		this.currentDate		= "";
 	}
 
 	public int getUserUniqueId() {
@@ -96,6 +100,22 @@ public class UserDetailsBean {
 
 	public void setUserPrivilegeList(ArrayList<UserPrivilegeBean> userPrivilegeList) {
 		this.userPrivilegeList = userPrivilegeList;
+	}
+
+	public String getPwd() {
+		return pwd;
+	}
+
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
+
+	public String getCurrentDate() {
+		return currentDate;
+	}
+
+	public void setCurrentDate(String currentDate) {
+		this.currentDate = currentDate;
 	}
 	
 }

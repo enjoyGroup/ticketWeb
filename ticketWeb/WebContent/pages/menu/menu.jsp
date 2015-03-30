@@ -1,10 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="utf-8"%>
 <%@ page import="th.go.ticket.app.enjoy.bean.UserDetailsBean,
 				 th.go.ticket.app.enjoy.bean.UserPrivilegeBean,
-				 th.go.ticket.app.enjoy.bean.PagesDetailBean"%>
+				 th.go.ticket.app.enjoy.bean.PagesDetailBean,
+				 th.go.ticket.app.enjoy.main.Constants"%>
 <%
-	UserDetailsBean userDeatil = (UserDetailsBean) request.getSession().getAttribute("userBean");
+	final String servURL1		= Constants.SERV_URL;
+	UserDetailsBean userDeatil 	= (UserDetailsBean) request.getSession().getAttribute("userBean");
 %>
+<div class="headwrap">
+	<div class="row">
+    	<div class="brand span4">
+        	<img src="/ticketWeb/images/logo2.png" >
+        </div>
+        
+        <div class="span8 user"  style="margin-right:4%;">
+        	<div class="font14"><img src="<%=servURL1%>/images/icon-user.jpg" alt="">ชื่อผู้ใช้งาน <span class="text_white"><%=userDeatil.getUserName() %>&nbsp;&nbsp;<%=userDeatil.getUserSurname() %></span></div>
+            <div class="font12"></div>
+            
+            <ul>
+            	<li class="date">เข้าใช้ระบบ : <span class="text_white"><%=userDeatil.getCurrentDate() %></span> </li>
+            </ul>
+            
+        </div>
+    </div><!-- container -->
+</div><!-- headwrap -->
+<div align="left">
   <ul id="menu1">
 	<%
 		UserPrivilegeBean 			userPrivilegeBean 		= null;
@@ -58,3 +78,4 @@
 	</li>
 	 -->	
 </ul>
+</div>
