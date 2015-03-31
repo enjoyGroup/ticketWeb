@@ -19,6 +19,8 @@ public class Userdetail implements Serializable {
 
 	private String flagChangePassword;
 
+	private String userEmail;
+
 	private String userId;
 
 	private String userLevel;
@@ -50,6 +52,14 @@ public class Userdetail implements Serializable {
 
 	public void setFlagChangePassword(String flagChangePassword) {
 		this.flagChangePassword = flagChangePassword;
+	}
+
+	public String getUserEmail() {
+		return this.userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public String getUserId() {

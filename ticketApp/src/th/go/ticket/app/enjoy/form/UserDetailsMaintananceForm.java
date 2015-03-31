@@ -9,18 +9,25 @@ import th.go.ticket.app.enjoy.model.Refuserstatus;
 import th.go.ticket.app.enjoy.model.Userprivilege;
 
 public class UserDetailsMaintananceForm {
-
 	
-	UserDetailsBean 		userDetailsBean;
-	List<RefuserstatusBean> refuserstatusCombo;
-	List<Userprivilege> 	userprivilegeList;
-	String					errMsg;
+	public static final String NEW 	= "NEW";
+	public static final String EDIT = "EDIT";
+	
+	
+	private UserDetailsBean 		userDetailsBean;
+	private List<RefuserstatusBean> refuserstatusCombo;
+	private List<Userprivilege> 	userprivilegeList;
+	private String					errMsg;
+	private String					pageMode;
+	private String					titlePage;
 	
 	public UserDetailsMaintananceForm(){
 		this.userDetailsBean 		= new UserDetailsBean();
 		this.refuserstatusCombo		= new ArrayList<RefuserstatusBean>();
 		this.userprivilegeList		= new ArrayList<Userprivilege>();
 		this.errMsg					= "";
+		this.pageMode				= NEW;
+		this.titlePage				= "";
 	}
 
 	public UserDetailsBean getUserDetailsBean() {
@@ -53,6 +60,22 @@ public class UserDetailsMaintananceForm {
 
 	public void setErrMsg(String errMsg) {
 		this.errMsg = errMsg;
+	}
+
+	public String getPageMode() {
+		return pageMode;
+	}
+
+	public void setPageMode(String pageMode) {
+		this.pageMode = pageMode;
+	}
+
+	public String getTitlePage() {
+		return titlePage;
+	}
+
+	public void setTitlePage(String titlePage) {
+		this.titlePage = titlePage;
 	}
 
 	

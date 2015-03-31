@@ -15,6 +15,7 @@ public class UserDetailsBean {
 	private ArrayList<UserPrivilegeBean> 	userPrivilegeList	  = null;
 	private String 							pwd 	 		  	  = null;
 	private String  						currentDate			  = null;
+	private String							userEmail			  = null;
 	
 	public UserDetailsBean(){
 		this.userUniqueId		= 0;
@@ -28,6 +29,7 @@ public class UserDetailsBean {
 		this.userPrivilegeList	= new ArrayList<UserPrivilegeBean>();
 		this.pwd				= "";
 		this.currentDate		= "";
+		this.userEmail			= "";
 	}
 
 	public int getUserUniqueId() {
@@ -116,6 +118,14 @@ public class UserDetailsBean {
 
 	public void setCurrentDate(String currentDate) {
 		this.currentDate = currentDate;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 	
 }

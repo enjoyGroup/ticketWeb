@@ -71,6 +71,8 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
  				request.setAttribute("target", Constants.PAGE_URL +"/UserDetailsMaintananceScn.jsp");
  			}else if(pageAction.equals("checkDupUserId")){
  				this.checkDupUserId();
+ 			}else if(pageAction.equals("save")){
+ 				this.onSave();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -92,6 +94,8 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			
 			this.form.getUserDetailsBean().setUserStatus("1");
 			this.setRefference();
+			
+			this.form.setTitlePage("เพิ่มผู้ใช้งานระบบ");
 			
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
@@ -149,6 +153,9 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			userdetailDb				= this.dao.getUserdetail(session, userUniqueId);
 			userDetailsBean				= this.form.getUserDetailsBean();
 			
+			this.form.setTitlePage("แก้ไขผู้ใช้งานระบบ");
+			this.form.setPageMode(UserDetailsMaintananceForm.EDIT);
+			
 			if(userdetailDb!=null){
 				userDetailsBean.setUserUniqueId			(userdetailDb.getUserUniqueId());
 				userDetailsBean.setUserId				(userdetailDb.getUserId());
@@ -158,6 +165,7 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 				userDetailsBean.setUserLevel			(userdetailDb.getUserLevel());
 				userDetailsBean.setUserStatus			(userdetailDb.getUserStatus());
 				userDetailsBean.setFlagChangePassword	(userdetailDb.getFlagChangePassword());
+				userDetailsBean.setUserEmail			(userdetailDb.getUserEmail());
 				
 			}else{
 				throw new EnjoyException("เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้งาน");
@@ -201,12 +209,12 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			
 		}catch(EnjoyException e){
 			obj.put(STATUS, 		ERROR);
-			obj.put("COU", 			e.getMessage());
+			obj.put(ERR_MSG, 		e.getMessage());
 		}catch(Exception e){
 			logger.info(e.getMessage());
 			
 			obj.put(STATUS, 		ERROR);
-			obj.put("COU", 			"checkDupUserId is error");
+			obj.put(ERR_MSG, 		"checkDupUserId is error");
 		}finally{
 			session.close();
 			sessionFactory	= null;
@@ -220,7 +228,92 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 	}
 	
 	
-	
+	private void onSave() throws EnjoyException{
+		logger.info("[onSave][Begin]");
+		
+		String				pageMode			= null;
+		int					userUniqueId		= 0;
+		String				userName			= null;
+		String				userSurname			= null;
+		String 				userId 				= null;
+		String				userEmail			= null;
+		String				userStatus			= null;
+		String				flagChangePassword 	= null;
+		String				userPrivilege		= null;
+		SessionFactory 		sessionFactory		= null;
+		Session 			session				= null;
+		JSONObject 			obj 				= null;
+		UserDetailsBean 	userDetailsBean		= null;
+		
+		try{
+			pageMode 					= EnjoyUtil.nullToStr(request.getParameter("pageMode"));
+			userName 					= EnjoyUtil.nullToStr(request.getParameter("userName"));
+			userSurname 				= EnjoyUtil.nullToStr(request.getParameter("userSurname"));
+			userId 						= EnjoyUtil.nullToStr(request.getParameter("userId"));
+			userEmail 					= EnjoyUtil.nullToStr(request.getParameter("userEmail"));
+			userStatus 					= EnjoyUtil.nullToStr(request.getParameter("userStatus"));
+			flagChangePassword 			= EnjoyUtil.chkBoxtoDb(request.getParameter("flagChangePassword"));
+			userPrivilege 				= EnjoyUtil.nullToStr(request.getParameter("hidUserPrivilege"));
+			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			obj 						= new JSONObject();
+			userDetailsBean				= new UserDetailsBean();
+			
+			logger.info("[onSave] pageMode 				:: " + pageMode);
+			logger.info("[onSave] userName 				:: " + userName);
+			logger.info("[onSave] userSurname 			:: " + userSurname);
+			logger.info("[onSave] userId 				:: " + userId);
+			logger.info("[onSave] userEmail 			:: " + userEmail);
+			logger.info("[onSave] userStatus 			:: " + userStatus);
+			logger.info("[onSave] flagChangePassword 	:: " + flagChangePassword);
+			logger.info("[onSave] userPrivilege 		:: " + userPrivilege);
+			logger.info("[onSave] userUniqueId 			:: " + userUniqueId);
+			
+			userDetailsBean.setUserName(userName);
+			userDetailsBean.setUserSurname(userSurname);
+			userDetailsBean.setUserId(userId);
+			userDetailsBean.setUserEmail(userEmail);
+			userDetailsBean.setUserStatus(userStatus);
+			userDetailsBean.setFlagChangePassword(flagChangePassword);
+			userDetailsBean.setUserPrivilege(userPrivilege);
+			userDetailsBean.setUserUniqueId(userUniqueId);
+			
+			session.beginTransaction();
+			
+			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
+				this.dao.insertNewUser(session, userDetailsBean);
+				
+				userUniqueId = this.dao.lastId(session);
+			}else{
+				this.dao.updateUserDetail(session, userDetailsBean);
+			}
+			
+			obj.put(STATUS, 			SUCCESS);
+			obj.put("userUniqueId", 	userUniqueId);
+			
+			session.getTransaction().commit();
+			session.flush();
+			
+		}catch(EnjoyException e){
+			session.getTransaction().rollback();
+			obj.put(STATUS, 		ERROR);
+			obj.put(ERR_MSG, 		e.getMessage());
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			
+			obj.put(STATUS, 		ERROR);
+			obj.put(ERR_MSG, 		"onSave is error");
+		}finally{
+			session.close();
+			sessionFactory	= null;
+			session			= null;
+			
+			this.enjoyUtil.writeMSG(obj.toString());
+			
+			logger.info("[onSave][End]");
+		}
+	}
 	
 	
 	

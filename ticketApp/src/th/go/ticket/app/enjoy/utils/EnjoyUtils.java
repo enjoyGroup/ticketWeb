@@ -96,8 +96,8 @@ public class EnjoyUtils {
             }else{
                 dt      = new SimpleDateFormat(av_currFormat); 
                 date    = dt.parse(av_date); 
-//                dt1     = new SimpleDateFormat(av_toFormat,Locale.US);// เธ�.เธจ.
-                dt1     = new SimpleDateFormat(av_toFormat);//เธ�.เธจ.
+//                dt1     = new SimpleDateFormat(av_toFormat,Locale.US);// ค.ศ.
+                dt1     = new SimpleDateFormat(av_toFormat);//พ.ศ.
                 
                 dateFormat = dt1.format(date);
             }
@@ -210,8 +210,8 @@ public class EnjoyUtils {
         String st_ch;
         int idx,Digit;
 
-        String[] GetNum   = { "เธซเธ�เธถเน�เธ�","เธชเธญเธ�","เธชเธฒเธก","เธชเธตเน�","เธซเน�เธฒ","เธซเธ�","เน€เธ�เน�เธ”","เน�เธ�เธ”","เน€เธ�เน�เธฒ","เธขเธตเน�","เน€เธญเน�เธ”" };
-        String[] GetDigit = { "","เธชเธดเธ�","เธฃเน�เธญเธข","เธ�เธฑเธ�","เธซเธกเธทเน�เธ�","เน�เธชเธ�","เธฅเน�เธฒเธ�"};
+        String[] GetNum   = { "หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า","ยี่","เอ็ด" };
+        String[] GetDigit = { "","สิบ","ร้อย","พัน","หมื่น","แสน","ล้าน"};
 
         CurText = amt;
         Digit = 0;
@@ -219,14 +219,14 @@ public class EnjoyUtils {
         {
            if ( Digit == 6 ){
               Digit = 0;
-              Thai_CurText = "เธฅเน�เธฒเธ�" + Thai_CurText;
+              Thai_CurText = "ล้าน" + Thai_CurText;
            }
 
            ch      = CurText.substring(idx-1,idx).toCharArray()[0];
            st_ch   = CurText.substring(idx-1,idx);
            switch (ch){
               case '.' :  Digit = 0;
-                          Thai_CurText = "เธ�เธฒเธ—" + Thai_CurText;
+                          Thai_CurText = "บาท" + Thai_CurText;
                           break;
               case ',' :  break;
 
@@ -275,12 +275,12 @@ public class EnjoyUtils {
         int pos_dot = CurText.indexOf(".");
         if (Integer.parseInt(CurText.substring(pos_dot+1,CurText.length())) == 0 ){
         	if(amt.equals("0.00")){
-        		Thai_CurText = "เธจเธนเธ�เธขเน�" + Thai_CurText + "เธ–เน�เธงเธ�";
+        		Thai_CurText = "ศูนย์" + Thai_CurText + "ถ้วน";
         	}else{
-        		Thai_CurText = Thai_CurText + "เธ–เน�เธงเธ�";
+        		Thai_CurText = Thai_CurText + "ถ้วน";
         	}
         }else{
-        	Thai_CurText = Thai_CurText + "เธชเธ•เธฒเธ�เธ�เน�";
+        	Thai_CurText = Thai_CurText + "สตางค์";
         }
         return Thai_CurText;
     }
@@ -294,23 +294,23 @@ public class EnjoyUtils {
         try {
         	if (!dateThai.equals(""))
 			{	
-	            tblMonth.put("1", "เธกเธ�เธฃเธฒเธ�เธก");
-	            tblMonth.put("2", "เธ�เธธเธกเธ เธฒเธ�เธฑเธ�เธ�เน�");
-	            tblMonth.put("3", "เธกเธตเธ�เธฒเธ�เธก");
-	            tblMonth.put("4", "เน€เธกเธฉเธฒเธขเธ�");
-	            tblMonth.put("5", "เธ�เธคเธฉเธ เธฒเธ�เธก");
-	            tblMonth.put("6", "เธกเธดเธ–เธธเธ�เธฒเธขเธ�");
-	            tblMonth.put("7", "เธ�เธฃเธ�เธ�เธฒเธ�เธก");
-	            tblMonth.put("8", "เธชเธดเธ�เธซเธฒเธ�เธก");
-	            tblMonth.put("9", "เธ�เธฑเธ�เธขเธฒเธขเธ�");
-	            tblMonth.put("10","เธ•เธธเธฅเธฒเธ�เธก");
-	            tblMonth.put("11","เธ�เธคเธจเธ�เธดเธ�เธฒเธขเธ�");
-	            tblMonth.put("12","เธ�เธฑเธ�เธงเธฒเธ�เธก");
+	            tblMonth.put("1", "มกราคม");
+	            tblMonth.put("2", "กุมภาพันธ์");
+	            tblMonth.put("3", "มีนาคม");
+	            tblMonth.put("4", "เมษายน");
+	            tblMonth.put("5", "พฤษภาคม");
+	            tblMonth.put("6", "มิถุนายน");
+	            tblMonth.put("7", "กรกฏาคม");
+	            tblMonth.put("8", "สิงหาคม");
+	            tblMonth.put("9", "กันยายน");
+	            tblMonth.put("10","ตุลาคม");
+	            tblMonth.put("11","พฤศจิกายน");
+	            tblMonth.put("12","ธันวาคม");
 	
 	            day    = dateThai.substring(6, 8);
 				month  = Integer.parseInt(dateThai.substring(4, 6));
 		        year   = Integer.parseInt(dateThai.substring(0, 4));
-		        dateDisplay = day + " " + tblMonth.get(String.valueOf(month)).toString() +" เธ�.เธจ. " + year;
+		        dateDisplay = day + " " + tblMonth.get(String.valueOf(month)).toString() +" พ.ศ. " + year;
 			} else {
 				dateDisplay = "";			
 			}
@@ -354,7 +354,19 @@ public class EnjoyUtils {
         return lv_ret;
 	}
 	
-	public static Double parseDouble(String av_val) {
+	public static int paresInt(String av_val) {
+		
+		int lv_ret = 0;
+		
+        try {
+        	if (av_val!=null&&!av_val.equals("")) lv_ret = Integer.parseInt(av_val);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        } 
+        return lv_ret;
+	}
+	
+	public static Double pareseDouble(String av_val) {
 		
 		Double lv_ret = 0.00;
 		
@@ -369,4 +381,3 @@ public class EnjoyUtils {
 	}
 	
 }
-
