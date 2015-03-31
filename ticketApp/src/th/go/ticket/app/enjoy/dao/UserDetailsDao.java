@@ -76,6 +76,7 @@ logger.info("pass ==> " + passWord);
 		    sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
 			hql				= "from Userdetail where userId = '" + userId + "'";
+//			hql				= "from Userdetail where userId = '" + userId + "' and userPassword = '" + passWord + "'";
 			userdetailList 	= session.createQuery(hql).list();
 			maxRecord       = userdetailList.size();
 			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
