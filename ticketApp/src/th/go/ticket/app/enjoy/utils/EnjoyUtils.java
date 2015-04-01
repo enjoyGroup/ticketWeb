@@ -366,7 +366,7 @@ public class EnjoyUtils {
         return lv_ret;
 	}
 	
-	public static Double pareseDouble(String av_val) {
+	public static Double parseDouble(String av_val) {
 		
 		Double lv_ret = 0.00;
 		
