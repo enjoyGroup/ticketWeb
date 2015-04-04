@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Random;
 
 public class EnjoyUtils {
 	
@@ -13,6 +14,7 @@ public class EnjoyUtils {
         
 //		currDateThai();
 //		System.out.println(dateToStringThai(date));
+//		genPassword();
 
 	}
 	
@@ -378,6 +380,21 @@ public class EnjoyUtils {
         	e.printStackTrace();
         } 
         return lv_ret;
+	}
+	
+	public static String genPassword(int charLength){
+		Random r 			= new Random();
+		String newPass		= "";
+		String alphabet 	= "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+		// Prints 50 random characters from alphabet
+		for (int i = 0; i < charLength; i++){
+			newPass = newPass.concat(String.valueOf(alphabet.charAt(r.nextInt(alphabet.length()))));
+			
+		}
+		
+		return newPass;
+		
 	}
 	
 }

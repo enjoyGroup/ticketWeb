@@ -6,15 +6,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.CacheMode;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 
 import th.go.ticket.app.enjoy.bean.RefuserstatusBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
+import th.go.ticket.app.enjoy.form.UserDetailsMaintananceForm;
 import th.go.ticket.app.enjoy.model.Refuserstatus;
 import th.go.ticket.app.enjoy.model.Userdetail;
 import th.go.ticket.app.enjoy.model.Userprivilege;
@@ -187,20 +190,106 @@ logger.info("pass ==> " + passWord);
 	}
 	
 	/*ดึงรายละเอียดของผู้ใช้*/
-	public Userdetail getUserdetail(Session session, int userUniqueId) throws EnjoyException{
+//	public Userdetail getUserdetailTest(int userUniqueId) throws EnjoyException{
+//		logger.info("[getUserdetail][Begin]");
+//		
+//		List<Userdetail> 	refuserstatusList		= null;
+//		String				hql						= null;
+//		Userdetail			userdetail				= null;
+//		SessionFactory 		sessionFactory		= null;
+//		Session 			session				= null;
+//		
+//		try{
+//			sessionFactory 				= HibernateUtil.getSessionFactory();
+//			session 					= sessionFactory.openSession();
+//			hql							= "from Userdetail where userUniqueId = " + userUniqueId;
+//			session.setCacheMode(CacheMode.IGNORE);
+//			refuserstatusList 	= session.createQuery(hql).list();
+//			
+//			for(Userdetail userDetail:refuserstatusList){
+//				logger.info("[getUserdetail] userId 			:: " + userDetail.getUserId());
+//				logger.info("[getUserdetail] userUniqueId 		:: " + userDetail.getUserUniqueId());
+//			}
+//		}catch(Exception e){
+//			logger.info("[getUserdetail] " + e.getMessage());
+//			throw new EnjoyException("เกิดข้อผิดพลาดในการดึงรายละเอียดผู้ใช้");
+//		}finally{
+//			session.flush();
+//			session.clear();
+//			session.close();
+//			
+//			hql						= null;
+//			logger.info("[getUserdetail][End]");
+//		}
+//		
+//		return userdetail;
+//		
+//	}
+	
+	/*ดึงรายละเอียดของผู้ใช้*/
+	public UserDetailsBean getUserdetail(Session session, int userUniqueId) throws EnjoyException{
 		logger.info("[getUserdetail][Begin]");
 		
-		List<Userdetail> 	refuserstatusList		= null;
 		String				hql						= null;
 		Userdetail			userdetail				= null;
+		SQLQuery 			query 					= null;
+		List<Object[]>		list					= null;
+		UserDetailsBean		userDetailsBean			= null;
+		Object[] 			row 					= null;
 		
 		try{
 			
-			hql					= "from Userprivilege userUniqueId = " + userUniqueId;
-			refuserstatusList 	= session.createQuery(hql).list();
+			hql					= "select userUniqueId"
+										+ ", userId"
+										+ ", userName"
+										+ ", userSurname"
+										+ ", userEmail"
+										+ ", userPrivilege"
+										+ ", userLevel"
+										+ ", userStatus"
+										+ ", flagChangePassword"
+								+ "	from userdetails where userUniqueId = " + userUniqueId;
+			query			= session.createSQLQuery(hql);
 			
-			if(refuserstatusList!=null && refuserstatusList.size() > 0){
-				userdetail = refuserstatusList.get(0);
+			query.addScalar("userUniqueId"			, new IntegerType());
+			query.addScalar("userId"				, new StringType());
+			query.addScalar("userName"				, new StringType());
+			query.addScalar("userSurname"			, new StringType());
+			query.addScalar("userEmail"				, new StringType());
+			query.addScalar("userPrivilege"			, new StringType());
+			query.addScalar("userLevel"				, new StringType());
+			query.addScalar("userStatus"			, new StringType());
+			query.addScalar("flagChangePassword"	, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[getUserdetail] list :: " + list);
+			
+			if(list!=null && list.size() > 0){
+				logger.info("[getUserdetail] list.size() :: " + list.size());
+				
+				row 				= list.get(0);
+				userDetailsBean 	= new UserDetailsBean();
+				
+				logger.info("[getUserdetail] userUniqueId 		:: " + row[0]);
+				logger.info("[getUserdetail] userId 			:: " + row[1]);
+				logger.info("[getUserdetail] userName 			:: " + row[2]);
+				logger.info("[getUserdetail] userSurname 		:: " + row[3]);
+				logger.info("[getUserdetail] userEmail 			:: " + row[4]);
+				logger.info("[getUserdetail] userPrivilege 		:: " + row[5]);
+				logger.info("[getUserdetail] userLevel 			:: " + row[6]);
+				logger.info("[getUserdetail] userStatus 		:: " + row[7]);
+				logger.info("[getUserdetail] flagChangePassword :: " + row[8]);
+				
+				userDetailsBean.setUserUniqueId			(Integer.parseInt(row[0].toString()));
+				userDetailsBean.setUserId				(row[1].toString());
+				userDetailsBean.setUserName				(row[2].toString());
+				userDetailsBean.setUserSurname			(row[3].toString());
+				userDetailsBean.setUserEmail			(row[4].toString());
+				userDetailsBean.setUserPrivilege		(row[5].toString());
+				userDetailsBean.setUserLevel			(row[6].toString());
+				userDetailsBean.setUserStatus			(row[7].toString());
+				userDetailsBean.setFlagChangePassword	(row[8].toString());
 			}
 			
 		}catch(Exception e){
@@ -211,11 +300,11 @@ logger.info("pass ==> " + passWord);
 			logger.info("[getUserdetail][End]");
 		}
 		
-		return userdetail;
+		return userDetailsBean;
 		
 	}
 	
-	public int checkDupUserId(Session session, String userId) throws EnjoyException{
+	public int checkDupUserId(Session session, String userId, String pageMode, int userUniqueId) throws EnjoyException{
 		logger.info("[checkDupUserId][Begin]");
 		
 		List<String> 					returnList 							= null;
@@ -229,6 +318,14 @@ logger.info("pass ==> " + passWord);
 			returnList		= new ArrayList<String>();
 			
 			hql				= "Select count(*) cou from userdetails where userId = '" + userId + "'";
+			
+			logger.info("[checkDupUserId] pageMode :: " + pageMode);
+			
+			if(pageMode.equals(UserDetailsMaintananceForm.EDIT)){
+				hql = hql + " and userUniqueId <> " + userUniqueId;
+			}
+			
+			
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("cou"			, new IntegerType());
@@ -280,6 +377,7 @@ logger.info("pass ==> " + passWord);
 			session.saveOrUpdate(userdetailDb);
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.info(e.getMessage());
 			throw new EnjoyException("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
 		}finally{
@@ -321,9 +419,8 @@ logger.info("pass ==> " + passWord);
 			
 			result = query.executeUpdate();
 			
-			
-			
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.info(e.getMessage());
 			throw new EnjoyException("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
 		}finally{
@@ -363,6 +460,7 @@ logger.info("pass ==> " + passWord);
 			
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			logger.info(e.getMessage());
 			throw new EnjoyException(e.getMessage());
 		}finally{

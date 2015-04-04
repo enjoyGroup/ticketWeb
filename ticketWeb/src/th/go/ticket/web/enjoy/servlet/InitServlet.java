@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import th.go.ticket.app.enjoy.main.ConfigFile;
 import th.go.ticket.app.enjoy.main.Constants;
+import th.go.ticket.app.enjoy.main.MailConFigFile;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 
 /**
@@ -41,6 +42,7 @@ public class InitServlet extends javax.servlet.http.HttpServlet implements javax
 			System.out.println("[InitServlet][init] :: 1");
 			realPath  = getServletContext().getRealPath("");  
 			ConfigFile.init(realPath + getServletContext().getInitParameter(Constants.CONFIG_FILE));
+			MailConFigFile.init(realPath + getServletContext().getInitParameter(Constants.MAIL_CONFIG_FILE));
 			System.out.println("[InitServlet][init] :: 2");
 			EnjoyLogger.initial(false);
 			System.out.println("[InitServlet][init] :: 3");

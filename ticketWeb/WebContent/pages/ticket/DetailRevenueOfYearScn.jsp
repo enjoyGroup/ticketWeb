@@ -56,6 +56,8 @@
 		
 		
 		$(document).ready(function(){
+			gp_progressBarOn();
+			
 			gv_service 	= "service=" + $('#service').val();
 			gv_dataFlow	= '<%=detailRevenueOfYearForm.getDataFlow()%>';
 			
@@ -63,6 +65,8 @@
 			
 			//alert(gv_dataFlow);
 			drawChart();
+			
+			gp_progressBarOff();
 		});
 		
 		function drawChart() {
@@ -273,76 +277,112 @@
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
-		<div align="center" style="width:100%;position:relative;">
-			<div style="height:100%; width:200px; position:absolute;margin:30px 0 0 0;">
-				<B>ฤดูกาลแข่งขัน</B><br/>
-				<table id="seasonTab" border="0" style="width:200px;">
-					<%
-					List<String>  list			=   detailRevenueOfYearForm.getSeasonList();
-					 
-					if(list.size()>0){
-						for(int i=0;i<list.size();i++){
-						
-						%>
-						 <tr>
-						 
-						 	<%if(list.get(i).equals(detailRevenueOfYearForm.getSeason())){%>
-						 		<td class="unLink" align="center" title="<%=list.get(i)%>" >
-									<%=list.get(i)%>
-								</td>	
-						 	<%}else{%>
-						 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-									<%=list.get(i)%>
-								</td>
-						 	<%}%>
-						</tr> 
-						<% } 
-					} %>
-				</table>
-			</div>
-			<div style="position:absolute;height:100%;margin:20px 0 0 200px; padding:8px;width: 60%;">
-				<div align="left">
-					<div id="seasonTitle" style="font-weight: bold;">
-						ปี : <%=detailRevenueOfYearForm.getSeason() %>
-					</div><br/><br/>
-					<table id="resultTab" border="1" style="border: 2; width:100%">
-						<tr id="headRow" class="headerRow">
-							<td width="10%" style="text-align: center;"><B>ลำดับ</B></td>
-							<td width="30%" style="text-align: center;"><B>Match การแข่งขัน</B></td>
-							<td width="30%" style="text-align: center;"><B>จำนวนคนเข้าดู</B></td>
-							<td width="30%" style="text-align: center;"><B>จำนวนเงิน</B></td>
-						</tr>
-						<%
-						List<DetailRevenueOfYearBean>  	detailList			= detailRevenueOfYearForm.getDetailList();
-						DetailRevenueOfYearBean			detail				= null;
-						int								seq					= 0;
-						 
-						if(detailList.size()>0){
-							for(int i=0;i<detailList.size();i++){
-								detail = detailList.get(i);
-								seq++;
-							%>
-							 <tr>
-								<td align="center">
-									<B><%=seq%></B>
-								</td>
-								<td align="center">
-									<%=detail.getAwayTeamNameTH()%>
-								</td>
-								<td align="center">
-									<%=detail.getTotalSeating()%>
-								</td>
-								<td align="right">
-									<%=detail.getBookingPrices()%>
-								</td>
-							</tr> 
-							<% } 
-						} %>
-					</table>
-				</div>
-				<div id="piechart" style="width: 900px; height: 500px;"></div>
-			</div>
-		</div>
+		<section class="vbox">
+			<section>
+				<section class="hbox stretch">
+					<section id="content">
+						<section class="vbox">
+							<section class="scrollable padder">
+								<div class="alert alert-block alert-error fade in">
+					            	<h4 class="alert-heading">รายงานแสดงรายละเอียดรายได้ประจำปี</h4>
+					          	</div>
+					          	<div class="row">
+									<div class="col-sm-12">
+										<section class="panel panel-default">
+											<div class="panel-body" align="left">
+												<!-- Begin contents -->
+												<table border="0" width="100%">
+													<tr>
+														<td align="left" valign="top">
+															<div style="width:200px;" align="left">
+																<span class='topic-head'><B>ฤดูกาลแข่งขัน</B></span><br/>
+																<table class="table sim-panel-result-table" id="seasonTab" border="0" style="width:200px;" align="left">
+																	<%
+																	List<String>  list			=   detailRevenueOfYearForm.getSeasonList();
+																	 
+																	if(list.size()>0){
+																		for(int i=0;i<list.size();i++){
+																		
+																		%>
+																		 <tr>
+																		 
+																		 	<%if(list.get(i).equals(detailRevenueOfYearForm.getSeason())){%>
+																		 		<td class="unLink" align="center" title="<%=list.get(i)%>" >
+																					<%=list.get(i)%>
+																				</td>	
+																		 	<%}else{%>
+																		 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
+																					<%=list.get(i)%>
+																				</td>
+																		 	<%}%>
+																		</tr> 
+																		<% } 
+																	} %>
+																</table>
+															</div>
+														</td>
+														<td align="left" valign="top">
+															<div align="left">
+																<div id="seasonTitle" style="font-weight: bold;" class='topic-head'>
+																	ปี : <%=detailRevenueOfYearForm.getSeason() %>
+																</div>
+																<table class="table sim-panel-result-table" id="resultTab" border="1" style="border: 2; width:100%">
+																	<tr id="headRow">
+																		<th width="10%" style="text-align: center;"><B>ลำดับ</B></th>
+																		<th width="30%" style="text-align: center;"><B>Match การแข่งขัน</B></th>
+																		<th width="30%" style="text-align: center;"><B>จำนวนคนเข้าดู</B></th>
+																		<th width="30%" style="text-align: center;"><B>จำนวนเงิน</B></th>
+																	</tr>
+																	<%
+																	List<DetailRevenueOfYearBean>  	detailList			= detailRevenueOfYearForm.getDetailList();
+																	DetailRevenueOfYearBean			detail				= null;
+																	int								seq					= 0;
+																	 
+																	if(detailList.size()>0){
+																		for(int i=0;i<detailList.size();i++){
+																			detail = detailList.get(i);
+																			seq++;
+																		%>
+																		 <tr>
+																			<td align="center">
+																				<B><%=seq%></B>
+																			</td>
+																			<td align="center">
+																				<%=detail.getAwayTeamNameTH()%>
+																			</td>
+																			<td align="center">
+																				<%=detail.getTotalSeating()%>
+																			</td>
+																			<td align="right">
+																				<%=detail.getBookingPrices()%>
+																			</td>
+																		</tr> 
+																		<% } 
+																	} %>
+																</table>
+															</div>
+															<div id="piechart" style="width: 900px; height: 500px;"></div>
+														</td>
+													</tr>
+												</table>
+												<!-- End contents -->
+											</div>
+										</section>
+									</div>
+								</div>
+							</section>
+						</section>
+					</section>
+					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+				</section>
+			</section>
+		</section>
+		<div align="center" class="FreezeScreen" style="display:none;">
+	        <center>
+	        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+	        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+	        </center>
+	    </div>
 	</form>
 </body>
 </html>

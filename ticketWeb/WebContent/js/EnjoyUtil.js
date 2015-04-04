@@ -205,19 +205,13 @@ function gp_checkAmtOnly(ao_obj){
 }
 
 function gp_progressBarOn(){
-    scroll(0,0);
-    var outerPane = document.getElementById('FreezePane');
-    var processBar = document.getElementById('processBar');
-    if (outerPane) outerPane.className = 'FreezePaneOn';
-    if(processBar) processBar.className = 'processBarOn';
+    
+    $(".FreezeScreen").fadeIn();
 }
 
 function gp_progressBarOff(){
-    scroll(0,0);
-    var outerPane = document.getElementById('FreezePane');
-    var processBar = document.getElementById('processBar');
-    if (outerPane) outerPane.className = 'FreezePaneOff';
-    if(processBar) processBar.className = 'processBarOff';
+	
+	$(".FreezeScreen").fadeOut("slow");
 }
 
 function gp_checkDate(ao_obj){

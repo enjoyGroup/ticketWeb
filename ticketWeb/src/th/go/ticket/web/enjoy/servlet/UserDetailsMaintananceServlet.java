@@ -17,8 +17,10 @@ import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.UserDetailsMaintananceForm;
 import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.model.Userdetail;
+import th.go.ticket.app.enjoy.utils.EnjoyEncryptDecrypt;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
+import th.go.ticket.app.enjoy.utils.SendMail;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
 import th.go.ticket.web.enjoy.utils.EnjoyUtil;
 
@@ -61,13 +63,13 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
  			
              logger.info("[execute] pageAction : " + pageAction );
              
- 			if(this.form == null || pageAction.equals("new")) this.form = new UserDetailsMaintananceForm();
+ 			if(this.form == null || pageAction.equals("new") || pageAction.equals("getUserDetail")) this.form = new UserDetailsMaintananceForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
  				this.onLoad();
  				request.setAttribute("target", Constants.PAGE_URL +"/UserDetailsMaintananceScn.jsp");
  			}else if(pageAction.equals("getUserDetail")){
- 				this.onGetUserDetail();
+ 				this.onGetUserDetail(0);
  				request.setAttribute("target", Constants.PAGE_URL +"/UserDetailsMaintananceScn.jsp");
  			}else if(pageAction.equals("checkDupUserId")){
  				this.checkDupUserId();
@@ -137,41 +139,53 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 		}
 	}
 	
-	private void onGetUserDetail() throws EnjoyException{
+	private void onGetUserDetail(int userUniqueId) throws EnjoyException{
 		logger.info("[onGetUserDetail][Begin]");
 		
-		int 				userUniqueId 	= 0;
-		Userdetail 			userdetailDb	= null;
+//		int 				userUniqueId 	= 0;
+//		Userdetail 			userdetailDb	= null;
+		UserDetailsBean 	userdetailDb	= null;
 		SessionFactory 		sessionFactory	= null;
 		Session 			session			= null;
-		UserDetailsBean		userDetailsBean	= null;
+//		UserDetailsBean		userDetailsBean	= null;
 		
 		try{
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();
-			userUniqueId 				= EnjoyUtil.nullToStr(request.getParameter("userUniqueId")).equals("")?0:Integer.parseInt(request.getParameter("userUniqueId"));
+			
+			session.beginTransaction();
+			
+			if(userUniqueId==0){
+				userUniqueId 				= EnjoyUtil.nullToStr(request.getParameter("userUniqueId")).equals("")?0:Integer.parseInt(request.getParameter("userUniqueId"));
+			}
+			
+			logger.info("[onGetUserDetail] userUniqueId :: " + userUniqueId);
+			
 			userdetailDb				= this.dao.getUserdetail(session, userUniqueId);
-			userDetailsBean				= this.form.getUserDetailsBean();
+//			userDetailsBean				= this.form.getUserDetailsBean();
 			
 			this.form.setTitlePage("แก้ไขผู้ใช้งานระบบ");
 			this.form.setPageMode(UserDetailsMaintananceForm.EDIT);
 			
+			logger.info("[onGetUserDetail] userdetailDb :: " + userdetailDb);
+			
 			if(userdetailDb!=null){
-				userDetailsBean.setUserUniqueId			(userdetailDb.getUserUniqueId());
-				userDetailsBean.setUserId				(userdetailDb.getUserId());
-				userDetailsBean.setUserName				(userdetailDb.getUserName());
-				userDetailsBean.setUserSurname			(userdetailDb.getUserSurname());
-				userDetailsBean.setUserPrivilege		(userdetailDb.getUserPrivilege());
-				userDetailsBean.setUserLevel			(userdetailDb.getUserLevel());
-				userDetailsBean.setUserStatus			(userdetailDb.getUserStatus());
-				userDetailsBean.setFlagChangePassword	(userdetailDb.getFlagChangePassword());
-				userDetailsBean.setUserEmail			(userdetailDb.getUserEmail());
+				
+				this.form.setUserDetailsBean(userdetailDb);
+				
+//				userDetailsBean.setUserUniqueId			(userdetailDb.getUserUniqueId());
+//				userDetailsBean.setUserId				(userdetailDb.getUserId());
+//				userDetailsBean.setUserName				(userdetailDb.getUserName());
+//				userDetailsBean.setUserSurname			(userdetailDb.getUserSurname());
+//				userDetailsBean.setUserPrivilege		(userdetailDb.getUserPrivilege());
+//				userDetailsBean.setUserLevel			(userdetailDb.getUserLevel());
+//				userDetailsBean.setUserStatus			(userdetailDb.getUserStatus());
+//				userDetailsBean.setFlagChangePassword	(userdetailDb.getFlagChangePassword());
+//				userDetailsBean.setUserEmail			(userdetailDb.getUserEmail());
 				
 			}else{
 				throw new EnjoyException("เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้งาน");
 			}
-			
-			this.setRefference();
 			
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
@@ -180,6 +194,9 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			throw new EnjoyException("onGetUserDetail is error");
 		}finally{
 			session.close();
+			
+			this.setRefference();
+			
 			sessionFactory	= null;
 			session			= null;
 			logger.info("[onGetUserDetail][End]");
@@ -195,12 +212,22 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 		SessionFactory 		sessionFactory	= null;
 		Session 			session			= null;
 		JSONObject 			obj 			= null;
+		String				pageMode		= null;
+		int					userUniqueId	= 0;
 		
 		try{
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();
 			userId 						= EnjoyUtil.nullToStr(request.getParameter("userId"));
-			cou							= this.dao.checkDupUserId(session, userId);
+			pageMode 					= EnjoyUtil.nullToStr(request.getParameter("pageMode"));
+			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
+			
+			logger.info("[checkDupUserId] userId 		:: " + userId);
+			logger.info("[checkDupUserId] pageMode 		:: " + pageMode);
+			logger.info("[checkDupUserId] userUniqueId 	:: " + userUniqueId);
+			
+			
+			cou							= this.dao.checkDupUserId(session, userId, pageMode, userUniqueId);
 			obj 						= new JSONObject();
 			
 			obj.put(STATUS, 		SUCCESS);
@@ -240,10 +267,15 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 		String				userStatus			= null;
 		String				flagChangePassword 	= null;
 		String				userPrivilege		= null;
+		String				pwd					= null;
+		String				pwdEncypt			= null;
+		String				userLevel			= null;
 		SessionFactory 		sessionFactory		= null;
 		Session 			session				= null;
 		JSONObject 			obj 				= null;
 		UserDetailsBean 	userDetailsBean		= null;
+		SendMail			sendMail			= null;
+		String				fullName			= null;
 		
 		try{
 			pageMode 					= EnjoyUtil.nullToStr(request.getParameter("pageMode"));
@@ -255,10 +287,14 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			flagChangePassword 			= EnjoyUtil.chkBoxtoDb(request.getParameter("flagChangePassword"));
 			userPrivilege 				= EnjoyUtil.nullToStr(request.getParameter("hidUserPrivilege"));
 			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
+			pwd							= EnjoyUtil.genPassword(8);
+			pwdEncypt					= EnjoyEncryptDecrypt.enCryption(userId, pwd);
+			userLevel					= userPrivilege.indexOf("R01") > -1?"9":"1";
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();
 			obj 						= new JSONObject();
 			userDetailsBean				= new UserDetailsBean();
+			sendMail					= new SendMail();
 			
 			logger.info("[onSave] pageMode 				:: " + pageMode);
 			logger.info("[onSave] userName 				:: " + userName);
@@ -269,6 +305,9 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			logger.info("[onSave] flagChangePassword 	:: " + flagChangePassword);
 			logger.info("[onSave] userPrivilege 		:: " + userPrivilege);
 			logger.info("[onSave] userUniqueId 			:: " + userUniqueId);
+			logger.info("[onSave] pwd 					:: " + pwd);
+			logger.info("[onSave] pwdEncypt 			:: " + pwdEncypt);
+			logger.info("[onSave] userLevel 			:: " + userLevel);
 			
 			userDetailsBean.setUserName(userName);
 			userDetailsBean.setUserSurname(userSurname);
@@ -278,38 +317,56 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			userDetailsBean.setFlagChangePassword(flagChangePassword);
 			userDetailsBean.setUserPrivilege(userPrivilege);
 			userDetailsBean.setUserUniqueId(userUniqueId);
+			userDetailsBean.setPwd(pwdEncypt);
+			userDetailsBean.setUserLevel(userLevel);
 			
 			session.beginTransaction();
 			
 			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
 				this.dao.insertNewUser(session, userDetailsBean);
-				
-				userUniqueId = this.dao.lastId(session);
 			}else{
 				this.dao.updateUserDetail(session, userDetailsBean);
 			}
 			
-			obj.put(STATUS, 			SUCCESS);
-			obj.put("userUniqueId", 	userUniqueId);
+			fullName = userName + " " + userSurname;
+			
+			sendMail.sendMail(fullName, userId, pwd, userEmail);
 			
 			session.getTransaction().commit();
 			session.flush();
+			session.clear();
+			session.close();
+			
+			logger.info("[onSave] After Save userUniqueId 			:: " + userUniqueId);
+			
+			obj.put(STATUS, 			SUCCESS);
+			obj.put("userUniqueId", 	userUniqueId);
 			
 		}catch(EnjoyException e){
 			session.getTransaction().rollback();
 			obj.put(STATUS, 		ERROR);
 			obj.put(ERR_MSG, 		e.getMessage());
 		}catch(Exception e){
+			session.getTransaction().rollback();
 			logger.info(e.getMessage());
-			
+			e.printStackTrace();
 			obj.put(STATUS, 		ERROR);
 			obj.put(ERR_MSG, 		"onSave is error");
 		}finally{
-			session.close();
+			
+			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
+				session = sessionFactory.openSession();
+				userUniqueId = this.dao.lastId(session);
+				session.flush();
+				session.clear();
+				session.close();
+			}
+			
+			this.onGetUserDetail(userUniqueId);
+			this.enjoyUtil.writeMSG(obj.toString());
+			
 			sessionFactory	= null;
 			session			= null;
-			
-			this.enjoyUtil.writeMSG(obj.toString());
 			
 			logger.info("[onSave][End]");
 		}

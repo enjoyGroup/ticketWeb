@@ -24,6 +24,7 @@
 		var gv_url 			= '<%=servURL%>/EnjoyGenericSrv';
 		
 		$(document).ready(function(){
+			gp_progressBarOn();
 			
 			$('#menu1').ptMenu();
 			
@@ -31,6 +32,8 @@
 			
 			$("#tbl_result").tablesorter(); 
 			$( "#tbl_result th" ).resizable();
+			
+			gp_progressBarOff();
 		});
 		
 		function drawChart() {
@@ -79,50 +82,79 @@
 <body>
 	<form id="frm" action="<%=servURL%>/EnjoyGenericSrv">
 		<input type="hidden" id="service" 	name="service" value="servlet.DetailRevenueOfYearServlet" />
-		
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
-		<div align="center" style="width:100%;position: absolute;height: 100%;">
-			<div style="position: relative;margin-top: 30px;" align="center">
-				<table id="tbl_result" border="1" style="border: 2; width:60%">
-					<thead> 
-						<tr class="headerRow" bgcolor="#473636" style="color: white;">
-							<th width="30%" style="text-align: center;"><B>ลำดับ</B></th>
-							<th width="30%" style="text-align: center;"><B>ปีการแข่งขัน</B></th>
-							<th width="40%" style="text-align: center;"><B>จำนวนเงิน</B></th>
-						</tr>
-					</thead>
-					<tbody>
-						<%
-						List<SummaryRevenueOfYearBean>  list			=   summaryRevenueOfYearForm.getResultList();
-						SummaryRevenueOfYearBean 		bean			=   null;
-						int 							rowNumber		=   0;
-						 
-						if(list.size()>0){
-							for(int i=0;i<list.size();i++){
-								bean = list.get(i);
-								rowNumber = i+1; 
-							
-							%>
-							 <tr>
-								<td align="center">
-									<B><%=rowNumber%></B>
-								</td>
-								<td align="center" >
-									<B><%=bean.getSeason()%></B>
-								</td>
-								<td align="center">
-									<B><%=bean.getBookingPrice()%></B>
-								</td>
-							</tr> 
-							<% } 
-						} %>
-					</tbody>
-				</table>
-			</div>
-			<div id="columnchart_values" style="width: 900px; height: 300px;"></div>
-		</div>
+		<section class="vbox">
+			<section>
+				<section class="hbox stretch">
+					<section id="content">
+						<section class="vbox">
+							<section class="scrollable padder">
+								<div class="alert alert-block alert-error fade in">
+					            	<h4 class="alert-heading">รายงานสรุปรายได้ประจำปี</h4>
+					          	</div>
+					          	<div class="row">
+									<div class="col-sm-12">
+										<section class="panel panel-default">
+											<div class="panel-body" align="center">
+												<!-- Begin contents -->
+												<div style="margin-top: 30px;" align="center">
+														<table class="table sim-panel-result-table" id="tbl_result" border="1" style="border: 2; width:60%">
+															<thead> 
+																<tr class="headerRow">
+																	<th width="30%" style="text-align: center;"><B>ลำดับ</B></th>
+																	<th width="30%" style="text-align: center;"><B>ปีการแข่งขัน</B></th>
+																	<th width="40%" style="text-align: center;"><B>จำนวนเงิน</B></th>
+																</tr>
+															</thead>
+															<tbody>
+																<%
+																List<SummaryRevenueOfYearBean>  list			=   summaryRevenueOfYearForm.getResultList();
+																SummaryRevenueOfYearBean 		bean			=   null;
+																int 							rowNumber		=   0;
+																 
+																if(list.size()>0){
+																	for(int i=0;i<list.size();i++){
+																		bean = list.get(i);
+																		rowNumber = i+1; 
+																	
+																	%>
+																	 <tr>
+																		<td align="center">
+																			<B><%=rowNumber%></B>
+																		</td>
+																		<td align="center" >
+																			<B><%=bean.getSeason()%></B>
+																		</td>
+																		<td align="center">
+																			<B><%=bean.getBookingPrice()%></B>
+																		</td>
+																	</tr> 
+																	<% } 
+																} %>
+															</tbody>
+														</table>
+													</div>
+													<div id="columnchart_values"></div>
+												<!-- End contents -->
+											</div>
+										</section>
+									</div>
+								</div>
+							</section>
+						</section>
+					</section>
+					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+				</section>
+			</section>
+		</section>
 	</form>
+	<div align="center" class="FreezeScreen" style="display:none;">
+        <center>
+        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+        </center>
+    </div>
 </body>
 </html>

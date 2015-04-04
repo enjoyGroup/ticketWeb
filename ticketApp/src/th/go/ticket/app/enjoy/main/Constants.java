@@ -3,6 +3,7 @@ package th.go.ticket.app.enjoy.main;
 public class Constants {
 
 	public  static final String CONFIG_FILE         = "ConfigFile";
+	public  static final String MAIL_CONFIG_FILE    = "MailConFigFile";
 	
 	private static final String EJ_WEB_ROOT 		= "/ticketWeb";
 	private static final String ERR_PAGE			= "/enjoyErrorPage.jsp";

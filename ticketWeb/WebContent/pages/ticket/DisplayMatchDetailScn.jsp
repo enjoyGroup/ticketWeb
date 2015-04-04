@@ -102,91 +102,112 @@
 <body>
 	<form id="frm" action="<%=servURL%>/EnjoyGenericSrv">
 		<input type="hidden" id="service" 	name="service" value="servlet.DisplayMatchDetailServlet" />  
-		<div align="left">
-			<div id="seasonTitle" style="font-weight: bold;">
-				<%=displayMatchDetailForm.getAwayTeamName()%>
-			</div><br/><br/>
-			
-			<%
-			List<DisplayMatchDetailBean>	headerTicketTypeList = displayMatchDetailForm.getHeaderTicketTypeList();
-			
-			if(headerTicketTypeList!=null && headerTicketTypeList.size() > 0){
-			%>
-			
-			<table id="resultTab" border="1" style="border: 2; width:100%">
-				<tr class="headerRow">
-					<td style="text-align: center;"><B>ลำดับ</B></td>
-					<td style="text-align: center;" rowspan="2"><B>Zone<br/>ที่นั่ง</B></td>
-					
-					<%
-									
-						for(DisplayMatchDetailBean bean:headerTicketTypeList){
-					%>
-					<td style="text-align: center;" colspan="2"><B><%=bean.getBookingTypeName()%></B></td>
-					<%
-						}
-					%>
-					<td style="text-align: center;"><B>รวมเงิน</B></td>
-				</tr>
-				<tr class="headerRow">
-					<td style="text-align: center;"></td>
-					<%
-						for(DisplayMatchDetailBean bean:headerTicketTypeList){
-					%>
-					<td style="text-align: center;"><B>บัตร</B></td>
-					<td style="text-align: center;"><B>เงิน</B></td>
-					<%
-						}
-					%>
-					<td style="text-align: center;"></td>
-				</tr>
-				
-				<%
-					List<String>				fieldZoneNameList 	= displayMatchDetailForm.getFieldZoneNameList();
-					int							rowSeq				= 0;
-					Map							detailTicketMap		= null;
-					DisplayMatchDetailBean		detailData			= null;
-					Double						sumTatalMoney		= 0.00;
-				
-					for(String fieldZoneName:fieldZoneNameList){
-						sumTatalMoney = (Double) displayMatchDetailForm.getSumTatalMoneyMap().get(fieldZoneName);
-						rowSeq++;
-				%>
-				<tr>
-					<td align="center"><%=rowSeq%></td>
-					<td align="center"><%=fieldZoneName%></td>
-					
-					<%
-						for(DisplayMatchDetailBean bean:headerTicketTypeList){
-										
-							detailTicketMap = (Map) displayMatchDetailForm.getDetailOfMatchMap().get(fieldZoneName);
-							
-							if(detailTicketMap.containsKey(bean.getBookingTypeId())){
-								detailData = (DisplayMatchDetailBean) detailTicketMap.get(bean.getBookingTypeId());
-					%>
-								<td style="text-align: center;"><%=detailData.getTotalSeating() %></td>
-								<td style="text-align: center;"><%=detailData.getTatalMoney() %></td>
-					<%
-							}else{
-					%>
-								<td style="text-align: center;"></td>
-								<td style="text-align: center;"></td>
-					<%
-							}
-						}
-					
-					%>
-					<td style="text-align: center;"><%=sumTatalMoney %></td>
-				</tr>
-				<%}%>
-			</table>
-		</div>
-		<div id="piechart" style="width: 900px; height: 500px;"></div>
-		<%}else{ %>
-			<div style="width: 100%;">
-				<span>ไม่พบข้อมูล</span>
-			</div>
-		<%} %>
+		<section class="vbox">
+			<section>
+				<section class="hbox stretch">
+					<section id="content">
+						<section class="vbox">
+							<section class="scrollable padder">
+					          	<div class="row">
+									<div class="col-sm-12">
+										<section class="panel panel-default">
+											<div class="panel-body" align="left">
+												<!-- Begin contents -->
+												<div align="left">
+													<div id="seasonTitle" style="font-weight: bold;">
+														<%=displayMatchDetailForm.getAwayTeamName()%>
+													</div><br/><br/>
+													
+													<%
+													List<DisplayMatchDetailBean>	headerTicketTypeList = displayMatchDetailForm.getHeaderTicketTypeList();
+													
+													if(headerTicketTypeList!=null && headerTicketTypeList.size() > 0){
+													%>
+													
+													<table class="table sim-panel-result-table" id="resultTab" border="1" style="border: 2; width:100%">
+														<tr>
+															<th style="text-align: center;" rowspan="2" valign="middle"><B>ลำดับ</B></th>
+															<th style="text-align: center;" rowspan="2"><B>Zone<br/>ที่นั่ง</B></th>
+															
+															<%
+																			
+																for(DisplayMatchDetailBean bean:headerTicketTypeList){
+															%>
+															<th style="text-align: center;" colspan="2"><B><%=bean.getBookingTypeName()%></B></th>
+															<%
+																}
+															%>
+															<th style="text-align: center;" rowspan="2" valign="middle"><B>รวมเงิน</B></th>
+														</tr>
+														<tr>
+															<%
+																for(DisplayMatchDetailBean bean:headerTicketTypeList){
+															%>
+															<th style="text-align: center;"><B>บัตร</B></th>
+															<th style="text-align: center;"><B>เงิน</B></th>
+															<%
+																}
+															%>
+														</tr>
+														
+														<%
+															List<String>				fieldZoneNameList 	= displayMatchDetailForm.getFieldZoneNameList();
+															int							rowSeq				= 0;
+															Map							detailTicketMap		= null;
+															DisplayMatchDetailBean		detailData			= null;
+															Double						sumTatalMoney		= 0.00;
+														
+															for(String fieldZoneName:fieldZoneNameList){
+																sumTatalMoney = (Double) displayMatchDetailForm.getSumTatalMoneyMap().get(fieldZoneName);
+																rowSeq++;
+														%>
+														<tr>
+															<td align="center"><%=rowSeq%></td>
+															<td align="center"><%=fieldZoneName%></td>
+															
+															<%
+																for(DisplayMatchDetailBean bean:headerTicketTypeList){
+																				
+																	detailTicketMap = (Map) displayMatchDetailForm.getDetailOfMatchMap().get(fieldZoneName);
+																	
+																	if(detailTicketMap.containsKey(bean.getBookingTypeId())){
+																		detailData = (DisplayMatchDetailBean) detailTicketMap.get(bean.getBookingTypeId());
+															%>
+																		<td style="text-align: center;"><%=detailData.getTotalSeating() %></td>
+																		<td style="text-align: center;"><%=detailData.getTatalMoney() %></td>
+															<%
+																	}else{
+															%>
+																		<td style="text-align: center;"></td>
+																		<td style="text-align: center;"></td>
+															<%
+																	}
+																}
+															
+															%>
+															<td style="text-align: center;"><%=sumTatalMoney %></td>
+														</tr>
+														<%}%>
+													</table>
+												</div>
+												<div id="piechart" style="width: 900px; height: 500px;"></div>
+												<%}else{ %>
+													<div style="width: 100%;">
+														<span>ไม่พบข้อมูล</span>
+													</div>
+												<%} %>
+												<!-- End contents -->
+											</div>
+										</section>
+									</div>
+								</div>
+							</section>
+						</section>
+					</section>
+					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+				</section>
+			</section>
+		</section>
 	</form>
 </body>
 </html>

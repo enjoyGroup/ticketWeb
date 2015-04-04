@@ -7,8 +7,8 @@
     <param-value>/WEB-INF/conf/config.properties</param-value>
   </context-param>
   <context-param>
-    <param-name>Log4JFile</param-name>
-    <param-value>/WEB-INF/conf/log.properties</param-value>
+    <param-name>MailConFigFile</param-name>
+    <param-value>/WEB-INF/conf/mail.properties</param-value>
   </context-param>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

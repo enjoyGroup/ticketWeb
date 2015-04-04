@@ -19,9 +19,13 @@
 		
 		
 		$(document).ready(function(){
+			gp_progressBarOn();
+			
 			gv_service 		= "service=" + $('#service').val();
 			
 			$('#menu1').ptMenu();
+			
+			gp_progressBarOff();
 		});
 	
 	</script>
@@ -33,41 +37,82 @@
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
-		<div align="center" style="width:100%;position:relative;">
-			<div style="height:100%; width:200px; position:absolute;margin:30px 0 0 0;">
-				<B>ฤดูกาลแข่งขัน</B><br/>
-				<div id='cssmenu' style="min-height:auto;  background:#000000; ">
-	                <ul>
-	                <%
-	                	List<String> 					seasonList 		= displayMacthForm.getSeasonList();
-             	        List<DisplayMatchDetailBean> 	matchList		= null;
-             			
-             				
-           				for(String season :seasonList){
-           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
-	                %>
-	                   <li class='has-sub'><a href='#'><span><%=season%></span></a>
-	                      <ul>
-	                      	<%
-	                      		for(DisplayMatchDetailBean bean:matchList){
-	                      	%>
-							<li onclick="">
-								<a href="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=<%=bean.getMatchId()%>&season=<%=season%>&awayTeamName=<%=bean.getAwayTeamNameTH() %>" target="ttestt">
-									<%=bean.getAwayTeamNameTH() %>
-								</a>
-							</li>
-							<%}%>
-	 					</ul>
-	                   </li>
-	                <%}%>
-	                </ul>
-                </div>
-			</div>
-			<div style="position:absolute;height:100%;margin:20px 0 0 200px; padding:8px;width: 60%;">
-				<iframe name="ttestt" src="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=new" scrolling="no"  
-frameborder="0" width="1000" height="1000"></iframe>  
-			</div>
-		</div>
+		<section class="vbox">
+			<section>
+				<section class="hbox stretch">
+					<section id="content">
+						<section class="vbox">
+							<section class="scrollable padder">
+								<div class="alert alert-block alert-error fade in">
+					            	<h4 class="alert-heading">รายงานรายได้ตามประเภทตั๋ว</h4>
+					          	</div>
+					          	<div class="row">
+									<div class="col-sm-12">
+										<section class="panel panel-default">
+											<div class="panel-body" align="left">
+												<!-- Begin contents -->
+												<table border="0" width="100%">
+													<tr>
+														<td align="left" valign="top">
+															<div style="width:200px;" align="left">
+																<span class='topic-head'><B>ฤดูกาลแข่งขัน</B></span><br/>
+																<div id='cssmenu' style="min-height:auto;  background:#000000; ">
+													                <ul>
+													                <%
+													                	List<String> 					seasonList 		= displayMacthForm.getSeasonList();
+												             	        List<DisplayMatchDetailBean> 	matchList		= null;
+												             			
+												             				
+												           				for(String season :seasonList){
+												           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
+													                %>
+													                   <li class='has-sub'><a href='#'><span><%=season%></span></a>
+													                      <ul>
+													                      	<%
+													                      		for(DisplayMatchDetailBean bean:matchList){
+													                      	%>
+																			<li onclick="">
+																				<a href="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=<%=bean.getMatchId()%>&season=<%=season%>&awayTeamName=<%=bean.getAwayTeamNameTH() %>" target="ttestt">
+																					<%=bean.getAwayTeamNameTH() %>
+																				</a>
+																			</li>
+																			<%}%>
+													 					</ul>
+													                   </li>
+													                <%}%>
+													                </ul>
+												                </div>
+															</div>
+														</td>
+														<td align="left" valign="top">
+															<iframe name="ttestt" 
+																	src="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=new" 
+																	scrolling="no"  
+																	frameborder="0" 
+																	width="1000" 
+																	height="1000">
+															</iframe>
+														</td>
+													</tr>
+												</table>
+												<!-- End contents -->
+											</div>
+										</section>
+									</div>
+								</div>
+							</section>
+						</section>
+					</section>
+					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+				</section>
+			</section>
+		</section>
+		<div align="center" class="FreezeScreen" style="display:none;">
+	        <center>
+	        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+	        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+	        </center>
+	    </div>
 	</form>
 </body>
 </html>

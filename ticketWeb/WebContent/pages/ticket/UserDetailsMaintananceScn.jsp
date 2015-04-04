@@ -19,14 +19,15 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>เพิ่ม Match การแข่งขัน</title>
-	<%@ include file="/pages/include/enjoyInclude.jsp"%>	
+	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<script>
-	
 		var gv_service 			= null;
 		var gv_url 				= '<%=servURL%>/EnjoyGenericSrv';
 		var gv_checkDupUserId 	= false;
 		
 		$(document).ready(function(){
+			gp_progressBarOn();
+			
 			gv_service 		= "service=" + $('#service').val();
 			$('#menu1').ptMenu();
 			
@@ -34,6 +35,7 @@
 				lp_setModeEdit();
 			}
 			
+			/*
 			$('#btnSave').on('click',function(){
 				
 				var la_chkUserPrivilege = null;
@@ -64,42 +66,50 @@
 						return;
 					}
 					
-					if(confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
-						$.ajax({
-							async:false,
-				            type: "POST",
-				            url: gv_url,
-				            data: gv_service + "&pageAction=save&" + $('#frm').serialize(),
-				            beforeSend: "",
-				            success: function(data){
-				            	var jsonObj 			= null;
-				            	var status				= null;
-				            	
-				            	try{
-				            		jsonObj = JSON.parse(data);
-				            		status	= jsonObj.status;
-				            		
-				            		if(status=="SUCCESS"){
-				            			alert();
-				            			
-				            		}else{
-				            			errMsg 	= jsonObj.errMsg;
-				            			
-				            		}
-				            	}catch(e){
-				            		alert("in btnSave :: " + e);
-				            	}
-				            }
-				        });
-					}else{
+					if(!confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
 						$('#userEmail').focus();
+						return;
 					}
-					
-					
 				}catch(e){
 					alert("btnSave :: " + e);
 				}
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: "pageAction=save&" + $('#frm').serialize(),
+		            beforeSend: gp_progressBarOn(),
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var userUniqueId		= 0;
+		            	
+		            	try{
+		            		gp_progressBarOff();
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		
+		            		if(status=="SUCCESS"){
+		            			userUniqueId = jsonObj.userUniqueId;
+		            			
+		            			//alert("บันทึกเรียบร้อย " + userUniqueId);
+		            			//location.reload();
+		            			//window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
+		            		}else{
+		            			alert(jsonObj.errMsg);
+		            			
+		            		}
+		            	}catch(e){
+		            		alert("in btnSave :: " + e);
+		            	}
+		            }
+		        });
+				
 			});
+			*/
+			gp_progressBarOff();
 			
 		});
 		
@@ -150,19 +160,22 @@
 					return;
 				}
 				
-				params 	= gv_service + "&pageAction=checkDupUserId&userId=" + lv_userId;
+				$("#userId").val(lv_userId);
+				
+				params 	= "pageAction=checkDupUserId&" + $('#frm').serialize();
 				$.ajax({
 					async:false,
 		            type: "POST",
 		            url: gv_url,
 		            data: params,
-		            beforeSend: "",
+		            beforeSend: gp_progressBarOn(),
 		            success: function(data){
 		            	var jsonObj 			= null;
 		            	var status				= null;
 		            	var cou					= 0;
 		            	
 		            	try{
+		            		gp_progressBarOff();
 		            		jsonObj = JSON.parse(data);
 		            		status	= jsonObj.status;
 		            		
@@ -220,10 +233,83 @@
 					
 				}
 				
+				lp_checkDupUserId();
+				
 			}catch(e){
 				alert("lp_setModeEdit :: " + e);
 			}
 			
+		}
+		
+		function lp_save(){
+			var la_chkUserPrivilege = null;
+			var lv_userPrivilege	= "";
+			
+			try{
+				
+				la_chkUserPrivilege = document.getElementsByName("chkUserPrivilege");
+				
+				for(var i=0;i<la_chkUserPrivilege.length;i++){
+					
+					if(la_chkUserPrivilege[i].checked==true){
+						
+						if(lv_userPrivilege==""){
+							lv_userPrivilege = la_chkUserPrivilege[i].value;
+						}else{
+							lv_userPrivilege = lv_userPrivilege + "," + la_chkUserPrivilege[i].value;
+						}
+						
+					}
+					
+				}
+				
+				$("#hidUserPrivilege").val(lv_userPrivilege);
+				
+				
+				if(!lp_validate()){
+					return;
+				}
+				
+				if(!confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
+					$('#userEmail').focus();
+					return;
+				}
+			}catch(e){
+				alert("btnSave :: " + e);
+			}
+			
+			$.ajax({
+				async:false,
+	            type: "POST",
+	            url: gv_url,
+	            data: "pageAction=save&" + $('#frm').serialize(),
+	            beforeSend: gp_progressBarOn(),
+	            success: function(data){
+	            	var jsonObj 			= null;
+	            	var status				= null;
+	            	var userUniqueId		= 0;
+	            	
+	            	try{
+	            		gp_progressBarOff();
+	            		
+	            		jsonObj = JSON.parse(data);
+	            		status	= jsonObj.status;
+	            		
+	            		if(status=="SUCCESS"){
+	            			userUniqueId = jsonObj.userUniqueId;
+	            			
+	            			//alert("บันทึกเรียบร้อย " + userUniqueId);
+	            			//location.reload();
+	            			//window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
+	            		}else{
+	            			alert(jsonObj.errMsg);
+	            			
+	            		}
+	            	}catch(e){
+	            		alert("in btnSave :: " + e);
+	            	}
+	            }
+	        });
 		}
 		
 	</script>
@@ -292,7 +378,7 @@
 									        			<td align="left">
 									        				<select id="userStatus" name="userStatus">
 									        					<% for(RefuserstatusBean beanStatus:refuserstatusCombo){ %>
-									        					<option value="<%=beanStatus.getUserStatusCode()%>" <%if(userDetailsBean.getUserStatus().equals(beanStatus.getUserStatusCode())){ %>selected="selected"<%} %> ><%=beanStatus.getUserStatusName()%></option>
+									        					<option value="<%=beanStatus.getUserStatusCode()%>" <%if(userDetailsBean.getUserStatus().equals(beanStatus.getUserStatusCode())){ %> selected <%} %> ><%=beanStatus.getUserStatusName()%></option>
 									        					<%} %>
 									        				</select>
 									        			</td>
@@ -337,7 +423,7 @@
 									        		<tr>
 									        			<td align="center" colspan="4">
 									        				<br/><br/>
-									        				<input type="button" id="btnSave" class='btn btn-danger' value='บันทึก' />&nbsp;&nbsp;&nbsp;
+									        				<input type="button" id="btnSave" class='btn btn-danger' value='บันทึก' onclick="lp_save();" />&nbsp;&nbsp;&nbsp;
 									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มใหม่' />
 									        			</td>
 									        		</tr>
@@ -354,5 +440,11 @@
 			</section>
 		</section>
 	</form>
+	<div align="center" class="FreezeScreen" style="display:none;">
+        <center>
+        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+        </center>
+    </div>
 </body>
 </html>

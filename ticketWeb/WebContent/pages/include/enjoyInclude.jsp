@@ -36,11 +36,12 @@ final String themeURL 		= Constants.THEME_URL;
 <link href="<%=cssURL%>/bootstrap-responsive.css" rel="stylesheet" />
 <link href="<%=cssURL%>/bootstrap-responsive.min.css" rel="stylesheet" />
 <link href="<%=cssURL%>/menu-styles.css" rel="stylesheet" />
+<link href="<%=cssURL%>/Enjoy.css" rel="stylesheet" />
 
 <!-- End css -->
 
 <!-- Begin JS -->
-<script src="<%=jsURL%>/jquery.js"></script>
+<script src="<%=jsURL%>/jquery-1.7.1.min.js"></script>
 <script src="<%=jsURL%>/EnjoyUtil.js" type="text/javascript"></script>
 <script src="<%=jsURL%>/jquery-ui.js" type="text/javascript"></script>
 <script src="<%=jsURL%>/jquery.tablesorter.js" type="text/javascript"></script>
@@ -49,7 +50,6 @@ final String themeURL 		= Constants.THEME_URL;
 <script src="<%=jsURL%>/script.js"></script>
 <script src="<%=jsURL%>/script.responsive.js"></script>
 
-<script src="<%=themeURL%>/js/jquery.min.js"></script>
 <script src="<%=themeURL%>/js/bootstrap.js"></script>
 <script src="<%=themeURL%>/js/app.js"></script> 
 <script src="<%=themeURL%>/js/slimscroll/jquery.slimscroll.min.js"></script>
