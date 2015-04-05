@@ -16,6 +16,7 @@ public class UserDetailsBean {
 	private String 							pwd 	 		  	  = null;
 	private String  						currentDate			  = null;
 	private String							userEmail			  = null;
+	private String							errMsg				  = null;
 	
 	public UserDetailsBean(){
 		this.userUniqueId		= 0;
@@ -30,6 +31,7 @@ public class UserDetailsBean {
 		this.pwd				= "";
 		this.currentDate		= "";
 		this.userEmail			= "";
+		this.errMsg			    = "";
 	}
 
 	public int getUserUniqueId() {
@@ -128,4 +130,11 @@ public class UserDetailsBean {
 		this.userEmail = userEmail;
 	}
 	
+	public String getErrMsg() {
+		return errMsg;
+	}
+
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
+	}
 }

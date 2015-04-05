@@ -101,10 +101,11 @@ logger.info("pass ==> " + passWord);
 				
 				userDetailsBean.setUserUniqueId			(userdetail.getUserUniqueId());
 				userDetailsBean.setUserId				(userdetail.getUserId());
+				userDetailsBean.setPwd					(userdetail.getUserPassword());
 				userDetailsBean.setUserName				(userdetail.getUserName());
 				userDetailsBean.setUserSurname			(userdetail.getUserSurname());
 				userDetailsBean.setUserPrivilege		(userdetail.getUserPrivilege());
-				userDetailsBean.setUserLevel			(userdetail.getUserPrivilege());
+				userDetailsBean.setUserLevel			(userdetail.getUserLevel());
 				userDetailsBean.setUserStatus			(userdetail.getUserStatus());
 				userDetailsBean.setFlagChangePassword	(userdetail.getFlagChangePassword());
 				userDetailsBean.setCurrentDate			(dateFormat.format(date));
@@ -302,6 +303,33 @@ logger.info("pass ==> " + passWord);
 		
 		return userDetailsBean;
 		
+	}
+	
+	public void updateUserPassword(Session session, UserDetailsBean userDetailsBean) throws EnjoyException{
+		logger.info("[updateUserPassword][Begin]");
+		
+		String							hql									= null;
+		Query 							query 								= null;
+		int 							result								= 0;
+		
+		try{
+			hql				= "update  Userdetail set userPassword 			= :userPassword"
+										+ " where userUniqueId = :userUniqueId";
+			
+			query = session.createQuery(hql);
+			query.setParameter("userPassword"		, userDetailsBean.getPwd());
+			query.setParameter("userUniqueId"		, userDetailsBean.getUserUniqueId());
+			
+			result = query.executeUpdate();			
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
+		}finally{
+			
+			hql									= null;
+			query 								= null;
+			logger.info("[updateUserPassword][End]");
+		}
 	}
 	
 	public int checkDupUserId(Session session, String userId, String pageMode, int userUniqueId) throws EnjoyException{

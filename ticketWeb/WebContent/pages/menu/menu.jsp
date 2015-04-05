@@ -47,7 +47,7 @@
 	<%		
 		}
 	%>
- 	<li><a href="#">เปลี่ยนรหัสผ่าน</a></li>
+ 	<li><a href="/ticketWeb/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
  	<li><a href="#">ออกจากระบบ</a></li>
   	<!-- 
 	<li><a href="#">รายงาน</a>
