@@ -287,8 +287,6 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			flagChangePassword 			= EnjoyUtil.chkBoxtoDb(request.getParameter("flagChangePassword"));
 			userPrivilege 				= EnjoyUtil.nullToStr(request.getParameter("hidUserPrivilege"));
 			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
-			pwd							= EnjoyUtil.genPassword(8);
-			pwdEncypt					= EnjoyEncryptDecrypt.enCryption(userId, pwd);
 			userLevel					= userPrivilege.indexOf("R01") > -1?"9":"1";
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();
@@ -317,25 +315,38 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			userDetailsBean.setFlagChangePassword(flagChangePassword);
 			userDetailsBean.setUserPrivilege(userPrivilege);
 			userDetailsBean.setUserUniqueId(userUniqueId);
-			userDetailsBean.setPwd(pwdEncypt);
 			userDetailsBean.setUserLevel(userLevel);
 			
 			session.beginTransaction();
 			
 			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
+				
+				//Random new password (8 chars)
+				pwd							= EnjoyUtil.genPassword(8);
+				
+				//Encypt password
+				pwdEncypt					= EnjoyEncryptDecrypt.enCryption(userId, pwd);
+				userDetailsBean.setPwd(pwdEncypt);
+				
 				this.dao.insertNewUser(session, userDetailsBean);
+				
+				/*Begin send new password to email*/
+				fullName = userName + " " + userSurname;
+				sendMail.sendMail(fullName, userId, pwd, userEmail);
+				/*End send new password to email*/
+				
 			}else{
 				this.dao.updateUserDetail(session, userDetailsBean);
 			}
 			
-			fullName = userName + " " + userSurname;
 			
-			sendMail.sendMail(fullName, userId, pwd, userEmail);
 			
 			session.getTransaction().commit();
-			session.flush();
-			session.clear();
-			session.close();
+			
+			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
+				session = sessionFactory.openSession();
+				userUniqueId = this.dao.lastId(session);
+			}
 			
 			logger.info("[onSave] After Save userUniqueId 			:: " + userUniqueId);
 			
@@ -354,15 +365,11 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			obj.put(ERR_MSG, 		"onSave is error");
 		}finally{
 			
-			if(pageMode.equals(UserDetailsMaintananceForm.NEW)){
-				session = sessionFactory.openSession();
-				userUniqueId = this.dao.lastId(session);
-				session.flush();
-				session.clear();
-				session.close();
-			}
+			session.flush();
+			session.clear();
+			session.close();
 			
-			this.onGetUserDetail(userUniqueId);
+//			this.onGetUserDetail(userUniqueId);
 			this.enjoyUtil.writeMSG(obj.toString());
 			
 			sessionFactory	= null;

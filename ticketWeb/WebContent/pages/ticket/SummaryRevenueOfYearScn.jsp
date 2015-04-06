@@ -120,7 +120,7 @@
 																		rowNumber = i+1; 
 																	
 																	%>
-																	 <tr>
+																	 <tr class="rowSelect">
 																		<td align="center">
 																			<B><%=rowNumber%></B>
 																		</td>

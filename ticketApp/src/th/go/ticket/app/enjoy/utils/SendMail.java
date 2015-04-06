@@ -10,13 +10,14 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.main.MailConFigFile;
 
 public class SendMail {
 	
 	private static final EnjoyLogger logger = EnjoyLogger.getLogger(SendMail.class);
 	
-	public void sendMail(String fullName, String userId, String userPwd, String email){
+	public void sendMail(String fullName, String userId, String userPwd, String email) throws EnjoyException{
 		final String username = MailConFigFile.getMAIL_USER();
 		final String password = MailConFigFile.getMAIL_PWD();
  
@@ -48,7 +49,13 @@ public class SendMail {
 			logger.info("Send mail done !!");
  
 		} catch (MessagingException e) {
-			throw new RuntimeException(e);
+			logger.info(e.getMessage());
+			e.printStackTrace();
+			throw new EnjoyException("เกิดข้อผิดพลาดในการส่ง E-mai (E-mail ปลายทางไม่ถูกต้อง)");
+		}catch (Exception e) {
+			logger.info(e.getMessage());
+			e.printStackTrace();
+			throw new EnjoyException("เกิดข้อผิดพลาดในการส่ง E-mai");
 		}
 	}
 	

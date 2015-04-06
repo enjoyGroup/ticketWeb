@@ -10,6 +10,6 @@
 	<!--<frame name="frame_main"  style="border:0px solid gray;" src="/ticketWeb/EnjoyGenericSrv?service=servlet.SummaryRevenueOfYearServlet&pageAction=new" />-->
 	<!-- <frame name="frame_main"  style="border:0px solid gray;" src="/ticketWeb/pages/menu/menuTest.jsp" /> -->
 	 
-	 <frame name="frame_main"  style="border:0px solid gray;" src="/ticketWeb/pages/menu/welcome.jsp" />
+	<frame name="frame_main"  style="border:0px solid gray;" src="/ticketWeb/pages/menu/welcome.jsp" />
 </FRAMESET>
 </html>

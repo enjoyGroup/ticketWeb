@@ -149,7 +149,8 @@
 		
 		function lp_checkDupUserId(){
 			
-			var lv_userId = null;
+			var lv_userId 	= null;
+			var params		= "";
 			
 			try{
 				lv_userId = gp_trim($("#userId").val());
@@ -244,6 +245,7 @@
 		function lp_save(){
 			var la_chkUserPrivilege = null;
 			var lv_userPrivilege	= "";
+			var params				= "";
 			
 			try{
 				
@@ -278,11 +280,13 @@
 				alert("btnSave :: " + e);
 			}
 			
+			params 	= "pageAction=save&" + $('#frm').serialize();
+			
 			$.ajax({
 				async:false,
 	            type: "POST",
 	            url: gv_url,
-	            data: "pageAction=save&" + $('#frm').serialize(),
+	            data: params,
 	            beforeSend: gp_progressBarOn(),
 	            success: function(data){
 	            	var jsonObj 			= null;
@@ -298,9 +302,8 @@
 	            		if(status=="SUCCESS"){
 	            			userUniqueId = jsonObj.userUniqueId;
 	            			
-	            			//alert("บันทึกเรียบร้อย " + userUniqueId);
-	            			//location.reload();
-	            			//window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
+	            			alert("บันทึกเรียบร้อย");
+	            			window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
 	            		}else{
 	            			alert(jsonObj.errMsg);
 	            			
@@ -439,12 +442,13 @@
 				</section>
 			</section>
 		</section>
+		<div align="center" class="FreezeScreen" style="display:none;">
+	        <center>
+	        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+	        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+	        </center>
+	    </div>
 	</form>
-	<div align="center" class="FreezeScreen" style="display:none;">
-        <center>
-        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
-        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
-        </center>
-    </div>
+	
 </body>
 </html>
