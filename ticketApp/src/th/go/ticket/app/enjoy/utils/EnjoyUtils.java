@@ -71,9 +71,9 @@ public class EnjoyUtils {
         Date 	date	= new Date();
         
         try{
-            java.text.SimpleDateFormat df= new java.text.SimpleDateFormat();
+            java.text.SimpleDateFormat df= new java.text.SimpleDateFormat("yyyyMMdd", new Locale("th", "TH"));
             
-            df.applyPattern("yyyyMMdd");
+//            df.applyPattern("yyyyMMdd");
             stDate = df.format(date);
             System.out.println(stDate);
             
@@ -99,7 +99,7 @@ public class EnjoyUtils {
                 dt      = new SimpleDateFormat(av_currFormat); 
                 date    = dt.parse(av_date); 
 //                dt1     = new SimpleDateFormat(av_toFormat,Locale.US);// ค.ศ.
-                dt1     = new SimpleDateFormat(av_toFormat);//พ.ศ.
+                dt1     = new SimpleDateFormat(av_toFormat, new Locale("th", "TH"));//พ.ศ.
                 
                 dateFormat = dt1.format(date);
             }
