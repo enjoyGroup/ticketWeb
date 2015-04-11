@@ -2,9 +2,11 @@ package th.go.ticket.app.enjoy.utils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -394,6 +396,26 @@ public class EnjoyUtils {
 		}
 		
 		return newPass;
+		
+	}
+	
+	
+	public static List<String> getListFromArr(String dataDelete){
+		 List<String>  returnList = null;
+		 String        lv_value   = null;
+		   try {
+	        	if(dataDelete != null && dataDelete != ""){	
+	        		returnList = new ArrayList<>();
+	        		lv_value = dataDelete.replaceAll("\\s", ""); 
+	        		String[] parts = lv_value.split(",");
+	        		for(String s : parts){
+	        		    returnList.add(s);
+	        		}
+				} 
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        } 
+	        return returnList;
 		
 	}
 	
