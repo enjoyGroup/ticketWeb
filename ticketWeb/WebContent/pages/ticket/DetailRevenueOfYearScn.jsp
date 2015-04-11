@@ -67,6 +67,7 @@
 			drawChart();
 			
 			gp_progressBarOff();
+			
 		});
 		
 		function drawChart() {
@@ -114,7 +115,7 @@
 		            type: "POST",
 		            url: gv_url,
 		            data: gv_service + "&pageAction=changeSeason&" + $('#frm').serialize() + "&season=" + av_season,
-		            beforeSend: "",
+		            beforeSend: gp_progressBarOn(),
 		            success: function(data){
 		            	var jsonObj 			= null;
 		            	var status				= null;
@@ -123,6 +124,8 @@
 		            	var index				= 1;
 		            	
 		            	try{
+		            		gp_progressBarOff();
+		            		
 		            		jsonObj = JSON.parse(data);
 		            		status	= jsonObj.status;
 		            		//alert(status);
@@ -145,7 +148,7 @@
 		            			
 		            			$.each(jsonObj.detail, function(idx, obj) {
 		            				//alert(obj.awayTeamName + " " + obj.totalSeating + " " + obj.bookingPrices);
-		            				lp_addTableResultTab(index++, obj.awayTeamName, obj.totalSeating, obj.bookingPrices);
+		            				lp_addTableResultTab(index++, obj.awayTeamName, obj.totalSeating, obj.bookingPrices, obj.matchId);
 		            			});
 		            			
 		            			//วาดกราฟ
@@ -231,7 +234,7 @@
 			}
 		}
 		
-		function lp_addTableResultTab(av_index, av_awayTeamName, av_totalSeating, av_bookingPrices){
+		function lp_addTableResultTab(av_index, av_awayTeamName, av_totalSeating, av_bookingPrices, av_matchId){
 			var lo_table		= null;
 			var lv_length 	 	= null;
 			var row 		 	= null;
@@ -244,6 +247,13 @@
 				lo_table 		= document.getElementById("resultTab");
 				lv_length 		= lo_table.rows.length;
 				row 			= lo_table.insertRow(lv_length);
+				
+				row.className	= "rowSelect";
+				
+				row.onclick = function() { 
+					lp_getReportByTicketType($("#hidSeason").val(), av_matchId, av_awayTeamName);
+		        };
+				
 				cell1 			= row.insertCell(0);
 				cell2 			= row.insertCell(1);
 				cell3 			= row.insertCell(2);
@@ -265,6 +275,17 @@
 				alert("lp_addTableResultTab :: " + e);
 			}
 			
+		}
+		
+		function lp_getReportByTicketType(av_season, av_matchId, av_awayTeamNameTH){
+			
+			try{
+				
+				window.location = gv_url + "?service=servlet.DisplayMatchServlet&pageAction=getReportByTicketType&season=" + av_season + "&matchId=" + av_matchId + "&awayTeamName=" + av_awayTeamNameTH;
+				
+			}catch(e){
+				alert("lp_getReportByTicketType :: " + e);
+			}
 		}
 	
 	</script>
@@ -343,7 +364,7 @@
 																			detail = detailList.get(i);
 																			seq++;
 																		%>
-																		 <tr>
+																		 <tr class="rowSelect" onclick="lp_getReportByTicketType('<%=detailRevenueOfYearForm.getSeason()%>', '<%=detail.getMatchId()%>', '<%=detail.getAwayTeamNameTH()%>');">
 																			<td align="center">
 																				<B><%=seq%></B>
 																			</td>

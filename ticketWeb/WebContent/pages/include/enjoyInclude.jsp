@@ -54,7 +54,7 @@ final String themeURL 		= Constants.THEME_URL;
 <script src="<%=themeURL%>/js/app.js"></script> 
 <script src="<%=themeURL%>/js/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="<%=themeURL%>/js/fuelux/fuelux.js"></script>
-<script src="<%=themeURL%>/js/datepicker/bootstrap-datepicker.js"></script>
+<!-- <script src="/js/datepicker/bootstrap-datepicker.js"></script> -->
 <script src="<%=themeURL%>/js/slider/bootstrap-slider.js"></script>
 <script src="<%=themeURL%>/js/file-input/bootstrap-filestyle.min.js"></script>
 <script src="<%=themeURL%>/js/libs/moment.min.js"></script>

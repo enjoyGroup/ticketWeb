@@ -77,6 +77,17 @@
 	    	}
 	  	}
 		
+		function lp_getDetailFromSeason(av_val){
+			
+			try{
+				
+				window.location = gv_url + "?service=servlet.DetailRevenueOfYearServlet&pageAction=getDetailFromSeason&season=" + av_val;
+				
+			}catch(e){
+				alert("lp_getDetailFromSeason :: " + e);
+			}
+		}
+		
   </script>
 </head>
 <body>
@@ -120,7 +131,7 @@
 																		rowNumber = i+1; 
 																	
 																	%>
-																	 <tr class="rowSelect">
+																	 <tr class="rowSelect" onclick="lp_getDetailFromSeason('<%=bean.getSeason()%>');">
 																		<td align="center">
 																			<B><%=rowNumber%></B>
 																		</td>

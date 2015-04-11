@@ -183,5 +183,65 @@ public class SeatReservationDao {
 		return returnList;
 	}
 	
+	public List<SeatReservationBean> getSeatBookingList(String matchId, String fieldZoneId) throws EnjoyException{
+		logger.info("[getSeatBookingList][Begin]");
+		
+		List<SeatReservationBean> 		returnList 							= null;
+		SeatReservationBean				returnObj							= null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		String							hql									= null;
+		List<Object[]>			 		list								= null;
+		SQLQuery 						query 								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			returnList		= new ArrayList<SeatReservationBean>();
+			
+			hql				= "select ticketId, seatingNo"
+								+ " FROM ticketorder"
+								+ " where matchId 			= '" + matchId + "'"
+									+ " and fieldZoneId		= '" + fieldZoneId + "'"
+									+ " and ticketStatus 	<> 'R'";
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("ticketId"		, new StringType());
+			query.addScalar("seatingNo"		, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[getSeatBookingList] list :: " + list.size());
+			for(Object[] row : list){
+				returnObj = new SeatReservationBean();
+				
+				logger.info("[getSeatBookingList] ticketId 		:: " + row[0].toString());
+				logger.info("[getSeatBookingList] seatingNo		:: " + row[1].toString());
+				
+				returnObj.setTicketId		(row[0].toString());
+				returnObj.setSeatingNo		(row[1].toString());
+				
+				returnList.add(returnObj);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			session.close();
+			
+			sessionFactory						= null;
+			session								= null;
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getSeatBookingList][End]");
+		}
+		
+		return returnList;
+	}
+	
 	
 }

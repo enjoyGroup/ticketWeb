@@ -10,6 +10,8 @@ public class SeatReservationBean {
 	private String bookingTypeId;
 	private String bookingTypeName;
 	private String bookingPrices;
+	private String ticketId;
+	private String seatingNo;
 	
 	public SeatReservationBean(){
 		this.fieldZoneId 			= "";
@@ -20,6 +22,8 @@ public class SeatReservationBean {
 		this.bookingTypeId 			= "";
 		this.bookingTypeName 		= "";
 		this.bookingPrices 			= "";
+		this.ticketId 				= "";
+		this.seatingNo 				= "";
 	}
 
 	public String getFieldZoneId() {
@@ -84,6 +88,22 @@ public class SeatReservationBean {
 
 	public void setBookingPrices(String bookingPrices) {
 		this.bookingPrices = bookingPrices;
+	}
+
+	public String getTicketId() {
+		return ticketId;
+	}
+
+	public void setTicketId(String ticketId) {
+		this.ticketId = ticketId;
+	}
+
+	public String getSeatingNo() {
+		return seatingNo;
+	}
+
+	public void setSeatingNo(String seatingNo) {
+		this.seatingNo = seatingNo;
 	}
 
 	

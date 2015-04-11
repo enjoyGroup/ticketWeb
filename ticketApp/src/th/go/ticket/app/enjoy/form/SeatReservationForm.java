@@ -9,31 +9,13 @@ import th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 
 public class SeatReservationForm {
-
-	Map 				matchMap;
-	List<SeatZoneBean> 	fieldZoneList;
+	
 	String				matchId;
+	String				fieldZoneId;
 
 	public SeatReservationForm() {
-		this.matchMap 		= new Hashtable();
-		this.fieldZoneList 	= new ArrayList<SeatZoneBean>();
-		this.matchId		= "";
-	}
-
-	public Map getMatchMap() {
-		return matchMap;
-	}
-
-	public void setMatchMap(Map matchMap) {
-		this.matchMap = matchMap;
-	}
-
-	public List<SeatZoneBean> getFieldZoneList() {
-		return fieldZoneList;
-	}
-
-	public void setFieldZoneList(List<SeatZoneBean> fieldZoneList) {
-		this.fieldZoneList = fieldZoneList;
+		this.matchId 		= "";
+		this.fieldZoneId 	= "";
 	}
 
 	public String getMatchId() {
@@ -44,4 +26,12 @@ public class SeatReservationForm {
 		this.matchId = matchId;
 	}
 
+	public String getFieldZoneId() {
+		return fieldZoneId;
+	}
+
+	public void setFieldZoneId(String fieldZoneId) {
+		this.fieldZoneId = fieldZoneId;
+	}
+	
 }

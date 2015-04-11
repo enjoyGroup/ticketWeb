@@ -25,7 +25,11 @@
 }
 
 .rowSelect:hover{
-    background-color:FFCCFF;
-    /*opacity: .2; */
+    background-color:#DCDCDC;
+    filter:alpha(opacity=25);/* IE 5-7 */
+   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";/* IE 8 */
+   -khtml-opacity: 0.25;/* Safari 1.x */
+   -moz-opacity:0.25;/* Netscape */
+   opacity: 0.25;/* Good browsers */
     cursor: pointer;
 }

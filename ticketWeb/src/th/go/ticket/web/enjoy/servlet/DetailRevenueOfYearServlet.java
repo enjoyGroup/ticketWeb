@@ -68,6 +68,9 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
  				request.setAttribute("target", Constants.PAGE_URL +"/DetailRevenueOfYearScn.jsp");
  			}else if(pageAction.equals("changeSeason")){
  				this.lp_changeSeason();
+ 			}else if( pageAction.equals("getDetailFromSeason") ){
+ 				this.getDetailFromSeason();
+ 				request.setAttribute("target", Constants.PAGE_URL +"/DetailRevenueOfYearScn.jsp");
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -112,6 +115,7 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
 					objDetail.put("awayTeamName", 			detail.getAwayTeamNameTH());
 					objDetail.put("totalSeating", 			detail.getTotalSeating());
 					objDetail.put("bookingPrices", 			detail.getBookingPrices());
+					objDetail.put("matchId", 				detail.getMatchId());
 					
 					detailJSONArray.add(objDetail);
 				}
@@ -132,6 +136,61 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
 			season			= null;
 			
 			logger.info("[onLoad][End]");
+		}
+		
+	}
+	
+	private void getDetailFromSeason() throws EnjoyException{
+		logger.info("[getDetailFromSeason][Begin]");
+		
+		List<String> 					seasonList			= null;
+		String							season				= null;
+		List<DetailRevenueOfYearBean> 	detailList			= null;
+		DetailRevenueOfYearBean			detail				= null;
+		JSONObject 						obj 				= null;
+		JSONObject 						objDetail 			= null;
+		JSONArray 						detailJSONArray 	= null;
+		
+		try{
+			seasonList 				= this.dao.seasonList();
+			obj 					= new JSONObject();
+			detailJSONArray 		= new JSONArray();
+			season 					= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+			
+			if(seasonList!=null && seasonList.size() > 0){
+				//season 		= seasonList.get(0);
+				this.lp_setDetailList(season);
+				
+				detailList 	= this.form.getDetailList();
+				
+				for(int i=0;i<detailList.size();i++){
+					detail 			= detailList.get(i);
+					objDetail 		= new JSONObject();
+					
+					objDetail.put("awayTeamName", 			detail.getAwayTeamNameTH());
+					objDetail.put("totalSeating", 			detail.getTotalSeating());
+					objDetail.put("bookingPrices", 			detail.getBookingPrices());
+					objDetail.put("matchId", 				detail.getMatchId());
+					
+					detailJSONArray.add(objDetail);
+				}
+				
+				obj.put("detail", 			detailJSONArray);
+				
+				this.form.setDataFlow(obj.toString());
+			}
+			
+			this.form.setSeasonList(seasonList);
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new EnjoyException("getDetailFromSeason :: " + e.getMessage());
+		}finally{
+			seasonList		= null;
+			season			= null;
+			
+			logger.info("[getDetailFromSeason][End]");
 		}
 		
 	}
@@ -171,6 +230,7 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
 					objDetail.put("awayTeamName", 			detail.getAwayTeamNameTH());
 					objDetail.put("totalSeating", 			detail.getTotalSeating());
 					objDetail.put("bookingPrices", 			detail.getBookingPrices());
+					objDetail.put("matchId", 				detail.getMatchId());
 					
 					detailJSONArray.add(objDetail);
 				}

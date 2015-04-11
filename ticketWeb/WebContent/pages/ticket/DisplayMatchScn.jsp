@@ -27,6 +27,17 @@
 			
 			gp_progressBarOff();
 		});
+		
+		function lp_getReportByTicketType(av_matchId, av_season, av_awayTeamNameTH){
+			
+			try{
+				gp_progressBarOn();
+				window.open(gv_url + "?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=" + av_matchId + "&season=" + av_season + "&awayTeamName=" + av_awayTeamNameTH, "ttestt" );
+				gp_progressBarOff();
+			}catch(e){
+				alert("lp_getReportByTicketType :: " + e);
+			}
+		}
 	
 	</script>
 	
@@ -72,7 +83,7 @@
 													                      		for(DisplayMatchDetailBean bean:matchList){
 													                      	%>
 																			<li onclick="">
-																				<a href="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=<%=bean.getMatchId()%>&season=<%=season%>&awayTeamName=<%=bean.getAwayTeamNameTH() %>" target="ttestt">
+																				<a href="#" onclick="lp_getReportByTicketType('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
 																					<%=bean.getAwayTeamNameTH() %>
 																				</a>
 																			</li>
