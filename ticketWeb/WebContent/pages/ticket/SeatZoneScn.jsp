@@ -1,10 +1,8 @@
 <%@ include file="/pages/include/checkLogin.jsp"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ page import="th.go.ticket.app.enjoy.bean.SeatZoneBean"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean"%>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="seatZoneForm" class="th.go.ticket.app.enjoy.form.SeatZoneForm" scope="session"/>
-<jsp:useBean id="displayMacthForm" class="th.go.ticket.app.enjoy.form.DisplayMacthForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  
 <html>
@@ -12,6 +10,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>	
+	<link href="<%=cssURL%>/menu-styles2.css" rel="stylesheet">
+	<script src="<%=jsURL%>/bootstrap.min.js" type="text/javascript"></script> 
+	<script src="<%=jsURL%>/menu-script.js" type="text/javascript"></script>
 	<script> 
 		var gv_service 		= null;
 		var gv_url 			= '<%=servURL%>/EnjoyGenericSrv';
@@ -54,21 +55,23 @@
 						              							<tr>
 						              								<td>
 						              								<div style="width:200px;" align="left">
-																		<span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;"><B>ฤดูกาลแข่งขัน</B></span><br/>
+																		<span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																			<B>ฤดูกาลแข่งขัน</B>
+																		</span><br/>
 																		<div id='cssmenu' style="min-height:auto;  background:#000000; ">
 															                <ul>
 															                <%
-															                	List<String> 					seasonList 		= displayMacthForm.getSeasonList();
-														             	        List<DisplayMatchDetailBean> 	matchList		= null;
+															                	List<String> 					seasonList 		= seatZoneForm.getSeasonList();
+														             	        List<SeatZoneBean> 				matchList		= null;
 														             			
 														             				
 														           				for(String season :seasonList){
-														           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
+														           					matchList = (List<SeatZoneBean>) seatZoneForm.getMatchMap().get(season);
 															                %>
 															                   <li class='has-sub'><a href='#'><span><img src="/ticketWeb/images/football01.png" style="padding-right: 5px;"><%=season%></span></a>
 															                      <ul>
 															                      	<%
-															                      		for(DisplayMatchDetailBean bean:matchList){
+															                      		for(SeatZoneBean bean:matchList){
 															                      	%>
 																					<li onclick="">
 																						<a href="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=<%=bean.getMatchId()%>&season=<%=season%>&awayTeamName=<%=bean.getAwayTeamNameTH() %>" target="ttestt">

@@ -6,6 +6,28 @@ function isBlank(objValue){
     }
 }
 
+$(document).ready(function(){
+	 $(".numberOnly").keypress(function(event){
+	        return onKeyPressNumber(event);
+	    });
+	    $(".numberOnly").keydown(function(event){
+	        return onKeyDownNumber(event);
+	    });
+	    $(".numberOnly").keyup(function(event){
+	        return onKeyUpNumber(event);
+	    });
+	    
+	    $(".moneyOnly").keypress(function(event){
+	        return onKeyUpMoney(event);
+	    });
+	    $(".moneyOnly").keydown(function(event){
+	        return onKeyDownMoney(event);
+	    });
+	    $(".moneyOnly").keyup(function(event){
+	        return onKeyUpMoney(event);
+	    });
+});
+
 //Example gp_replaceComma(78,500.00);
 function gp_replaceComma(av_val){
 	
@@ -300,4 +322,137 @@ function showCalendar() {
     ggWinCal = vWinCal;
     vWinCal.focus();
     build(p_item, p_month, p_year, p_format);
+}
+
+function removeComma(obj) {
+    var val = obj.value;
+    val = val.replace(/,/g, '');
+    obj.value = val;
+}
+
+function checkAllowKey(keyCode, validChar){
+    var keyChar = String.fromCharCode(keyCode);
+    validChar += String.fromCharCode(8);
+    if (validChar.indexOf(keyChar) < 0) {
+        return false;
+    }
+    return true;
+}
+
+
+function onKeyPressNumber(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+
+    /** CHECK SPECIAL CHARACTER **/
+    /*
+     * SPECIAL CHARACTER (KEY CODE & CHAR CODE)
+     *  33=!       34="    35=#        36=$
+     *  37=%       38=&    39='        40=(
+     *  41=)       42=*    45=-        47=/
+     *  58=:       59=;    60=<        62=<
+     *  63=?       64=@    91=[        93=]
+     *  94=^       95=_    123={       125=}
+     */
+
+    if(keyCode == 33 || keyCode == 34 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 ||
+        keyCode == 41 || keyCode == 42 || keyCode == 45 || keyCode == 47 || keyCode == 58 || keyCode == 59 || keyCode == 60 || keyCode == 62 ||
+        keyCode == 63 || keyCode == 64 || keyCode == 91 || keyCode == 93 || keyCode == 123 || keyCode == 125){
+        return false;
+    }
+
+    /** ALLOW NUMBER **/
+    /*  96-105=number(0-9) */
+    /*if (keyCode > 95 && keyCode < 106) {
+        return true;
+    } else {*/
+        return checkAllowKey(keyCode, '1234567890');
+    //}
+}
+
+function onKeyDownNumber(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+    /*key 17 = Ctrl, key 86 = v, key 67 = c */
+    if(keyCode == 17 || keyCode == 86 || keyCode == 67 || keyCode == 8 || keyCode == 9 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 || keyCode == 46){
+        return true;
+    }
+    /** ALLOW NUMBER **/
+    /*  96-105=number(0-9) */
+    if (keyCode > 95 && keyCode < 106) {
+        return true;
+    } else {
+        return checkAllowKey(keyCode, '1234567890');
+    }
+}
+
+function onKeyUpNumber(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+
+    if(keyCode == 8 || keyCode == 9 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 || keyCode == 46){
+        return true;
+    }
+    /** ALLOW NUMBER **/
+ 
+    return checkAllowKey(keyCode, '1234567890');
+   
+}
+
+function onKeyPressMoney(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+
+    /** CHECK SPECIAL CHARACTER **/
+    /*
+     * SPECIAL CHARACTER (KEY CODE & CHAR CODE)
+     *  33=!       34="    35=#        36=$
+     *  37=%       38=&    39='        40=(
+     *  41=)       42=*    45=-        47=/
+     *  58=:       59=;    60=<        62=<
+     *  63=?       64=@    91=[        93=]
+     *  94=^       95=_    123={       125=}
+     */
+
+    if(keyCode == 33 || keyCode == 34 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 ||
+        keyCode == 41 || keyCode == 42 || keyCode == 45 || keyCode == 47 || keyCode == 58 || keyCode == 59 || keyCode == 60 || keyCode == 62 ||
+        keyCode == 63 || keyCode == 64 || keyCode == 91 || keyCode == 93 || keyCode == 123 || keyCode == 125){
+        return false;
+    }
+    return checkAllowKey(keyCode, '0123456789.,');
+}
+
+function onKeyDownMoney(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+
+    /*key 17 = Ctrl, key 86 = v, key 67 = c */
+    if(keyCode == 17 || keyCode == 86 || keyCode == 67 || keyCode == 8 || keyCode == 9 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 || keyCode == 46 || keyCode == 144 || keyCode == 110){
+        return true;
+    }
+    if ( (keyCode > 95 && keyCode < 106) || keyCode == 44 || keyCode == 188 || keyCode == 190 ) {
+        return true;
+    } else {
+        return checkAllowKey(keyCode, '0123456789.,');
+    }
+}
+
+function onKeyUpMoney(evt){
+    var keyCode = evt.keyCode ? evt.keyCode : evt.which;
+
+    if(keyCode == 8 || keyCode == 9 || keyCode == 35 || keyCode == 36 || keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40 || keyCode == 46 || keyCode == 144 || keyCode == 110){
+        return true;
+    }
+    return checkAllowKey(keyCode, '0123456789.,');
+}
+
+function formatNumber(obj) {
+    var val = obj.value;
+    val = $.trim(val);
+    if (val != '') {
+        val += '';
+        x = val.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '.00';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        obj.value = x1 + x2;
+    }
 }

@@ -105,6 +105,7 @@ public class SeatZoneServlet extends EnjoyStandardSvc {
 					
 					list.add(bean);
 					matchMap.put(season, list);
+					this.form.getSeasonList().add(season);
 				}
 				
 				if(defaultMatch){
@@ -113,6 +114,17 @@ public class SeatZoneServlet extends EnjoyStandardSvc {
 					defaultMatch = false;
 				}
 				
+				
+			}
+			
+			
+			for(String season1:this.form.getSeasonList()){
+				logger.info("[onLoad] season1 :: " + season1);
+				List<SeatZoneBean> 	list1 				= (List<SeatZoneBean>) matchMap.get(season1);
+				
+				for(SeatZoneBean bean1:list1){
+					logger.info("[onLoad] Match :: " + bean1.getMatchId() + " " + bean1.getAwayTeamNameTH());
+				}
 				
 			}
 			
