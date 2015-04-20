@@ -17,6 +17,10 @@ import th.go.ticket.app.enjoy.utils.HibernateUtil;
 public class SeatReservationDao {
 	
 	private static final EnjoyLogger logger = EnjoyLogger.getLogger(SeatReservationDao.class);
+	private static final String CHILD_TYPE	= "1";
+	private static final String MAN_TYPE	= "2";
+	private static final String OLD_TYPE	= "3";
+	private static final String VIP_TYPE	= "4";
 	
 //	public static void main(String[] args) {
 //		try {
@@ -54,10 +58,9 @@ public class SeatReservationDao {
 //		}
 //	}
 	
-	public List<SeatReservationBean> getSeatForThisZone(String fieldZoneId) throws EnjoyException{
+	public SeatReservationBean getSeatForThisZone(String fieldZoneId) throws EnjoyException{
 		logger.info("[getSeatForThisZone][Begin]");
 		
-		List<SeatReservationBean> 		returnList 							= null;
 		SeatReservationBean				returnObj							= null;
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
@@ -69,7 +72,6 @@ public class SeatReservationDao {
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<SeatReservationBean>();
 			
 			hql				= "SELECT fieldZoneId, fieldZoneName, rows, seating, totalSeating"
 								+ " FROM fieldzonemaster"
@@ -99,8 +101,6 @@ public class SeatReservationDao {
 				returnObj.setRows				(row[2].toString());
 				returnObj.setSeating			(row[3].toString());
 				returnObj.setTotalSeating		(row[4].toString());
-				
-				returnList.add(returnObj);
 			}
 			
 		}catch(Exception e){
@@ -118,7 +118,7 @@ public class SeatReservationDao {
 			logger.info("[getSeatForThisZone][End]");
 		}
 		
-		return returnList;
+		return returnObj;
 	}
 	
 	public List<SeatReservationBean> getTicketTypeList(String fieldZoneId) throws EnjoyException{
@@ -131,6 +131,8 @@ public class SeatReservationDao {
 		String							hql									= null;
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
+		String							bookingTypeId						= null;
+		String							bookingTypeImage					= null;
 		
 		
 		try{
@@ -152,15 +154,30 @@ public class SeatReservationDao {
 			
 			logger.info("[getTicketTypeList] list :: " + list.size());
 			for(Object[] row : list){
-				returnObj = new SeatReservationBean();
+				returnObj 		= new SeatReservationBean();
+				bookingTypeId	= row[0].toString();
 				
-				logger.info("[getTicketTypeList] bookingTypeId 			:: " + row[0].toString());
+				logger.info("[getTicketTypeList] bookingTypeId 			:: " + bookingTypeId);
 				logger.info("[getTicketTypeList] bookingTypeName		:: " + row[1].toString());
 				logger.info("[getTicketTypeList] bookingPrices		 	:: " + row[2].toString());
 				
-				returnObj.setBookingTypeId		(row[0].toString());
+				returnObj.setBookingTypeId		(bookingTypeId);
 				returnObj.setBookingTypeName	(row[1].toString());
 				returnObj.setBookingPrices		(row[2].toString());
+				
+				if(CHILD_TYPE.equals(bookingTypeId)){
+					bookingTypeImage = "child.png";
+				}else if(MAN_TYPE.equals(bookingTypeId)){
+					bookingTypeImage = "man.png";
+				}else if(OLD_TYPE.equals(bookingTypeId)){
+					bookingTypeImage = "old.png";
+				}else if(VIP_TYPE.equals(bookingTypeId)){
+					bookingTypeImage = "vip.png";
+				}else{
+					bookingTypeImage = "other.png";
+				}
+				
+				returnObj.setBookingTypeImage(bookingTypeImage);
 				
 				returnList.add(returnObj);
 			}

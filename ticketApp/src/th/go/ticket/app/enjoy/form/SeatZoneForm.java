@@ -10,14 +10,20 @@ import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 
 public class SeatZoneForm {
 
-	Map 				matchMap;
-	List<SeatZoneBean> 	fieldZoneList;
-	String				matchId;
+	private Map 				matchMap;
+	private List<SeatZoneBean> 	fieldZoneList;
+	private String				matchId;
+	private String 				awayTeamNameTH;
+	private List<String> 		seasonList;
+	private String 				season;
 
 	public SeatZoneForm() {
-		this.matchMap 		= new Hashtable();
-		this.fieldZoneList 	= new ArrayList<SeatZoneBean>();
-		this.matchId		= "";
+		this.matchMap 			= new Hashtable();
+		this.fieldZoneList 		= new ArrayList<SeatZoneBean>();
+		this.matchId			= "";
+		this.awayTeamNameTH		= "";
+		this.season				= "";
+		this.seasonList 		= new ArrayList<String>();
 	}
 
 	public Map getMatchMap() {
@@ -43,5 +49,30 @@ public class SeatZoneForm {
 	public void setMatchId(String matchId) {
 		this.matchId = matchId;
 	}
+
+	public List<String> getSeasonList() {
+		return seasonList;
+	}
+
+	public void setSeasonList(List<String> seasonList) {
+		this.seasonList = seasonList;
+	}
+
+	public String getAwayTeamNameTH() {
+		return awayTeamNameTH;
+	}
+
+	public void setAwayTeamNameTH(String awayTeamNameTH) {
+		this.awayTeamNameTH = awayTeamNameTH;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
+	}
+	
 
 }

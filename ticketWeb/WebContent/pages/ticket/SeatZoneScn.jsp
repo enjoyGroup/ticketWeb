@@ -18,20 +18,75 @@
 		var gv_url 			= '<%=servURL%>/EnjoyGenericSrv';
 		
 		$(document).ready(function(){
-			gp_progressBarOn();
-			
-			gv_service 		= "service=" + $('#service').val();
-			
-			$('#menu1').ptMenu();
-			
+			try{
+				gp_progressBarOn();
+				
+				gv_service 		= "service=" + $('#service').val();
+				
+				$('#menu1').ptMenu();
+				$("#firstList").click();
+			}catch(e){
+				alert("onLoadPage :: " + e);
+			}
 			gp_progressBarOff();
 		});
+		
+		function lp_selectMatch(av_matchId, av_season, av_awayTeamNameTH){
+			
+			var seasonTitle = null;
+			
+			try{
+				gp_progressBarOn();
+				
+				seasonTitle = "ปี : " + av_season + "&nbsp;แข่งขันกับ&nbsp;" + av_awayTeamNameTH;
+				$("#seasonTitle").html(seasonTitle);
+				$("#matchId").val(av_matchId);
+				$("#season").val(av_season);
+				$("#awayTeamNameTH").val(av_awayTeamNameTH);
+				
+				gp_progressBarOff();
+				
+			}catch(e){
+				alert("lp_selectMatch :: " + e);
+			}
+		}
+		
+		function lp_openBookingPage(av_fieldZoneId, av_fieldZoneName){
+			
+			var windowName 	= "";
+			var myWindow	= null;
+			var params		= null;
+			
+			try{
+				gp_progressBarOn();
+				
+				params		= "&fieldZoneId=" 		+ av_fieldZoneId 
+							+ "&fieldZoneName=" 	+ av_fieldZoneName 
+							+ "&matchId=" 			+ $("#matchId").val() 
+							+ "&season=" 			+ $("#season").val();
+							+ "&awayTeamNameTH=" 	+ $("#awayTeamNameTH").val();
+				windowName 	= "booking" + $("#matchId").val() + av_fieldZoneId;
+				
+				myWindow = window.open(gv_url + "?service=servlet.SeatReservationServlet&pageAction=getZoneDetail" + params, "_self");
+				myWindow.focus();
+				
+				
+				gp_progressBarOff();
+			}catch(e){
+				alert("lp_openBookingPage :: " + e);
+			}
+		}
+		
+		
 	</script>
 </head>
 
 <body>	
 	<form id="frm">
-		<input type="hidden" id="service" 	name="service" value="servlet.SeatZoneServlet" />    
+		<input type="hidden" id="service" 			name="service" 			value="servlet.SeatZoneServlet" />
+		<input type="hidden" id="matchId" 			name="matchId" 			value="<%=seatZoneForm.getMatchId() %>" />
+		<input type="hidden" id="season" 			name="season" 			value="<%=seatZoneForm.getSeason() %>" />
+		<input type="hidden" id="awayTeamNameTH" 	name="awayTeamNameTH" 	value="<%=seatZoneForm.getAwayTeamNameTH() %>" />       
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
@@ -63,25 +118,32 @@
 															                <%
 															                	List<String> 					seasonList 		= seatZoneForm.getSeasonList();
 														             	        List<SeatZoneBean> 				matchList		= null;
+														             	        String							listId			= "firstList";
 														             			
 														             				
 														           				for(String season :seasonList){
 														           					matchList = (List<SeatZoneBean>) seatZoneForm.getMatchMap().get(season);
 															                %>
-															                   <li class='has-sub'><a href='#'><span><img src="/ticketWeb/images/football01.png" style="padding-right: 5px;"><%=season%></span></a>
+															                   <li class='has-sub'>
+															                   	  <a href='#' id="<%=listId %>">
+																                   	  <span>
+																                   	  	<img src="<%=imgURL%>/football01.png" style="padding-right: 5px;">
+																                   	  		<%=season%>
+																                   	  </span>
+																                  </a>
 															                      <ul>
 															                      	<%
 															                      		for(SeatZoneBean bean:matchList){
 															                      	%>
 																					<li onclick="">
-																						<a href="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=onGetData&matchId=<%=bean.getMatchId()%>&season=<%=season%>&awayTeamName=<%=bean.getAwayTeamNameTH() %>" target="ttestt">
+																						<a href="#" onclick="lp_selectMatch('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
 																							<%=bean.getAwayTeamNameTH() %>
 																						</a>
 																					</li>
 																					<%}%>
 															 					</ul>
 															                   </li>
-															                <%}%>
+															                <% listId = "otherList"; }%>
 															                </ul>
 														                </div>
 																	</div>
@@ -93,23 +155,32 @@
 						                  	 				<table style="width: 100%">
 						                  	 					<tr>
 						                  	 						<td style="text-align: center;vertical-align: top;">
+						                  	 							<div id="seasonTitle" style="font-weight: bold;width: 100%" align="left">
+																			ปี :&nbsp;<%=seatZoneForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatZoneForm.getAwayTeamNameTH()%>
+																		</div><br/><br/>
 						                  	 							<div class='sim-panel-result' style="padding:10px;">
-									                        				<img src="/ticketWeb/images/Soccer.jpg">
+									                        				<img src="<%=imgURL%>/Soccer.jpg">
 								               							</div>
 						                  	 						</td>
 						                  	 						<td style="vertical-align: top;">
+						                  	 							
+						                  	 							<%
+						                  	 							List<SeatZoneBean> 	fieldZoneList = seatZoneForm.getFieldZoneList();
+						                  	 							
+						                  	 							for(SeatZoneBean fieldZoneBean:fieldZoneList){
+						                  	 							
+						                  	 							%>
+						                  	 							
 						                  	 							<div>
-								               								<button ondblclick="return false;" id="btnWR" name="btnWR"	class="btn btn-info" style="width: 250px;">WR</button> 
+						                  	 								<input  type="button" 
+						                  	 										id="btnWR" 
+						                  	 										name="btnWR" 
+						                  	 										class="btn btn-info" 
+						                  	 										style="width:250px;"
+						                  	 										onclick="lp_openBookingPage('<%=fieldZoneBean.getFieldZoneId() %>', '<%=fieldZoneBean.getFieldZoneName() %>')"
+						                  	 										value="<%=fieldZoneBean.getFieldZoneName() %>" />
 									          							</div>
-									          							<div>
-									          								<button ondblclick="return false;" id="btnWL" name="btnWL"  class="btn btn-warning" style="width: 250px;">WL</button>
-									          							</div>
-									          							<div>
-									          								<button ondblclick="return false;" id="btnE1" name="btnE1"  class="btn btn-success" style="width: 250px;">E1</button>
-									          							</div>
-									          							<div>
-									          								<button ondblclick="return false;" id="btnE2" name="btnE2"  class="btn btn-danger" style="width: 250px;">E2</button>
-									          							</div>
+									          							<%} %>
 									          						</td>
 						                  	 					</tr>
 						                  	 				</table>
@@ -125,6 +196,12 @@
 					</section>
 				</section>
 		</section>
+		<div align="center" class="FreezeScreen" style="display:none;">
+	        <center>
+	        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+	        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+	        </center>
+	    </div>
 	</form>
 </body>
 </html>

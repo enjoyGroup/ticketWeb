@@ -181,7 +181,7 @@ public class DisplayMatchDetailServlet extends EnjoyStandardSvc {
 			headerTicketTypeList	= this.dao.genHeaderTicketType(matchId);//gen header
 			matchJSONArray			= new JSONArray();
 			
-			this.form.setAwayTeamName("ปี : " + season + " แข่งขันกับ" + awayTeamName);
+			this.form.setAwayTeamName("ปี : " + season + " แข่งขันกับ " + awayTeamName);
 			
 			//set header
 			this.form.setHeaderTicketTypeList(headerTicketTypeList);

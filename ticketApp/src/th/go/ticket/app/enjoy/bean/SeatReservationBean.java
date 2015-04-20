@@ -12,6 +12,7 @@ public class SeatReservationBean {
 	private String bookingPrices;
 	private String ticketId;
 	private String seatingNo;
+	private String bookingTypeImage;
 	
 	public SeatReservationBean(){
 		this.fieldZoneId 			= "";
@@ -24,6 +25,7 @@ public class SeatReservationBean {
 		this.bookingPrices 			= "";
 		this.ticketId 				= "";
 		this.seatingNo 				= "";
+		this.bookingTypeImage		= "";
 	}
 
 	public String getFieldZoneId() {
@@ -106,5 +108,13 @@ public class SeatReservationBean {
 		this.seatingNo = seatingNo;
 	}
 
+	public String getBookingTypeImage() {
+		return bookingTypeImage;
+	}
+
+	public void setBookingTypeImage(String bookingTypeImage) {
+		this.bookingTypeImage = bookingTypeImage;
+	}
+	
 	
 }

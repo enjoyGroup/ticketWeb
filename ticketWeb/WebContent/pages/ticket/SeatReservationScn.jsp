@@ -80,6 +80,12 @@
 </head>
 <body>
 <form id="frm" action="<%=servURL%>/EnjoyGenericSrv">
+	<input type="hidden" id="service" 			name="service" 			value="servlet.SeatReservationServlet" />
+	<input type="hidden" id="fieldZoneId" 		name="fieldZoneId" 		value="<%=seatReservationForm.getFieldZoneId()%>" />
+	<input type="hidden" id="fieldZoneName" 	name="fieldZoneName" 	value="<%=seatReservationForm.getFieldZoneName()%>" />
+	<input type="hidden" id="matchId" 			name="matchId" 			value="<%=seatReservationForm.getMatchId()%>" />
+	<input type="hidden" id="season" 			name="season" 			value="<%=seatReservationForm.getSeason()%>" />
+	<input type="hidden" id="awayTeamNameTH" 	name="awayTeamNameTH" 	value="<%=seatReservationForm.getAwayTeamNameTH()%>" />
 	<div id="menu" style="width: 100%;background: black;">
 		<%@ include file="/pages/menu/menu.jsp"%>
 	</div>
@@ -102,12 +108,7 @@
 												<!-- start : options -->
 											    <div class="row no-padd-all">
        												<div class='span12'>
-														<select name='options1' class='form-control pull-right span2' style='margin-right:4px'>
-											           		<option value='-1'>all zone</option>
-											         	</select>
-         												<select name='options1' class='form-control pull-right span2' style='margin-right:4px'>
-           													<option value='-1'>all options</option>
-         												</select>
+														ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneName()%>
        												</div>
      											</div>
      											<!-- end : options -->
@@ -129,21 +130,26 @@
       												</div>
     											</div>
     											<div class="span3 round line-gray padd-all-4 no-marg-right" >
+    												
+    												<%
+    												List<SeatReservationBean> 		ticketTypeList = seatReservationForm.getTicketTypeList();
+    												for(SeatReservationBean ticketTypeBean:ticketTypeList){
+    												%>
         											<a href="javascript:void()" class='btn padd-all-4 user-type-select'>
-      													<img src="/ticketWeb/images/child.png" style='width:36px'>
+      													<img src="<%=imgURL + "/" + ticketTypeBean.getBookingTypeImage()%>" 
+      														 style='width:36px' 
+      														 alt="<%=ticketTypeBean.getBookingTypeName()%>" 
+      														 title="<%=ticketTypeBean.getBookingTypeName()%>" />
     												</a>
-    												<a href="javascript:void()" class='btn padd-all-4 user-type-select'>
-      													<img src="/ticketWeb/images/man.png" style='width:36px'>
-    												</a>
-    												<a href="javascript:void()" class='btn padd-all-4 user-type-select'>
-      													<img src="/ticketWeb/images/vip.png" style='width:36px'>
-    												</a>
+    												<%}%>
     												<div style='clear:both'></div>
 	    												<hr>
 													    <ul>
-													      	<li>เด็ก 50 บาท</li>
-													      	<li>ผู้ใหญ่ 100 บาท</li>
-													      	<li>vip 200 บาท</li>
+													    	<%
+													    	for(SeatReservationBean ticketTypeBean:ticketTypeList){
+													    	%>
+													      	<li><%=ticketTypeBean.getBookingTypeName()%>&nbsp;<%=ticketTypeBean.getBookingPrices()%>&nbsp;บาท</li>
+													      	<%} %>
 													    </ul>
     													<input class='form-control input' placeholder='0' style='text-align:right; max-width:75%'>
     													<span class="btn"> + </span>

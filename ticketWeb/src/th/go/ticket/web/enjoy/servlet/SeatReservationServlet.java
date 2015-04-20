@@ -1,24 +1,19 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.dao.SeatReservationDao;
-import th.go.ticket.app.enjoy.dao.SeatZoneDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.SeatReservationForm;
-import th.go.ticket.app.enjoy.form.SeatZoneForm;
 import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
+import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
 import th.go.ticket.web.enjoy.utils.EnjoyUtil;
 
@@ -27,7 +22,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 	static final long serialVersionUID = 1L;
 	private static final EnjoyLogger logger = EnjoyLogger.getLogger(SeatReservationServlet.class);
 	
-    private static final String FORM_NAME = "seatZoneForm";
+    private static final String FORM_NAME = "seatReservationForm";
     
     private EnjoyUtil               	easUtil                     = null;
     private HttpServletRequest          request                     = null;
@@ -64,7 +59,10 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
  			if(this.form == null || pageAction.equals("new")) this.form = new SeatReservationForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
- 				this.onLoad();
+// 				this.onLoad();
+ 				request.setAttribute("target", Constants.PAGE_URL +"/SeatReservationScn.jsp");
+ 			}if( pageAction.equals("getZoneDetail")){
+ 				this.getZoneDetail();
  				request.setAttribute("target", Constants.PAGE_URL +"/SeatReservationScn.jsp");
  			}
  			
@@ -81,27 +79,48 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
  		}
 	}
 	
-	private void onLoad() throws EnjoyException{
-		logger.info("[onLoad][Begin]");
+	private void getZoneDetail() throws EnjoyException{
+		logger.info("[getZoneDetail][Begin]");
 		
-		List<SeatZoneBean> 				resultList 			= null;
-		List<SeatZoneBean> 				list 				= null;
+		String							fieldZoneId			= null;
+		String							fieldZoneName		= null;
+		String							matchId				= null;
 		String							season				= null;
-		Map								matchMap			= null;
-		boolean							defaultMatch		= true;
+		String							awayTeamNameTH		= null;
 		
 		try{
 			
+			fieldZoneId 			= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
+			fieldZoneName 			= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneName"));
+			matchId 				= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+			season 					= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+			awayTeamNameTH 			= EnjoyUtils.nullToStr(this.request.getParameter("awayTeamNameTH"));
+			
+			logger.info("[getZoneDetail] fieldZoneId 		:: " + fieldZoneId);
+			logger.info("[getZoneDetail] fieldZoneName 		:: " + fieldZoneName);
+			logger.info("[getZoneDetail] matchId 			:: " + matchId);
+			logger.info("[getZoneDetail] season 			:: " + season);
+			logger.info("[getZoneDetail] awayTeamNameTH 	:: " + awayTeamNameTH);
+			
+			this.form.setFieldZoneId(fieldZoneId);
+			this.form.setFieldZoneName(fieldZoneName);
+			this.form.setMatchId(matchId);
+			this.form.setSeason(season);
+			this.form.setAwayTeamNameTH(awayTeamNameTH);
+			
+			//Set ประเภทตั๋ว
+			this.form.setTicketTypeList(this.dao.getTicketTypeList(fieldZoneId));
+			
+			//เลือกที่นั่งทั้งหมดของ Zone นี้
+			this.form.setSeatReservationBean(this.dao.getSeatForThisZone(fieldZoneId));
 			
 		}catch(Exception e){
-			throw new EnjoyException("onLoad :: " + e.getMessage());
+			throw new EnjoyException("getZoneDetail :: " + e.getMessage());
 		}finally{
-			logger.info("[onLoad][End]");
+			logger.info("[getZoneDetail][End]");
 		}
 		
 	}
-	
-	
 	
 	
 	

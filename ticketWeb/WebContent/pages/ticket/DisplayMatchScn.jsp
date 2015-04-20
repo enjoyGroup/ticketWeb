@@ -19,12 +19,17 @@
 		
 		
 		$(document).ready(function(){
-			gp_progressBarOn();
 			
-			gv_service 		= "service=" + $('#service').val();
-			
-			$('#menu1').ptMenu();
-			
+			try{
+				gp_progressBarOn();
+				
+				gv_service 		= "service=" + $('#service').val();
+				
+				$('#menu1').ptMenu();
+				$("#firstList").click();
+			}catch(e){
+				alert("onLoadPage :: " + e);
+			}
 			gp_progressBarOff();
 		});
 		
@@ -72,12 +77,18 @@
 													                <%
 													                	List<String> 					seasonList 		= displayMacthForm.getSeasonList();
 												             	        List<DisplayMatchDetailBean> 	matchList		= null;
+												             	        String							listId			= "firstList";
 												             			
 												             				
 												           				for(String season :seasonList){
 												           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
 													                %>
-													                   <li class='has-sub'><a href='#'><span><%=season%></span></a>
+													                   <li class='has-sub'>
+													                   	  <a href='#' id="<%=listId %>">
+													                   	  	<span>
+													                   	  		<%=season%>
+													                   	  	</span>
+													                   	  </a>
 													                      <ul>
 													                      	<%
 													                      		for(DisplayMatchDetailBean bean:matchList){
