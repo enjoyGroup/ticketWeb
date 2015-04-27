@@ -7,13 +7,15 @@ public class SeatZoneBean {
 	private String awayTeamNameTH;
 	private String fieldZoneId;
 	private String fieldZoneName;
+	private String fieldZoneNameTicket;
 	
 	public SeatZoneBean(){
-		this.matchId 			= "";
-		this.season 			= "";
-		this.awayTeamNameTH 	= "";
-		this.fieldZoneId 		= "";
-		this.fieldZoneName 		= "";
+		this.matchId 				= "";
+		this.season 				= "";
+		this.awayTeamNameTH 		= "";
+		this.fieldZoneId 			= "";
+		this.fieldZoneName 			= "";
+		this.fieldZoneNameTicket 	= "";
 	}
 
 	public String getMatchId() {
@@ -56,6 +58,14 @@ public class SeatZoneBean {
 		this.fieldZoneName = fieldZoneName;
 	}
 
+	public String getFieldZoneNameTicket() {
+		return fieldZoneNameTicket;
+	}
+
+	public void setFieldZoneNameTicket(String fieldZoneNameTicket) {
+		this.fieldZoneNameTicket = fieldZoneNameTicket;
+	}
+	
 	
 
 }

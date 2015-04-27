@@ -13,14 +13,18 @@ import javax.persistence.*;
 public class Ticketorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EmbeddedId
-	private TicketorderPK id;
+	@Id
+	private String ticketId;
 
 	private int bookingTypeId;
 
 	private int fieldZoneId;
 
 	private int matchId;
+
+	private String saleDate;
+
+	private String seatingNo;
 
 	private String ticketStatus;
 
@@ -29,12 +33,12 @@ public class Ticketorder implements Serializable {
 	public Ticketorder() {
 	}
 
-	public TicketorderPK getId() {
-		return this.id;
+	public String getTicketId() {
+		return this.ticketId;
 	}
 
-	public void setId(TicketorderPK id) {
-		this.id = id;
+	public void setTicketId(String ticketId) {
+		this.ticketId = ticketId;
 	}
 
 	public int getBookingTypeId() {
@@ -59,6 +63,22 @@ public class Ticketorder implements Serializable {
 
 	public void setMatchId(int matchId) {
 		this.matchId = matchId;
+	}
+
+	public String getSaleDate() {
+		return this.saleDate;
+	}
+
+	public void setSaleDate(String saleDate) {
+		this.saleDate = saleDate;
+	}
+
+	public String getSeatingNo() {
+		return this.seatingNo;
+	}
+
+	public void setSeatingNo(String seatingNo) {
+		this.seatingNo = seatingNo;
 	}
 
 	public String getTicketStatus() {

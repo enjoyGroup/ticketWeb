@@ -25,7 +25,7 @@
 				
 				gv_service 		= "service=" + $('#service').val();
 				
-				$('#menu1').ptMenu();
+				//$('#menu1').ptMenu();
 				$("#firstList").click();
 			}catch(e){
 				alert("onLoadPage :: " + e);

@@ -220,7 +220,7 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
 				detailList 	= this.form.getDetailList();
 				seasonList	= this.form.getSeasonList();
 				
-				obj.put("status", 			"SUCCESS");
+				obj.put(STATUS, 			SUCCESS);
 				obj.put("season", 			season);
 				
 				for(int i=0;i<detailList.size();i++){
@@ -246,14 +246,14 @@ public class DetailRevenueOfYearServlet extends EnjoyStandardSvc {
 				obj.put("detail", 			detailJSONArray);
 				obj.put("seasonList", 		seasonJSONArray);
 			}else{
-				obj.put("status", 			"ERROR");
-				obj.put("errMsg", 			"ฤดูกาลต้องไม่เท่ากับค่าว่าง");
+				obj.put(STATUS, 			ERROR);
+				obj.put(ERR_MSG, 			"ฤดูกาลต้องไม่เท่ากับค่าว่าง");
 			}
 			
 			
 		}catch(Exception e){
-			obj.put("status", 			"ERROR");
-			obj.put("errMsg", 			e.getMessage());
+			obj.put(STATUS, 			ERROR);
+			obj.put(ERR_MSG, 			e.getMessage());
 			e.printStackTrace();
 			throw new EnjoyException("onLoad :: " + e.getMessage());
 		}finally{

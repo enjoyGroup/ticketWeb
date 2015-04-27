@@ -185,7 +185,7 @@ public class EventMatchDao {
 		
 		try{
 			evMatchDB = new Eventmatch();
-			evMatchDB.setActiveFlag(true);
+//			evMatchDB.setActiveFlag(true);
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
@@ -245,7 +245,7 @@ public class EventMatchDao {
 		
 		try{
 			evMatchDB = new Eventmatch();
-			evMatchDB.setActiveFlag(eventMatchBean.isActive());
+//			evMatchDB.setActiveFlag(eventMatchBean.isActive());
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());

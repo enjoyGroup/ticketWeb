@@ -23,7 +23,7 @@
 				
 				gv_service 		= "service=" + $('#service').val();
 				
-				$('#menu1').ptMenu();
+				//$('#menu1').ptMenu();
 				$("#firstList").click();
 			}catch(e){
 				alert("onLoadPage :: " + e);
@@ -51,21 +51,22 @@
 			}
 		}
 		
-		function lp_openBookingPage(av_fieldZoneId, av_fieldZoneName){
+		function lp_openBookingPage(av_fieldZoneId, av_fieldZoneName, av_fieldZoneNameTicket){
 			
-			var windowName 	= "";
+			//var windowName 	= "";
 			var myWindow	= null;
 			var params		= null;
 			
 			try{
 				gp_progressBarOn();
 				
-				params		= "&fieldZoneId=" 		+ av_fieldZoneId 
-							+ "&fieldZoneName=" 	+ av_fieldZoneName 
-							+ "&matchId=" 			+ $("#matchId").val() 
-							+ "&season=" 			+ $("#season").val();
-							+ "&awayTeamNameTH=" 	+ $("#awayTeamNameTH").val();
-				windowName 	= "booking" + $("#matchId").val() + av_fieldZoneId;
+				params		= "&fieldZoneId=" 			+ av_fieldZoneId 
+							//+ "&fieldZoneName=" 		+ av_fieldZoneName 
+							//+ "&fieldZoneNameTicket=" 	+ av_fieldZoneNameTicket 
+							+ "&matchId=" 				+ $("#matchId").val(); 
+							//+ "&season=" 				+ $("#season").val()
+							//+ "&awayTeamNameTH=" 		+ $("#awayTeamNameTH").val();
+				//windowName 	= "booking" + $("#matchId").val() + av_fieldZoneId;
 				
 				myWindow = window.open(gv_url + "?service=servlet.SeatReservationServlet&pageAction=getZoneDetail" + params, "_self");
 				myWindow.focus();
@@ -173,12 +174,12 @@
 						                  	 							
 						                  	 							<div>
 						                  	 								<input  type="button" 
-						                  	 										id="btnWR" 
-						                  	 										name="btnWR" 
+						                  	 										id="<%=fieldZoneBean.getFieldZoneNameTicket() %>" 
+						                  	 										name="<%=fieldZoneBean.getFieldZoneNameTicket() %>" 
 						                  	 										class="btn btn-info" 
 						                  	 										style="width:250px;"
-						                  	 										onclick="lp_openBookingPage('<%=fieldZoneBean.getFieldZoneId() %>', '<%=fieldZoneBean.getFieldZoneName() %>')"
-						                  	 										value="<%=fieldZoneBean.getFieldZoneName() %>" />
+						                  	 										onclick="lp_openBookingPage('<%=fieldZoneBean.getFieldZoneId()%>', '<%=fieldZoneBean.getFieldZoneName()%>', '<%=fieldZoneBean.getFieldZoneNameTicket()%>')"
+						                  	 										value="<%=fieldZoneBean.getFieldZoneNameTicket()%>" />
 									          							</div>
 									          							<%} %>
 									          						</td>

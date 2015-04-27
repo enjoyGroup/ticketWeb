@@ -16,6 +16,8 @@ public class Eventmatch implements Serializable {
 	@Id
 	private int matchId;
 
+	private String activeFlag;
+
 	private String awayTeamNameEN;
 
 	private String awayTeamNameTH;
@@ -25,8 +27,6 @@ public class Eventmatch implements Serializable {
 	private String matchTime;
 
 	private int season;
-	
-	private boolean activeFlag;
 
 	public Eventmatch() {
 	}
@@ -37,6 +37,14 @@ public class Eventmatch implements Serializable {
 
 	public void setMatchId(int matchId) {
 		this.matchId = matchId;
+	}
+
+	public String getActiveFlag() {
+		return this.activeFlag;
+	}
+
+	public void setActiveFlag(String activeFlag) {
+		this.activeFlag = activeFlag;
 	}
 
 	public String getAwayTeamNameEN() {
@@ -79,13 +87,4 @@ public class Eventmatch implements Serializable {
 		this.season = season;
 	}
 
-	public boolean isActiveFlag() {
-		return activeFlag;
-	}
-
-	public void setActiveFlag(boolean activeFlag) {
-		this.activeFlag = activeFlag;
-	}
-
-	
 }

@@ -35,8 +35,6 @@
 		<mapping class="th.go.ticket.app.enjoy.model.Refpagedetail" />
 		<mapping class="th.go.ticket.app.enjoy.model.Refuserstatus" />
 		<mapping class="th.go.ticket.app.enjoy.model.Ticketorder" />
-		<mapping class="th.go.ticket.app.enjoy.model.TicketorderPK" />
-		<mapping class="th.go.ticket.app.enjoy.model.Ticketstatus" />
 		<mapping class="th.go.ticket.app.enjoy.model.Userdetail" />
 		<mapping class="th.go.ticket.app.enjoy.model.Userprivilege" />
 		<!-- End Entity zone -->

@@ -8,9 +8,8 @@ import java.util.Properties;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 
 public class ConfigFile {
-	private static final String VAT_RATE   		 = "conf.vatRate";
-	private static final String PADING_INVOICE   = "pading.invoice";
-	private static final String BEGIN_INVOICE    = "begin.invoice.";
+	private static final String PADING_SEAT_NO   	= "pading.seatNo";
+	private static final String PADING_TICKET_ID   	= "pading.ticketId";
 	private static ConfigFile configFile;
 	private static Properties properties ;
 	
@@ -43,15 +42,11 @@ public class ConfigFile {
 		return result;
 	}
 	
-	public static String getVAT_RATE() {
-		return getText(VAT_RATE);
+	public static String getPadingSeatNo() {
+		return getText(PADING_SEAT_NO);
 	}
 	
-	public static String getPADING_INVOICE() {
-		return getText(PADING_INVOICE);
-	}
-
-	public static String getBEGIN_INVOICE(String typeInvoice) {
-		return getText(BEGIN_INVOICE + typeInvoice);
+	public static String getPadingTicketId() {
+		return getText(PADING_TICKET_ID);
 	}
 }

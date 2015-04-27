@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import th.go.ticket.app.enjoy.exception.EnjoyException;
+
 public class EnjoyUtils {
 	
 	public static void main(String[] args) {
@@ -148,7 +150,7 @@ public class EnjoyUtils {
     
 	public static String convertFloatToDisplay(String stFloat,int point){
 
-		if (!stFloat.equals("")){
+		if (stFloat!=null&&!stFloat.equals("")){
 			String strFormat = "##,##0";
 			if (point > 0) { strFormat = strFormat + "."; }
 			for(int i=0;i<point;i++){
@@ -156,6 +158,8 @@ public class EnjoyUtils {
 			}		
 			DecimalFormat df	= new DecimalFormat(strFormat);			
 			stFloat 			= df.format(Double.parseDouble(stFloat));	
+		}else{
+			stFloat = "0.00";
 		}
 
 		return stFloat;
@@ -416,6 +420,25 @@ public class EnjoyUtils {
 	        	e.printStackTrace();
 	        } 
 	        return returnList;
+		
+	}
+	
+	//แปลงรูปแบบเวลา Ex av_time = "1725"
+	public static String formatTime(String av_time) throws Exception{
+		
+		String t_formay		= "00:00";
+		
+		try{
+			
+			if(av_time!=null && !av_time.equals("") && av_time.length()==4){
+				t_formay = av_time.substring(0, 2) + ":" + av_time.substring(2, 4);
+			}
+			
+		}catch(Exception e){
+			throw e;
+		}
+		
+		return t_formay;
 		
 	}
 	

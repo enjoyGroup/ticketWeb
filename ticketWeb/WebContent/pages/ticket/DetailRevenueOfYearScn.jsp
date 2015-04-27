@@ -61,7 +61,7 @@
 			gv_service 	= "service=" + $('#service').val();
 			gv_dataFlow	= '<%=detailRevenueOfYearForm.getDataFlow()%>';
 			
-			$('#menu1').ptMenu();
+			//$('#menu1').ptMenu();
 			
 			//alert(gv_dataFlow);
 			drawChart();

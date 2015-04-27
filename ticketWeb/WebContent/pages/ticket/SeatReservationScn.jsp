@@ -9,18 +9,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>จำหน่ายตั๋วการแข่งขัน</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="description" content="">
-	<meta name="keywords" content="">
-	
-	<script>
-		$(document).ready(function(){
-			$('#menu1').ptMenu();
-		});
-	</script>
-	
 	<!-- TODO : move all css to files later -->
 	<style type="text/css">
 	  .padd-all-4{padding: 4px !important;}
@@ -50,7 +38,8 @@
 	  .seat-col-free{background: url('/ticketWeb/images/seat-free.png') no-repeat 10%; cursor: pointer}
 	  .seat-col-occupy{background: url('/ticketWeb/images/seat-occupy.png') no-repeat 10%; cursor:no-drop }
 	  .seat-col-occupy2{background: url('/ticketWeb/images/seat-occupy2.png') no-repeat 10%; cursor:no-drop }
-	  .seat-col-bookking{background: url('/ticketWeb/images/seat-bookking.png') no-repeat 10%; cursor:no-drop }
+	  .seat-col-bookking-oth{background: url('/ticketWeb/images/seat-bookking.png') no-repeat 10%; cursor:no-drop }
+	  .seat-col-bookking{background: url('/ticketWeb/images/seat-bookking.png') no-repeat 10%; cursor:pointer }
 	  .seat-col-head{background: blue; cursor:default; color:#fff; }
 	
 	  .user-type-select{padding: 4px 16px !important; }
@@ -77,15 +66,481 @@
 	  .seat-gray:hover{ background-color:   rgba(174, 174, 174, 0.7);}
 	</style>
 	<!-- End TODO  -->
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	
+	<script>
+		var gv_service 			= null;
+		var gv_url 				= '<%=servURL%>/EnjoyGenericSrv';
+		var gv_free 			= '<%=seatReservationForm.FREE%>';
+		var gv_active 			= '<%=seatReservationForm.ACTIVE%>';
+		var gv_pending 			= '<%=seatReservationForm.PENDING%>';
+		var gv_reject 			= '<%=seatReservationForm.REJECT%>';
+		var gv_flagAlterSeat 	= '<%=seatReservationForm.getFlagAlterSeat()%>';//0 ไม่สามารถเลือกที่นั่งได้, 1 เลือกที่นั่งได้
+	
+		$(document).ready(function(){
+			try{
+				gp_progressBarOn();
+				//$('#menu1').ptMenu();
+				
+				gv_service 		= "service=" + $('#service').val();
+				
+				if(gv_flagAlterSeat=="1"){
+					lp_getSeatBooking();
+					setInterval(function(){ lp_getSeatBooking(); }, 3000);
+				}
+				/*$(window).on('beforeunload', function(){
+					lp_clearDataBeforeCloseWindow();
+				    return 'ข้อมูลที่นั่งได้ถูกเคลียร์แล้ว คุณต้องการปิดหน้าต่างนี้ ?';
+				});
+				
+				$(window).bind('unload', function(){
+					lp_clearDataBeforeCloseWindow();
+				});*/
+				
+			}catch(e){
+				alert("onLoadPage :: " + e);
+			}
+			gp_progressBarOff();
+		});
+		
+		function lp_getSeatBooking(){
+			
+			try{
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=getSeatBooking&" + $('#frm').serialize(),
+		            beforeSend: "",
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		            	var sizeList			= 0;
+		            	
+		            	try{
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		//alert(status);
+		            		if(status=="SUCCESS"){
+		            			sizeList = parseInt(jsonObj.sizeList);
+		            			
+		            			//ปรับทุกทีนั่งให้ว่าง
+	            				lp_clearSeatBooking();
+		            			
+		            			//alert(sizeList);
+		            			if(sizeList > 0){
+		            				
+		            				$.each(jsonObj.detail, function(idx, obj) {
+		            					//alert(obj.ticketId + " "+ obj.seatingNo + " "+ obj.ticketUserUniqueId + " "+ obj.ticketStatus + " "+ obj.classSeat);
+		            					lp_setSeatBooking(obj.ticketId, obj.seatingNo, obj.ticketUserUniqueId, obj.ticketStatus, obj.classSeat, obj.seatBookingTypeId);
+			            			});
+		            			}
+		            			
+		            		}else{
+		            			errMsg = jsonObj.errMsg;
+		            			alert(errMsg);
+		            		}
+		            	}catch(e){
+		            		alert("in lp_getSeatBooking :: " + e);
+		            	}
+		            }
+		        });
+				
+			}catch(e){
+				alert("lp_getSeatBooking :: " + e);
+			}
+			
+		}
+		
+		function lp_clearSeatBooking(){
+			
+			var la_ticketId 			= null;
+			var la_seatingNo 			= null;
+			var la_ticketUserUniqueId 	= null;
+			var la_seatIndex 			= null;
+			var la_ticketStatus 		= null;
+			var la_hidNumSeat			= null;
+			var la_seatBookingTypeId 	= null;
+			var la_numTicketType		= null;
+			var lo_divSeat				= null;
+			var lo_spanNumSeat			= null;
+			
+			try{
+				
+				la_seatingNo 			= document.getElementsByName("seatingNo");
+				la_seatIndex 			= document.getElementsByName("seatIndex");
+				la_ticketId 			= document.getElementsByName("ticketId");
+				la_ticketUserUniqueId 	= document.getElementsByName("ticketUserUniqueId");
+				la_ticketStatus 		= document.getElementsByName("ticketStatus");
+				la_hidNumSeat 			= document.getElementsByName("hidNumSeat");
+				la_seatBookingTypeId 	= document.getElementsByName("seatBookingTypeId");
+				la_numTicketType 		= document.getElementsByName("numTicketType");
+				
+				for(var i=0;i<la_numTicketType.length;i++){
+					la_numTicketType[i].value = 0;
+				}
+				
+				for(var i=0;i<la_seatingNo.length;i++){
+					lo_divSeat 		= eval('document.getElementById("seat' + la_seatIndex[i].value + '")');
+					lo_spanNumSeat 	= eval('document.getElementById("numSeat' + la_seatIndex[i].value + '")');
+					
+					la_ticketId[i].value			= "";
+					la_ticketUserUniqueId[i].value	= "";
+					la_ticketStatus[i].value		= "";
+					la_seatBookingTypeId[i].value	= "";
+					lo_divSeat.className 			= "seat-col seat-col-free seat-blue round";
+					lo_spanNumSeat.innerHTML		= la_hidNumSeat[i].value;
+					
+				}
+				
+				
+			}catch(e){
+				alert("lp_clearSeatBooking :: " + e);
+			}
+			
+		}
+		
+		function lp_setSeatBooking(av_ticketId, av_seatingNo, av_ticketUserUniqueId, av_ticketStatus, av_classSeat, av_seatBookingTypeId){
+			
+			var la_ticketId 			= null;
+			var la_seatingNo 			= null;
+			var la_ticketUserUniqueId 	= null;
+			var la_seatIndex 			= null;
+			var la_ticketStatus 		= null;
+			var la_hidNumSeat			= null;
+			var la_seatBookingTypeId 	= null;
+			var lv_seatingNo			= "";
+			var lo_divSeat				= null;
+			var lo_spanNumSeat			= null;
+			var lo_numTicketType		= null;
+			var lo_userUniqueId			= null;
+			var lv_numTicketType		= 0;
+			
+			try{
+				
+				la_seatingNo 			= document.getElementsByName("seatingNo");
+				la_seatIndex 			= document.getElementsByName("seatIndex");
+				la_ticketId 			= document.getElementsByName("ticketId");
+				la_ticketUserUniqueId 	= document.getElementsByName("ticketUserUniqueId");
+				la_ticketStatus 		= document.getElementsByName("ticketStatus");
+				la_hidNumSeat 			= document.getElementsByName("hidNumSeat");
+				la_seatBookingTypeId 	= document.getElementsByName("seatBookingTypeId");
+				lo_userUniqueId			= document.getElementById("userUniqueId");
+				
+				if(lo_userUniqueId.value==av_ticketUserUniqueId && av_ticketStatus=="P"){
+					lo_numTicketType = eval('document.getElementById("numTicketType' + av_seatBookingTypeId + '")');
+					lv_numTicketType = parseInt(gp_replaceComma(lo_numTicketType.value)) + 1;
+					
+					lo_numTicketType.value = lv_numTicketType;
+					gp_format(lo_numTicketType, 0);
+				}
+				
+				for(var i=0;i<la_seatingNo.length;i++){
+					lv_seatingNo 	= la_seatingNo[i].value;
+					lo_divSeat 		= eval('document.getElementById("seat' + la_seatIndex[i].value + '")');
+					lo_spanNumSeat 	= eval('document.getElementById("numSeat' + la_seatIndex[i].value + '")');
+					
+					if(av_seatingNo==lv_seatingNo){
+						la_ticketId[i].value			= av_ticketId;
+						la_ticketUserUniqueId[i].value	= av_ticketUserUniqueId;
+						la_ticketStatus[i].value		= av_ticketStatus;
+						la_seatBookingTypeId[i].value	= av_seatBookingTypeId;
+						lo_divSeat.className 			= av_classSeat;
+						lo_spanNumSeat.innerHTML		= "";
+						
+						break;
+					}
+					
+				}
+				
+				
+			}catch(e){
+				alert("lp_setSeatBooking :: " + e);
+			}
+			
+		}
+		
+		function lp_setTicketType(av_ticketTypeIndex, av_bookingTypeId, av_bookingTypeName){
+			
+			var la_btnTicketType 		= null;
+			
+			try{
+				
+				la_btnTicketType 	= document.getElementsByName("btnTicketType");
+				
+				for(var i=0;i<la_btnTicketType.length;i++){
+					
+					if(i==av_ticketTypeIndex){
+						la_btnTicketType[i].className = "";
+					}else{
+						la_btnTicketType[i].className = "btn-unSelect";
+					}
+					
+				}
+				
+				$("#bookingTypeId").val(av_bookingTypeId);
+				$("#bookingTypeName").val(av_bookingTypeName);
+				
+			}catch(e){
+				alert("lp_setTicketType :: " + e);
+			}
+			
+		}
+		
+		function lp_booking(av_index){
+			var la_ticketId 			= null;
+			var la_seatingNo 			= null;
+			var la_ticketUserUniqueId 	= null;
+			var la_seatIndex 			= null;
+			var la_ticketStatus 		= null;
+			var la_hidNumSeat			= null;
+			var la_seatBookingTypeId	= null;
+			var lv_seatingNo			= "";
+			var lo_divSeat				= null;
+			var lo_spanNumSeat			= null;
+			var lo_userUniqueId			= null;
+			var lv_params				= "";
+			
+			try{
+				la_seatingNo 			= document.getElementsByName("seatingNo");
+				la_seatIndex 			= document.getElementsByName("seatIndex");
+				la_ticketId 			= document.getElementsByName("ticketId");
+				la_ticketUserUniqueId 	= document.getElementsByName("ticketUserUniqueId");
+				la_ticketStatus 		= document.getElementsByName("ticketStatus");
+				la_hidNumSeat 			= document.getElementsByName("hidNumSeat");
+				la_seatBookingTypeId 	= document.getElementsByName("seatBookingTypeId");
+				lo_userUniqueId 		= document.getElementById("userUniqueId");
+				
+				//Status ถูกจองโดยไม่ใช่ User นี้
+				if(gv_pending==gp_trim(la_ticketStatus[av_index].value) && la_ticketUserUniqueId[av_index].value!=lo_userUniqueId.value){
+					alert("ไม่สามารถยกเลิกได้เนื่องจาก ถูกจองโดยคนอื่นแล้ว");
+					return;
+				}
+				
+				//สถานะจองเสร็จแล้วไม่สามารถเปลี่ยนแปลงได้
+				if(gv_active==la_ticketStatus[av_index].value)return;
+				
+				lv_params = gv_service + "&ticketId=" 		+ la_ticketId[av_index].value
+									   + "&seatingNo=" 		+ la_seatingNo[av_index].value
+									   + "&matchId=" 		+ $("#matchId").val()
+									   + "&fieldZoneId=" 	+ $("#fieldZoneId").val()
+									   + "&bookingTypeId=" 	+ $("#bookingTypeId").val()
+									   + "&userUniqueId=" 	+ $("#userUniqueId").val()
+									   + "&ticketStatus=" 	+ la_ticketStatus[av_index].value;
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=booking&" + lv_params,
+		            beforeSend: "",
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		            	
+		            	try{
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		//alert(status);
+		            		if(status=="SUCCESS"){
+		            			
+		            			lp_getSeatBooking();
+		            		}else{
+		            			errMsg = jsonObj.errMsg;
+		            			alert(errMsg);
+		            		}
+		            	}catch(e){
+		            		alert("in lp_booking :: " + e);
+		            	}
+		            }
+		        });
+				
+			}catch(e){
+				alert("lp_booking :: " + e);
+			}
+			
+		}
+		
+		function lp_goBack(){
+			
+			try{
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=goBack&" + $('#frm').serialize(),
+		            beforeSend: "",
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		            	
+		            	try{
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		//alert(status);
+		            		if(status=="SUCCESS"){
+		            			window.location = gv_url + "?service=servlet.SeatZoneServlet&pageAction=new";
+		            		}else{
+		            			errMsg = jsonObj.errMsg;
+		            			alert(errMsg);
+		            		}
+		            	}catch(e){
+		            		alert("in lp_goBack :: " + e);
+		            	}
+		            }
+		        });
+				
+			}catch(e){
+				alert("lp_goBack :: " + e);
+			}
+		}
+		
+		function lp_goNext(){
+			
+			var la_numTicketType 	= null;
+			var lv_flag				= true;
+			
+			try{
+				
+				la_numTicketType = document.getElementsByName("numTicketType");
+				
+				for(var i=0;i<la_numTicketType.length;i++){
+					if(la_numTicketType[i].value>0){
+						lv_flag = false;
+						break;
+					}
+				}
+				
+				if(lv_flag==true){
+					alert("กรุณาระบุจำนวนตั๋วก่อนทำรายการถัดไป");
+					return;
+				}
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=goNext&" + $('#frm').serialize(),
+		            beforeSend: "",
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		            	var params				= "";
+		            	
+		            	try{
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		//alert(status);
+		            		if(status=="SUCCESS"){
+		            			//alert(gp_sanitizeURLString(JSON.stringify(jsonObj)));
+		            			params = "&matchId=" + $("#matchId").val() + "&fieldZoneId=" + $("#fieldZoneId").val() + "&ticketIdList=" + gp_sanitizeURLString(JSON.stringify(jsonObj));
+		            			
+		            			window.location = gv_url + "?service=servlet.SeatSummaryReservationServlet&pageAction=getSummaryReserv" + params;
+		            		}else{
+		            			errMsg = jsonObj.errMsg;
+		            			alert(errMsg);
+		            		}
+		            	}catch(e){
+		            		alert("in lp_goNext :: " + e);
+		            	}
+		            }
+		        });
+			}catch(e){
+				alert("lp_goNext :: " + e);
+			}
+			
+		}
+		
+		//av_flag 0 คือ ลบ, 1 คือ บวก
+		function lp_setNumTicketType(av_flag, av_seatBookingTypeId){
+			
+			var lo_numTicketType 	= null;
+			var lv_numTicketType	= 0;
+			var lo_btnMinus			= null;
+			
+			try{
+				
+				lo_numTicketType 	= eval('document.getElementById("numTicketType' + av_seatBookingTypeId + '")');
+				lo_btnMinus 		= eval('document.getElementById("btnMinus' + av_seatBookingTypeId + '")');
+				
+				if(av_flag=="0"){
+					lv_numTicketType = parseInt(gp_replaceComma(lo_numTicketType.value)) - 1;
+				}else{
+					lv_numTicketType = parseInt(gp_replaceComma(lo_numTicketType.value)) + 1;
+				}
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=forStandZone&seatBookingTypeId=" + av_seatBookingTypeId + "&numTicketType=" + lv_numTicketType,
+		            beforeSend: "",
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		            	
+		            	try{
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		//alert(status);
+		            		if(status=="SUCCESS"){
+		            			lo_numTicketType.value = lv_numTicketType;
+		        				gp_format(lo_numTicketType, 0);
+		        				
+		        				//ค่าผลรวมเป็น 0 ให้ set disabled ปุ่มลบ
+		        				if(lv_numTicketType==0){
+		        					lo_btnMinus.disabled = true;
+		        				}else{
+		        					lo_btnMinus.disabled = false;
+		        				}
+		        				
+		            		}else{
+		            			errMsg = jsonObj.errMsg;
+		            			alert(errMsg);
+		            		}
+		            	}catch(e){
+		            		alert("in lp_setNumTicketType :: " + e);
+		            	}
+		            }
+		        });
+				
+			}catch(e){
+				alert("lp_setNumTicketType :: " + e);
+			}
+			
+		}
+		
+	</script>
 </head>
 <body>
 <form id="frm" action="<%=servURL%>/EnjoyGenericSrv">
-	<input type="hidden" id="service" 			name="service" 			value="servlet.SeatReservationServlet" />
-	<input type="hidden" id="fieldZoneId" 		name="fieldZoneId" 		value="<%=seatReservationForm.getFieldZoneId()%>" />
-	<input type="hidden" id="fieldZoneName" 	name="fieldZoneName" 	value="<%=seatReservationForm.getFieldZoneName()%>" />
-	<input type="hidden" id="matchId" 			name="matchId" 			value="<%=seatReservationForm.getMatchId()%>" />
-	<input type="hidden" id="season" 			name="season" 			value="<%=seatReservationForm.getSeason()%>" />
-	<input type="hidden" id="awayTeamNameTH" 	name="awayTeamNameTH" 	value="<%=seatReservationForm.getAwayTeamNameTH()%>" />
+	<input type="hidden" id="service" 				name="service" 				value="servlet.SeatReservationServlet" />
+	<input type="hidden" id="fieldZoneId" 			name="fieldZoneId" 			value="<%=seatReservationForm.getFieldZoneId()%>" />
+	<input type="hidden" id="fieldZoneName" 		name="fieldZoneName" 		value="<%=seatReservationForm.getFieldZoneName()%>" />
+	<input type="hidden" id="fieldZoneNameTicket" 	name="fieldZoneNameTicket" 	value="<%=seatReservationForm.getFieldZoneNameTicket()%>" />
+	<input type="hidden" id="matchId" 				name="matchId" 				value="<%=seatReservationForm.getMatchId()%>" />
+	<input type="hidden" id="season" 				name="season" 				value="<%=seatReservationForm.getSeason()%>" />
+	<input type="hidden" id="awayTeamNameTH" 		name="awayTeamNameTH" 		value="<%=seatReservationForm.getAwayTeamNameTH()%>" />
+	<input type="hidden" id="userUniqueId" 			name="userUniqueId" 		value="<%=seatReservationForm.getUserUniqueId()%>" />
+	<input type="hidden" id="bookingTypeId" 		name="bookingTypeId" 		value="<%=seatReservationForm.getBookingTypeId()%>" />
+	<input type="hidden" id="bookingTypeName" 		name="bookingTypeName" 		value="<%=seatReservationForm.getBookingTypeName()%>" />
+	<input type="hidden" id="flagAlterSeat" 		name="flagAlterSeat" 		value="<%=seatReservationForm.getFlagAlterSeat()%>" />
 	<div id="menu" style="width: 100%;background: black;">
 		<%@ include file="/pages/menu/menu.jsp"%>
 	</div>
@@ -108,52 +563,150 @@
 												<!-- start : options -->
 											    <div class="row no-padd-all">
        												<div class='span12'>
-														ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneName()%>
+														ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneNameTicket()%>
        												</div>
      											</div>
      											<!-- end : options -->
      											<!-- start : seat -->
-     											<div class="span8 round line-gray padd-all-4 no-marg-left">
-      												<div class="seat-holder" id='-1'>
-        												<div class="seat-row">
-												        	<!-- <div class="seat-col seat-col-head " id='ch-a'>A</div>
-												          	<div class="seat-col seat-col-occupy round" id='a-1-2'data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-occupy round" id='a-1-4' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-green round"   	id='a-1-1' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-blue round"   	id='a-1-3' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-yellow round"   id='a-1-3' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-pink round"   	id='a-1-3' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-orange round"   id='a-1-3' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-violet round"   id='a-1-3' data-ref-id='-1' ></div>
-												          	<div class="seat-col seat-col-free seat-gray round"   	id='a-1-3' data-ref-id='-1' ></div> -->
-        												</div>
-      												</div>
-    											</div>
-    											<div class="span3 round line-gray padd-all-4 no-marg-right" >
-    												
-    												<%
-    												List<SeatReservationBean> 		ticketTypeList = seatReservationForm.getTicketTypeList();
-    												for(SeatReservationBean ticketTypeBean:ticketTypeList){
-    												%>
-        											<a href="javascript:void()" class='btn padd-all-4 user-type-select'>
-      													<img src="<%=imgURL + "/" + ticketTypeBean.getBookingTypeImage()%>" 
-      														 style='width:36px' 
-      														 alt="<%=ticketTypeBean.getBookingTypeName()%>" 
-      														 title="<%=ticketTypeBean.getBookingTypeName()%>" />
-    												</a>
-    												<%}%>
-    												<div style='clear:both'></div>
-	    												<hr>
-													    <ul>
-													    	<%
-													    	for(SeatReservationBean ticketTypeBean:ticketTypeList){
-													    	%>
-													      	<li><%=ticketTypeBean.getBookingTypeName()%>&nbsp;<%=ticketTypeBean.getBookingPrices()%>&nbsp;บาท</li>
-													      	<%} %>
-													    </ul>
-    													<input class='form-control input' placeholder='0' style='text-align:right; max-width:75%'>
-    													<span class="btn"> + </span>
-    												</div>
+     											<%
+												List<SeatReservationBean> 		seatPerRowList 		= null;
+												
+												if(seatReservationForm.getFlagAlterSeat().equals("1")){
+												%>
+												<div class="span8 round line-gray padd-all-4 no-marg-left">
+													<div class="seat-holder" id="-1">
+														<% for(String seatName:seatReservationForm.getSeatNameList()){%>
+														<div style="clear: both"></div>
+														<div class="seat-col seat-col-head " id="<%=seatName %>"><%=seatName %></div>
+														<%
+														seatPerRowList = (List<SeatReservationBean>) seatReservationForm.getRowsMap().get(seatName);
+														for(SeatReservationBean	seatPerRowBean:seatPerRowList){
+														%>
+														<div title="<%=seatPerRowBean.getSeatingNo()%>" class="<%=seatPerRowBean.getClassSeat()%>" id="seat<%=seatPerRowBean.getSeatIndex()%>" onclick="lp_booking(<%=seatPerRowBean.getSeatIndex()%>);" data-ref-id="">
+															<span id="numSeat<%=seatPerRowBean.getSeatIndex()%>"><%=seatPerRowBean.getNumSeat()%></span>
+															<input type="hidden" name="ticketId" 			value="<%=seatPerRowBean.getTicketId()%>" />
+															<input type="hidden" name="ticketStatus" 		value="<%=seatPerRowBean.getTicketStatus()%>" />
+															<input type="hidden" name="ticketUserUniqueId" 	value="<%=seatPerRowBean.getTicketUserUniqueId()%>" />
+															<input type="hidden" name="seatIndex" 			value="<%=seatPerRowBean.getSeatIndex()%>" />
+															<input type="hidden" name="seatingNo" 			value="<%=seatPerRowBean.getSeatingNo()%>" />
+															<input type="hidden" name="hidNumSeat" 			value="<%=seatPerRowBean.getNumSeat()%>" />
+															<input type="hidden" name="seatBookingTypeId" 	value="<%=seatPerRowBean.getSeatBookingTypeId()%>" />
+														</div>	
+														<%}}%>
+													</div>
+												</div>
+												<%}else{ %>
+												<div class="span8 round line-gray padd-all-4 no-marg-left">
+													<div class="seat-holder" id="-1">
+														<!-- แบบไม่เลือกที่นั่ง -->
+														<span>รออี๊ดเอารุปมาใส่</span>
+													</div>
+												</div>
+												<%} %>
+												<table border="0" >
+													<tr>
+														<td>
+			    											<div class="span3 round line-gray padd-all-4 no-marg-right" >
+			    												
+			    												<%
+			    												List<SeatReservationBean> 		ticketTypeList 	= seatReservationForm.getTicketTypeList();
+			    												int								ticketTypeIndex	= 0;
+			    												Map								mapBookingType	= seatReservationForm.getMapBookingType();
+			    												int								numTicketType	= 0;
+			    												for(SeatReservationBean ticketTypeBean:ticketTypeList){
+			    													if(seatReservationForm.getFlagAlterSeat().equals("1")){
+			    												%>
+					        											<a href="javascript:void(0)" onclick="lp_setTicketType('<%=ticketTypeIndex%>', '<%=ticketTypeBean.getBookingTypeId()%>', '<%=ticketTypeBean.getBookingTypeName()%>');" class='btn padd-all-4 user-type-select'>
+					      													<img src="<%=imgURL + "/" + ticketTypeBean.getBookingTypeImage()%>" 
+					      														 style='width:36px;' 
+					      														 id="btnTicketType<%=ticketTypeIndex%>"
+					      														 name="btnTicketType"
+					      														 class="<%=ticketTypeBean.getClassBtn()%>"
+					      														 alt="<%=ticketTypeBean.getBookingTypeName()%>" 
+					      														 title="<%=ticketTypeBean.getBookingTypeName()%>" />
+					    												</a>
+			    												<% }else{%>
+			    													<a class='btn padd-all-4 user-type-select' disabled>
+					      													<img src="<%=imgURL + "/" + ticketTypeBean.getBookingTypeImage()%>" 
+					      														 style='width:36px;' 
+					      														 id="btnTicketType<%=ticketTypeIndex%>"
+					      														 name="btnTicketType"
+					      														 class="btn-unSelect"
+					      														 alt="<%=ticketTypeBean.getBookingTypeName()%>" 
+					      														 title="<%=ticketTypeBean.getBookingTypeName()%>" />
+					      											</a>
+			    												<%}
+			    												
+			    												ticketTypeIndex++; 
+			    												}%>
+			    												<div style='clear:both'></div>
+				    												<hr>
+				    												<table border="0" cellpadding="5" cellspacing="2">
+				    													<%
+																    	for(SeatReservationBean ticketTypeBean:ticketTypeList){
+																    	%>
+				    													<tr>
+				    														<td align="left">
+				    															<%=ticketTypeBean.getBookingTypeName()%>&nbsp;&nbsp;:&nbsp;&nbsp; 
+				    														</td>
+				    														<td align="left">
+				    															<%=ticketTypeBean.getBookingPrices()%>&nbsp;&nbsp;
+				    														</td>
+				    														<td align="left">
+				    															บาท
+				    														</td>
+				    													</tr>
+				    													<%} %>
+				    												</table>
+																    <table border="0" cellpadding="5" cellspacing="2">
+																    	<%
+																    	for(SeatReservationBean ticketTypeBean:ticketTypeList){
+																    		if(mapBookingType.containsKey(ticketTypeBean.getBookingTypeId())){
+																    			numTicketType = (Integer) mapBookingType.get(ticketTypeBean.getBookingTypeId());
+																    		}else{
+																    			numTicketType = 0;
+																    		}
+																    	%>
+																    	<tr>
+																    		<td align="right">
+																    			<input type="button" id="btnMinus<%=ticketTypeBean.getBookingTypeId()%>" name="btnMinus" onclick="lp_setNumTicketType('0', '<%=ticketTypeBean.getBookingTypeId()%>');" class="btn" style="width: 30px;" value="-" <%if(seatReservationForm.getFlagAlterSeat().equals("1") || ticketTypeBean.getNumTicketType().equals("0")){ %> disabled="disabled" <%} %> />
+																    		</td>
+																    		<td align="right">
+																    			&nbsp;&nbsp;<%=ticketTypeBean.getBookingTypeName()%>&nbsp;:&nbsp;
+																    		</td>
+																    		<td align="left">
+																    			<input  type="text" 
+						    															class="input-disabled" 
+						    															style="text-align:right; max-width:50%"
+						    															id="numTicketType<%=ticketTypeBean.getBookingTypeId()%>"
+						    															name="numTicketType"
+						    															readonly="readonly"
+						    															value="<%=numTicketType%>"
+						    															 />
+						    													<span>คน</span>&nbsp;&nbsp;
+			    																<input type="button" id="btnPlus<%=ticketTypeBean.getBookingTypeId()%>" name="btnPlus" onclick="lp_setNumTicketType('1', '<%=ticketTypeBean.getBookingTypeId()%>');" class="btn" style="width: 30px;" value="+" <%if(seatReservationForm.getFlagAlterSeat().equals("1")){ %> disabled="disabled" <%} %> />
+																    		</td>
+																    	</tr>
+																    	<%} %>
+																    </table>
+			    													<!--  
+			    													<input class='form-control input' placeholder='0' style='text-align:right; max-width:75%'>
+			    													<span class="btn"> + </span>
+			    													-->
+			    												</div>
+    														</td>
+    													</tr>
+    													<tr>
+    														<td><br/><br/></td>
+    													</tr>
+    													<tr>
+    														<td>
+    															&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    															<input type="button" id="btnBack" name="btnBack" onclick="lp_goBack();" class="btn" style="width: 150px;" value="<< ย้อนกลับ" />&nbsp;&nbsp;
+    															<input type="button" id="btnNext" name="btnNext" onclick="lp_goNext();" class="btn" style="width: 150px;" value="บันทึก" />
+    														</td>
+    													</tr>
+    												</table>
     												<!-- end : seat -->
     												<div class="prototype hide">
 												   		<div class="seat-col seat-col-head " id='seat-col-head-prototype'>A</div>
@@ -162,823 +715,6 @@
   												</div>
 											</div>
 											<!-- end : container -->
-											<script type="text/javascript">
-  												$(document).ready(function(){
-										        /*
-										        {
-												    "zone_id": "A1",
-												    "zone_title": "west side",
-												    "total_seat": [
-												        {
-												            "row_id": "1",
-												            "row_title": "A",
-												            "row_color": "blue",
-												            "list": [
-												                {
-												                    "col_id": "1",
-												                    "status": "occupy",
-												                    "reservation_ref": "A326891",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "2",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "3",
-												                    "status": "occupy",
-												                    "reservation_ref": "A356891",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "4",
-												                    "status": "occupy",
-												                    "reservation_ref": "A326791",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "5",
-												                    "status": "occupy",
-												                    "reservation_ref": "A316891",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "6",
-												                    "status": "occupy",
-												                    "reservation_ref": "A326861",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "7",
-												                    "status": "occupy",
-												                    "reservation_ref": "A322891",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "8",
-												                    "status": "occupy",
-												                    "reservation_ref": "A326491",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "9",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "10",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "11",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "12",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "13",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "14",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "15",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "16",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "17",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "18",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "19",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "20",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "21",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "22",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "23",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "24",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "25",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "26",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "27",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "28",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "29",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "30",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "31",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                }
-												            ]
-												        },
-												        {
-												            "row_id": "2",
-												            "row_title": "B",
-												            "row_color": "green",
-												            "list": [
-												                {
-												                    "col_id": "1",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "2",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "3",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "4",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "5",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "6",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "7",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "8",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "9",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "10",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "11",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "12",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "13",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "14",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "15",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "16",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "17",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "18",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "19",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "20",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "21",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "22",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "23",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "24",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "25",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "26",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "27",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "28",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "29",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "30",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "31",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                }
-												            ]
-												        },
-												        {
-												            "row_id": "3",
-												            "row_title": "C",
-												            "row_color": "violet",
-												            "list": [
-												                {
-												                    "col_id": "1",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "2",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "3",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "4",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "5",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "6",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "7",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "8",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "9",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "10",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "11",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "12",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "13",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "14",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "15",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "16",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "17",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "18",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "19",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "20",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "21",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "22",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "23",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "24",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "25",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "26",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "27",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "28",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "29",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "30",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "31",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                }
-												            ]
-												        },
-												        {
-												            "row_id": "4",
-												            "row_title": "D",
-												            "row_color": "pink",
-												            "list": [
-												                {
-												                    "col_id": "1",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "2",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "3",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "4",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "5",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "6",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "7",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "8",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "9",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "10",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "11",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "12",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "13",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "14",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "15",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "16",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "17",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "18",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "19",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "20",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "21",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "22",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "23",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "24",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "25",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "26",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "27",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "28",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "29",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "30",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                },
-												                {
-												                    "col_id": "31",
-												                    "status": "free",
-												                    "reservation_ref": "",
-												                    "col_color": ""
-												                }
-												            ]
-												        }
-												    ]
-												}
-												*/
-												var sample_json = '{"zone_id":"A1","zone_title":"west side","total_seat":[{"row_id":"1","row_title":"A","row_color":"blue","list":[{"col_id":"1","status":"occupy","reservation_ref":"A326891","col_color":""},{"col_id":"2","status":"free","reservation_ref":"","col_color":""},{"col_id":"3","status":"occupy","reservation_ref":"A356891","col_color":""},{"col_id":"4","status":"occupy","reservation_ref":"A326791","col_color":""},{"col_id":"5","status":"occupy","reservation_ref":"A316891","col_color":""},{"col_id":"6","status":"occupy","reservation_ref":"A326861","col_color":""},{"col_id":"7","status":"occupy","reservation_ref":"A322891","col_color":""},{"col_id":"8","status":"occupy","reservation_ref":"A326491","col_color":""},{"col_id":"9","status":"free","reservation_ref":"","col_color":""},{"col_id":"10","status":"free","reservation_ref":"","col_color":""},{"col_id":"11","status":"free","reservation_ref":"","col_color":""},{"col_id":"12","status":"free","reservation_ref":"","col_color":""},{"col_id":"13","status":"free","reservation_ref":"","col_color":""},{"col_id":"14","status":"free","reservation_ref":"","col_color":""},{"col_id":"15","status":"free","reservation_ref":"","col_color":""},{"col_id":"16","status":"free","reservation_ref":"","col_color":""},{"col_id":"17","status":"free","reservation_ref":"","col_color":""},{"col_id":"18","status":"free","reservation_ref":"","col_color":""},{"col_id":"19","status":"free","reservation_ref":"","col_color":""},{"col_id":"20","status":"free","reservation_ref":"","col_color":""},{"col_id":"21","status":"free","reservation_ref":"","col_color":""},{"col_id":"22","status":"free","reservation_ref":"","col_color":""},{"col_id":"23","status":"free","reservation_ref":"","col_color":""},{"col_id":"24","status":"free","reservation_ref":"","col_color":""},{"col_id":"25","status":"free","reservation_ref":"","col_color":""},{"col_id":"26","status":"free","reservation_ref":"","col_color":""},{"col_id":"27","status":"free","reservation_ref":"","col_color":""},{"col_id":"28","status":"free","reservation_ref":"","col_color":""},{"col_id":"29","status":"free","reservation_ref":"","col_color":""},{"col_id":"30","status":"free","reservation_ref":"","col_color":""},{"col_id":"31","status":"free","reservation_ref":"","col_color":""}]},{"row_id":"2","row_title":"B","row_color":"green","list":[{"col_id":"1","status":"free","reservation_ref":"","col_color":""},{"col_id":"2","status":"free","reservation_ref":"","col_color":""},{"col_id":"3","status":"free","reservation_ref":"","col_color":""},{"col_id":"4","status":"free","reservation_ref":"","col_color":""},{"col_id":"5","status":"free","reservation_ref":"","col_color":""},{"col_id":"6","status":"free","reservation_ref":"","col_color":""},{"col_id":"7","status":"free","reservation_ref":"","col_color":""},{"col_id":"8","status":"free","reservation_ref":"","col_color":""},{"col_id":"9","status":"free","reservation_ref":"","col_color":""},{"col_id":"10","status":"free","reservation_ref":"","col_color":""},{"col_id":"11","status":"free","reservation_ref":"","col_color":""},{"col_id":"12","status":"free","reservation_ref":"","col_color":""},{"col_id":"13","status":"free","reservation_ref":"","col_color":""},{"col_id":"14","status":"free","reservation_ref":"","col_color":""},{"col_id":"15","status":"free","reservation_ref":"","col_color":""},{"col_id":"16","status":"free","reservation_ref":"","col_color":""},{"col_id":"17","status":"free","reservation_ref":"","col_color":""},{"col_id":"18","status":"free","reservation_ref":"","col_color":""},{"col_id":"19","status":"free","reservation_ref":"","col_color":""},{"col_id":"20","status":"free","reservation_ref":"","col_color":""},{"col_id":"21","status":"free","reservation_ref":"","col_color":""},{"col_id":"22","status":"free","reservation_ref":"","col_color":""},{"col_id":"23","status":"free","reservation_ref":"","col_color":""},{"col_id":"24","status":"free","reservation_ref":"","col_color":""},{"col_id":"25","status":"free","reservation_ref":"","col_color":""},{"col_id":"26","status":"free","reservation_ref":"","col_color":""},{"col_id":"27","status":"free","reservation_ref":"","col_color":""},{"col_id":"28","status":"free","reservation_ref":"","col_color":""},{"col_id":"29","status":"free","reservation_ref":"","col_color":""},{"col_id":"30","status":"free","reservation_ref":"","col_color":""},{"col_id":"31","status":"free","reservation_ref":"","col_color":""}]},{"row_id":"3","row_title":"C","row_color":"violet","list":[{"col_id":"1","status":"free","reservation_ref":"","col_color":""},{"col_id":"2","status":"free","reservation_ref":"","col_color":""},{"col_id":"3","status":"free","reservation_ref":"","col_color":""},{"col_id":"4","status":"free","reservation_ref":"","col_color":""},{"col_id":"5","status":"free","reservation_ref":"","col_color":""},{"col_id":"6","status":"free","reservation_ref":"","col_color":""},{"col_id":"7","status":"free","reservation_ref":"","col_color":""},{"col_id":"8","status":"free","reservation_ref":"","col_color":""},{"col_id":"9","status":"free","reservation_ref":"","col_color":""},{"col_id":"10","status":"free","reservation_ref":"","col_color":""},{"col_id":"11","status":"free","reservation_ref":"","col_color":""},{"col_id":"12","status":"free","reservation_ref":"","col_color":""},{"col_id":"13","status":"free","reservation_ref":"","col_color":""},{"col_id":"14","status":"free","reservation_ref":"","col_color":""},{"col_id":"15","status":"free","reservation_ref":"","col_color":""},{"col_id":"16","status":"free","reservation_ref":"","col_color":""},{"col_id":"17","status":"free","reservation_ref":"","col_color":""},{"col_id":"18","status":"free","reservation_ref":"","col_color":""},{"col_id":"19","status":"free","reservation_ref":"","col_color":""},{"col_id":"20","status":"free","reservation_ref":"","col_color":""},{"col_id":"21","status":"free","reservation_ref":"","col_color":""},{"col_id":"22","status":"free","reservation_ref":"","col_color":""},{"col_id":"23","status":"free","reservation_ref":"","col_color":""},{"col_id":"24","status":"free","reservation_ref":"","col_color":""},{"col_id":"25","status":"free","reservation_ref":"","col_color":""},{"col_id":"26","status":"free","reservation_ref":"","col_color":""},{"col_id":"27","status":"free","reservation_ref":"","col_color":""},{"col_id":"28","status":"free","reservation_ref":"","col_color":""},{"col_id":"29","status":"free","reservation_ref":"","col_color":""},{"col_id":"30","status":"free","reservation_ref":"","col_color":""},{"col_id":"31","status":"free","reservation_ref":"","col_color":""}]},{"row_id":"4","row_title":"D","row_color":"pink","list":[{"col_id":"1","status":"free","reservation_ref":"","col_color":""},{"col_id":"2","status":"free","reservation_ref":"","col_color":""},{"col_id":"3","status":"free","reservation_ref":"","col_color":""},{"col_id":"4","status":"free","reservation_ref":"","col_color":""},{"col_id":"5","status":"free","reservation_ref":"","col_color":""},{"col_id":"6","status":"free","reservation_ref":"","col_color":""},{"col_id":"7","status":"free","reservation_ref":"","col_color":""},{"col_id":"8","status":"free","reservation_ref":"","col_color":""},{"col_id":"9","status":"free","reservation_ref":"","col_color":""},{"col_id":"10","status":"free","reservation_ref":"","col_color":""},{"col_id":"11","status":"free","reservation_ref":"","col_color":""},{"col_id":"12","status":"free","reservation_ref":"","col_color":""},{"col_id":"13","status":"free","reservation_ref":"","col_color":""},{"col_id":"14","status":"free","reservation_ref":"","col_color":""},{"col_id":"15","status":"free","reservation_ref":"","col_color":""},{"col_id":"16","status":"free","reservation_ref":"","col_color":""},{"col_id":"17","status":"free","reservation_ref":"","col_color":""},{"col_id":"18","status":"free","reservation_ref":"","col_color":""},{"col_id":"19","status":"free","reservation_ref":"","col_color":""},{"col_id":"20","status":"free","reservation_ref":"","col_color":""},{"col_id":"21","status":"free","reservation_ref":"","col_color":""},{"col_id":"22","status":"free","reservation_ref":"","col_color":""},{"col_id":"23","status":"free","reservation_ref":"","col_color":""},{"col_id":"24","status":"free","reservation_ref":"","col_color":""},{"col_id":"25","status":"free","reservation_ref":"","col_color":""},{"col_id":"26","status":"free","reservation_ref":"","col_color":""},{"col_id":"27","status":"free","reservation_ref":"","col_color":""},{"col_id":"28","status":"free","reservation_ref":"","col_color":""},{"col_id":"29","status":"free","reservation_ref":"","col_color":""},{"col_id":"30","status":"free","reservation_ref":"","col_color":""},{"col_id":"31","status":"free","reservation_ref":"","col_color":""}]}]}';
-												var json_obj = $.parseJSON(sample_json);
-													console.log(json_obj);
-  												var seat_wrapper = $('.seat-row');
-  													seat_wrapper.empty();
-												//Loop
-												var current_row = -1;
-												var zone_id = json_obj.zone_id;
-												var total_seat = json_obj.total_seat;
-												var output = '';
-  												//render 
-												$.each(total_seat,function(key,value){
-												  	if(current_row != value.row_id){
-												    	//add separator
-												    	output += '<div style="clear:both"></div>';
-												    	current_row = value.row_id;												
-												    	//add row head
-												    	output += '<div class="seat-col seat-col-head " id="'+zone_id+'-'+value.row_id+'">'+value.row_title+'</div>';
-												}
-											    //render row list
-											    var current_list = value.list;
-											    var row_id = value.row_id;
-											    $.each(current_list,function(inner_key,inner_value){
-											    	var current_color = (inner_value.status=='occupy')?'':value.row_color;
-											  		output += '<div class="seat-col seat-col-'+inner_value.status+' seat-'+current_color+' round"   id="'+zone_id+'-'+row_id+'-'+inner_value.col_id+'" data-ref-id="'+inner_value.reservation_ref+'" ><span>'+inner_value.col_id+'</span></div>';
-											    })//end inner each											
-											  })//end each 
-											  //Set seat 
-											  seat_wrapper.html(output);
-											  //Set sample click 
-											  $('.seat-col-free').on('click',function(){
-											    	alert('free for reservation');
-											  })
-										})
-										</script>
 									</div>
 									<!-- end : wrapper -->
 								</div>

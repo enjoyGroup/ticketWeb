@@ -26,7 +26,7 @@
 		$(document).ready(function(){
 			gp_progressBarOn();
 			
-			$('#menu1').ptMenu();
+			//$('#menu1').ptMenu();
 			
 			drawChart();
 			
@@ -44,33 +44,34 @@
 	    	
 	    	try{
 	    		jsonObj 	= JSON.parse(lv_dataFlow);
-	    		
-	    		$.each(jsonObj.dataFlow, function(idx, obj) {
-		    		lv_str += ',["ปี ' + obj.season + '", ' + obj.bookingPrice + ',  "#b87333"]';
-				});
-	    		
-	    		
-		    	var data = eval( 'google.visualization.arrayToDataTable(['
-								+ '["Element", "จำนวนเงิน", { role: "style" } ]'		    	                                                         
-								+ lv_str
-		    	                + '])');
-		    	
-				var view = new google.visualization.DataView(data);
-				view.setColumns([0, 1,
-				                 { calc: "stringify",
-				                   sourceColumn: 1,
-				                   type: "string",
-				                   role: "annotation" },
-				                 2]);
-				var options = {
-				  title: "รายงานสรุปรายได้ประจำปี",
-				  width: 600,
-				  height: 400,
-				  bar: {groupWidth: "95%"},
-				  legend: { position: "none" },
-				};
-				var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-				chart.draw(view, options);
+	    		if(jsonObj.dataFlow.length > 0){
+		    		$.each(jsonObj.dataFlow, function(idx, obj) {
+			    		lv_str += ',["ปี ' + obj.season + '", ' + obj.bookingPrice + ',  "#b87333"]';
+					});
+		    		
+		    		
+			    	var data = eval( 'google.visualization.arrayToDataTable(['
+									+ '["Element", "จำนวนเงิน", { role: "style" } ]'		    	                                                         
+									+ lv_str
+			    	                + '])');
+			    	
+					var view = new google.visualization.DataView(data);
+					view.setColumns([0, 1,
+					                 { calc: "stringify",
+					                   sourceColumn: 1,
+					                   type: "string",
+					                   role: "annotation" },
+					                 2]);
+					var options = {
+					  title: "รายงานสรุปรายได้ประจำปี",
+					  width: 600,
+					  height: 400,
+					  bar: {groupWidth: "95%"},
+					  legend: { position: "none" },
+					};
+					var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+					chart.draw(view, options);
+	    		}
 		    	
 	    	}catch(e){
 	    		alert("drawChart :: " + e);
@@ -143,7 +144,13 @@
 																		</td>
 																	</tr> 
 																	<% } 
-																} %>
+																}else{ %>
+																<tr align="center">
+																	<td align="center" colspan="3">
+																		<B>ไม่พบข้อมูล</B>
+																	</td>
+																</tr> 
+																<%} %>
 															</tbody>
 														</table>
 													</div>

@@ -136,13 +136,14 @@ public class SeatZoneDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<SeatZoneBean>();
 			
-			hql				= "SELECT fieldZoneId, fieldZoneName"
+			hql				= "SELECT fieldZoneId, fieldZoneName, fieldZoneNameTicket"
 								+ " FROM fieldzonemaster"
 								+ " order by fieldZoneId asc";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("fieldZoneId"			, new StringType());
 			query.addScalar("fieldZoneName"			, new StringType());
+			query.addScalar("fieldZoneNameTicket"	, new StringType());
 			
 			list		 	= query.list();
 			
@@ -152,9 +153,11 @@ public class SeatZoneDao {
 				
 				logger.info("[getFieldZoneMaster] fieldZoneId 			:: " + row[0].toString());
 				logger.info("[getFieldZoneMaster] fieldZoneName		 	:: " + row[1].toString());
+				logger.info("[getFieldZoneMaster] fieldZoneNameTicket	:: " + row[2].toString());
 				
-				returnObj.setFieldZoneId		(row[0].toString());
-				returnObj.setFieldZoneName		(row[1].toString());
+				returnObj.setFieldZoneId			(row[0].toString());
+				returnObj.setFieldZoneName			(row[1].toString());
+				returnObj.setFieldZoneNameTicket	(row[2].toString()==null || row[2].toString().equals("")?row[1].toString():row[2].toString());
 				
 				returnList.add(returnObj);
 			}

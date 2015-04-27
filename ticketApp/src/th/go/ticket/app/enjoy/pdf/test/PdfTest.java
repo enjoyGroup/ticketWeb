@@ -11,13 +11,14 @@ import th.go.ticket.app.enjoy.pdf.utils.PdfFormService;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
+import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
 
 public class PdfTest {
 
 	public static void main(String[] args) {
 		try {
-//			writePDF("SlipPdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/MotorPdfForm.pdf");
+			writePDF("TicketPdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/TicketPdfForm.pdf");
 //			writePDF("SlipPdfTypeTwoForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SlipPdfTypeTwoForm.pdf");
 //			writePDF("SummarySalePdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SummarySalePdfForm.pdf");
 
@@ -40,12 +41,16 @@ public class PdfTest {
 		PdfFormService 		pdfForm 					= null;
 		Object 				obj 						= null;
 		JSONObject 			jsonObject 					= null;
+		Rectangle 			pagesize 					= null;
 		
 		try{
 			System.out.println("formName :: " + formName);
 			
-			formClass					= "th.go.motorcycles.app.enjoy.pdf."+formName;
-			document 					= new Document(PageSize.A4);
+			formClass					= "th.go.ticket.app.enjoy.pdf."+formName;
+//			document 					= new Document(PageSize.A4);
+//			document 					= new Document(pagesize, 36f, 72f, 108f, 180f);
+			pagesize 					= new Rectangle(173, 432);
+			document 					= new Document(pagesize);
 			parser 						= new JSONParser();
 			f 							= new File(pdfPath);
 			fos            				= new FileOutputStream(f.getAbsolutePath());			

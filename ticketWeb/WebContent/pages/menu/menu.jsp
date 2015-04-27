@@ -80,4 +80,5 @@
 	</li>
 	 -->	
 </ul>
+<script>$('#menu1').ptMenu();</script>
 </div>
