@@ -367,7 +367,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			
 			//ticketStatus เป็นว่างแสดงว่าบันทึก record ใหม่
 			if(ticketStatus.equals("")){
-				bean.setTicketId(EnjoyUtil.genPassword(13));//ใช้รอสูตรการ gen TicketId จากพี่เอ
+				bean.setTicketId(EnjoyUtil.genPassword(17));//ใช้รอสูตรการ gen TicketId จากพี่เอ
 				bean.setSeatingNo(seatingNo);
 				bean.setMatchId(matchId);
 				bean.setFieldZoneId(fieldZoneId);
