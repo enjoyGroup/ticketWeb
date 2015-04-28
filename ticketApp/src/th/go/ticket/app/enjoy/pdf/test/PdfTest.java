@@ -1,8 +1,10 @@
 package th.go.ticket.app.enjoy.pdf.test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,14 +12,19 @@ import org.json.simple.parser.JSONParser;
 import th.go.ticket.app.enjoy.pdf.utils.PdfFormService;
 
 import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.AcroFields;
+import com.lowagie.text.pdf.Barcode128;
+import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
 import com.lowagie.text.pdf.PdfWriter;
 
 public class PdfTest {
 
 	public static void main(String[] args) {
 		try {
+//			writePDFFromFile("D:/motor/PDF/TicketPdfForm_1.pdf");
 			writePDF("TicketPdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/TicketPdfForm.pdf");
 //			writePDF("SlipPdfTypeTwoForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SlipPdfTypeTwoForm.pdf");
 //			writePDF("SummarySalePdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SummarySalePdfForm.pdf");
@@ -50,7 +57,7 @@ public class PdfTest {
 //			document 					= new Document(PageSize.A4);
 //			document 					= new Document(pagesize, 36f, 72f, 108f, 180f);
 			pagesize 					= new Rectangle(173, 432);
-			document 					= new Document(pagesize);
+			document 					= new Document(pagesize, 5f, 5f, 5f, 5f);
 			parser 						= new JSONParser();
 			f 							= new File(pdfPath);
 			fos            				= new FileOutputStream(f.getAbsolutePath());			
@@ -71,6 +78,35 @@ public class PdfTest {
 			pdfForm.createForm(document);
 	
 			document.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			
+		}
+	}
+	
+	public static void writePDFFromFile(String pdfPath) throws Exception{
+		File 				f 							= null;
+		FileOutputStream 	fos 						= null;
+        PdfStamper 			stamp 						= null;
+        InputStream 		inputStream 				= null;
+        PdfReader 			reader 						= null;
+        AcroFields 			form 						= null;
+		
+		try{
+			
+			inputStream 				= (InputStream) new FileInputStream("D://motor//ticket_1.pdf");
+            reader 						= new PdfReader(inputStream);
+            f 							= new File(pdfPath);
+			fos            				= new FileOutputStream(f.getAbsolutePath());
+			stamp 						= new PdfStamper(reader, fos);
+			form 						= stamp.getAcroFields();
+			
+			form.setField("gate", "1");
+			
+			stamp.close();
+			
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}finally{

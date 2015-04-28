@@ -2,6 +2,7 @@ package th.go.ticket.web.enjoy.common;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,14 +11,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import th.go.ticket.app.enjoy.main.Constants;
+import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 
 /**
  * Servlet implementation class RrcGenericSrv
  */
 @WebServlet(urlPatterns="/EnjoyGenericSrv")
 public class EnjoyGenericSrv extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+	private static final long 			serialVersionUID = 1L;
+	private static final EnjoyLogger 	logger 			= EnjoyLogger.getLogger(EnjoyGenericSrv.class);
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,7 +48,7 @@ public class EnjoyGenericSrv extends HttpServlet {
 	}
 	
 	public void service(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-		System.out.println("[EnjoyGenericSrv][service][Begin]");
+		logger.info("[service][Begin]");
 		
 		String 				serviceName 			= null;
 		Class 				cls 					= null;
@@ -50,6 +56,9 @@ public class EnjoyGenericSrv extends HttpServlet {
 		EnjoyStandardItf 	service 				= null;
 		HttpSession 		session 				= null;
 		String 				target 					= null;
+		DiskFileItemFactory factory 				= null;
+		ServletFileUpload 	upload 					= null;
+		List 				listItem 				= null;
         
         try {
         	request.setCharacterEncoding("UTF-8");
@@ -61,7 +70,17 @@ public class EnjoyGenericSrv extends HttpServlet {
             enjoyStandardSvc 	= (EnjoyStandardSvc)cls.newInstance();
             service 			= enjoyStandardSvc;
             
-            System.out.println("[EnjoyGenericSrv][service]: service: " + serviceName);
+            logger.info("[service]: service: " + serviceName);
+            
+            if (request != null && ServletFileUpload.isMultipartContent(request)) {
+	            factory 	= new DiskFileItemFactory();
+	            upload 		= new ServletFileUpload(factory);
+	            listItem 	= upload.parseRequest(request);
+	            
+	            logger.info("[service] listItem :: " + listItem);
+	            
+	            request.setAttribute(Constants.LIST_FILE, listItem);
+            }
 
             
             service.execute(request, response);
@@ -74,7 +93,7 @@ public class EnjoyGenericSrv extends HttpServlet {
             ex.printStackTrace();
             redirect(response, Constants.ERR_PAGE_URL);
         }finally{
-        	System.out.println("[EnjoyGenericSrv][service][End]");
+        	logger.info("[service][End]");
         }
 	}
 	

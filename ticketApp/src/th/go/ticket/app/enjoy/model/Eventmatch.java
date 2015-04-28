@@ -13,8 +13,8 @@ import javax.persistence.*;
 public class Eventmatch implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	private int matchId;
+	@EmbeddedId
+	private EventmatchPK id;
 
 	private String activeFlag;
 
@@ -26,17 +26,15 @@ public class Eventmatch implements Serializable {
 
 	private String matchTime;
 
-	private int season;
-
 	public Eventmatch() {
 	}
 
-	public int getMatchId() {
-		return this.matchId;
+	public EventmatchPK getId() {
+		return this.id;
 	}
 
-	public void setMatchId(int matchId) {
-		this.matchId = matchId;
+	public void setId(EventmatchPK id) {
+		this.id = id;
 	}
 
 	public String getActiveFlag() {
@@ -77,14 +75,6 @@ public class Eventmatch implements Serializable {
 
 	public void setMatchTime(String matchTime) {
 		this.matchTime = matchTime;
-	}
-
-	public int getSeason() {
-		return this.season;
-	}
-
-	public void setSeason(int season) {
-		this.season = season;
 	}
 
 }

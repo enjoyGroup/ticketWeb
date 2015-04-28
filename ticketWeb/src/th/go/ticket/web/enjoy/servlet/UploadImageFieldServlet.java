@@ -1,0 +1,165 @@
+package th.go.ticket.web.enjoy.servlet;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import th.go.ticket.app.enjoy.bean.SeatZoneBean;
+import th.go.ticket.app.enjoy.bean.UserDetailsBean;
+import th.go.ticket.app.enjoy.exception.EnjoyException;
+import th.go.ticket.app.enjoy.form.UploadImageFieldForm;
+import th.go.ticket.app.enjoy.main.Constants;
+import th.go.ticket.app.enjoy.utils.EnjoyLogger;
+import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
+import th.go.ticket.web.enjoy.utils.EnjoyUtil;
+
+public class UploadImageFieldServlet extends EnjoyStandardSvc {
+	 
+	static final long serialVersionUID = 1L;
+	private static final EnjoyLogger logger = EnjoyLogger.getLogger(UploadImageFieldServlet.class);
+	
+    private static final String FORM_NAME = "uploadImageFieldForm";
+    
+    private EnjoyUtil               	easUtil                     = null;
+    private HttpServletRequest          request                     = null;
+    private HttpServletResponse         response                    = null;
+    private HttpSession                 session                     = null;
+    private UserDetailsBean             userBean                    = null;
+//    private SeatZoneDao					dao							= null;
+    private UploadImageFieldForm		form						= null;
+    
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		// TODO Auto-generated method stub
+		doProcess(request, response);
+	}
+	
+	private void doProcess(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		logger.info("[execute][Begin]");
+		
+         String pageAction = null; 
+ 		
+ 		try{
+ 			 pageAction 				= EnjoyUtil.nullToStr(request.getParameter("pageAction"));
+ 			 this.easUtil 				= new EnjoyUtil(request, response);
+ 			 this.request            	= request;
+             this.response           	= response;
+             this.session            	= request.getSession(false);
+             this.userBean           	= (UserDetailsBean)session.getAttribute("userBean");
+             this.form               	= (UploadImageFieldForm)session.getAttribute(FORM_NAME);
+//             this.dao					= new SeatZoneDao();
+ 			
+             logger.info("[execute][Begin] : " + pageAction );
+             
+ 			if(this.form == null || pageAction.equals("new")) this.form = new UploadImageFieldForm();
+ 			
+ 			if( pageAction.equals("") || pageAction.equals("new") ){
+ 				this.onLoad();
+ 				request.setAttribute("target", Constants.PAGE_URL +"/UploadImageFieldScn.jsp");
+ 			}
+ 			
+ 			session.setAttribute(FORM_NAME, this.form);
+ 			
+ 		}catch(EnjoyException e){
+ 			e.printStackTrace();
+ 			logger.info(e.getMessage());
+ 		}catch(Exception e){
+ 			e.printStackTrace();
+ 			logger.info(e.getMessage());
+ 		}finally{
+ 			logger.info("[execute][End]");
+ 		}
+	}
+	
+	private void onLoad() throws EnjoyException{
+		logger.info("[onLoad][Begin]");
+		
+		List<SeatZoneBean> 				resultList 			= null;
+		List<SeatZoneBean> 				list 				= null;
+		String							season				= null;
+		Map								matchMap			= null;
+		boolean							defaultMatch		= true;
+		
+		try{
+			
+			
+		}catch(Exception e){
+			throw new EnjoyException("onLoad :: " + e.getMessage());
+		}finally{
+			logger.info("[onLoad][End]");
+		}
+		
+	}
+	
+	private void lp_upload() throws EnjoyException{
+		logger.info("[lp_upload][Begin]");
+		
+		boolean                         isMultipart             = ServletFileUpload.isMultipartContent(this.request);
+		List                            items                   = null;
+		Iterator                        iterator                = null;
+		String                          fileName                = null;
+        File                            uploadedFile            = null;
+        String[]                        extentArr               = null;
+        String                          extent                  = null;
+        long                            fileSize                = 0;
+        long                            limitSize               = 2048000;//2 MB
+		
+		try{
+			if (isMultipart) {
+                items                   = (List) this.request.getAttribute(Constants.LIST_FILE);
+                iterator                = items.iterator();
+                logger.info("[lp_upload] items :: " + items.size());
+                while (iterator.hasNext()) {
+                    FileItem item = (FileItem) iterator.next();
+                    
+                    logger.info("[lp_upload] item.isFormField() :: " + item.isFormField());
+                    
+                    if (!item.isFormField()) {
+                        fileName                        = new File(item.getName()).getName();
+                        extentArr                       = fileName.split("\\.");
+                        extent                          = extentArr[(extentArr.length - 1)];
+                        fileName                        = UploadImageFieldForm.FILE_NAME + "." + extent;
+                        fileSize                        = item.getSize();
+                        
+                        if(fileSize > limitSize){
+                            throw new EnjoyException("Total size limit 2 MB");
+                        }
+                        
+                        logger.info("[lp_upload] fileName :: " + fileName);
+
+                        uploadedFile = new File(fileName);
+                        item.write(uploadedFile);
+                        
+                     }
+                }
+            }
+			
+		}catch(Exception e){
+			throw new EnjoyException("onLoad :: " + e.getMessage());
+		}finally{
+			logger.info("[lp_upload][End]");
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

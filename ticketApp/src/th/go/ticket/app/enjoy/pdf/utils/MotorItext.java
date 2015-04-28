@@ -11,14 +11,22 @@ import com.lowagie.text.pdf.PdfPTable;
 public class MotorItext {
 	private static MotorItext instance = null;
 	private BaseFont bfComic;
-
+	
+	private Font font3;
+	private Font font4;
+	private Font font5;
 	private Font font6;
 	private Font font7;
 	private Font font8;
 	private Font font9;
 	private Font font10;
 	private Font fontL;
-
+	
+	private Font font3Bold;
+	private Font font4Bold;
+	private Font font5Bold;
+	private Font font6Bold;
+	private Font font7Bold;
 	private Font font8Bold;
 	private Font font9Bold;
 	private Font font10Bold;
@@ -39,8 +47,16 @@ public class MotorItext {
 		
 		try{
 			bfComic 		= 	BaseFont.createFont(fontName, BaseFont.IDENTITY_H,BaseFont.EMBEDDED);
+			font3 			= 	new Font(bfComic, 3);
+			font3Bold 		= 	new Font(bfComic, 3, Font.BOLD);
+			font4 			= 	new Font(bfComic, 4);
+			font4Bold 		= 	new Font(bfComic, 4, Font.BOLD);
+			font5 			= 	new Font(bfComic, 5);
+			font5Bold 		= 	new Font(bfComic, 6, Font.BOLD);
 			font6 			= 	new Font(bfComic, 6);
+			font6Bold 		= 	new Font(bfComic, 6, Font.BOLD);
 			font7 			= 	new Font(bfComic, 7);
+			font7Bold 		= 	new Font(bfComic, 7, Font.BOLD);
 			font8 			= 	new Font(bfComic, 8);
 			font8Bold 		= 	new Font(bfComic, 8, Font.BOLD);
 			font9 			= 	new Font(bfComic, 9);
@@ -334,4 +350,55 @@ public class MotorItext {
 	public void setFontSymbolL(Font fontSymbolL) {
 		this.fontSymbolL = fontSymbolL;
 	}
+	public Font getFont3() {
+		return font3;
+	}
+	public void setFont3(Font font3) {
+		this.font3 = font3;
+	}
+	public Font getFont4() {
+		return font4;
+	}
+	public void setFont4(Font font4) {
+		this.font4 = font4;
+	}
+	public Font getFont5() {
+		return font5;
+	}
+	public void setFont5(Font font5) {
+		this.font5 = font5;
+	}
+	public Font getFont3Bold() {
+		return font3Bold;
+	}
+	public void setFont3Bold(Font font3Bold) {
+		this.font3Bold = font3Bold;
+	}
+	public Font getFont4Bold() {
+		return font4Bold;
+	}
+	public void setFont4Bold(Font font4Bold) {
+		this.font4Bold = font4Bold;
+	}
+	public Font getFont5Bold() {
+		return font5Bold;
+	}
+	public void setFont5Bold(Font font5Bold) {
+		this.font5Bold = font5Bold;
+	}
+	public Font getFont6Bold() {
+		return font6Bold;
+	}
+	public void setFont6Bold(Font font6Bold) {
+		this.font6Bold = font6Bold;
+	}
+	public Font getFont7Bold() {
+		return font7Bold;
+	}
+	public void setFont7Bold(Font font7Bold) {
+		this.font7Bold = font7Bold;
+	}
+	
+	
+	
 }

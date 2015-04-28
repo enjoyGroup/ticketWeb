@@ -10,6 +10,9 @@ import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 public class ConfigFile {
 	private static final String PADING_SEAT_NO   	= "pading.seatNo";
 	private static final String PADING_TICKET_ID   	= "pading.ticketId";
+	private static final String FILE_PATH   		= "file.path";
+	private static final String FILE_NAME   		= "file.name";
+	private static final String FILE_EXT   			= "file.extends";
 	private static ConfigFile configFile;
 	private static Properties properties ;
 	
@@ -48,5 +51,17 @@ public class ConfigFile {
 	
 	public static String getPadingTicketId() {
 		return getText(PADING_TICKET_ID);
+	}
+	
+	public static String getFilePath() {
+		return getText(FILE_PATH);
+	}
+	
+	public static String getFileName() {
+		return getText(FILE_NAME);
+	}
+	
+	public static String getFileExt() {
+		return getText(FILE_EXT);
 	}
 }

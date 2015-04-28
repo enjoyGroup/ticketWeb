@@ -4,6 +4,7 @@ public class Constants {
 
 	public  static final String CONFIG_FILE         = "ConfigFile";
 	public  static final String MAIL_CONFIG_FILE    = "MailConFigFile";
+	public static final String LIST_FILE 			= "LIST_FILE";
 	
 	private static final String EJ_WEB_ROOT 		= "/ticketWeb";
 	private static final String ERR_PAGE			= "/enjoyErrorPage.jsp";

@@ -11,8 +11,10 @@ import th.go.ticket.app.enjoy.pdf.utils.PdfFormService;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.Barcode128;
 import com.lowagie.text.pdf.PdfContentByte;
+import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
@@ -36,8 +38,15 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 		
 		try{
 			document.add(this.genHeader());
-//			document.add(this.brLine());
-//			document.add(this.genDetail());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.brLine());
+			document.add(this.genDetail());
 //			document.add(this.brLine());
 //			document.add(this.genProduct());
 //			document.add(this.brLine());
@@ -65,15 +74,20 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 	
 	private PdfPTable genHeader() throws DocumentException, MalformedURLException, IOException {
 		
-		float[] 		widths	 		= {1};
-		PdfPTable 		table 			= new PdfPTable(widths);
-		PdfContentByte 	cb 				= writer.getDirectContent();
-		Barcode128 		code128 		= new Barcode128();
+		float[] 	widths	 		= {60f ,10f ,10f, 10f, 10f};
+		PdfPTable 	table 			= new PdfPTable(widths);
 		
-		code128.setCode("0123456789abcdefg");
 		
-		table.addCell(code128.createImageWithBarcode(cb, null, null));
+		table.addCell(setCellWB("THAI PREMEIER LEAGE", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("", getFont3(), 4, Element.ALIGN_LEFT, 0));
 		
+		table.addCell(setCellWB("", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("1", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("W", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("L", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("L-17", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		
+		table.addCell(setCellWB("BANGKOK UD         18.00           15/02/2015", getFont3(), 5, Element.ALIGN_LEFT, 0));
 		
 		table.setWidthPercentage(100);
 	
@@ -82,33 +96,48 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 	
 	private PdfPTable genDetail() throws DocumentException, MalformedURLException, IOException {
 		
-		float[] 	widths	 		= {70f ,10f ,30f};
+		float[] 	widths	 		= {1};
 		PdfPTable 	table 			= new PdfPTable(widths);
+		float[] 	subW1	 		= {25f ,25f ,25f, 25f};
+		PdfPTable 	subTab1 		= new PdfPTable(subW1);
+		PdfPCell 	cell			= null;
 		
-		float[] 	subWL	 		= {5f, 65f};
-		PdfPTable 	subTabL 		= new PdfPTable(subWL);
+		cell = setCellWB("THAI PREMEIER LEAGE", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
+		cell.setRotation(90);
+		table.addCell(cell);
 		
-		float[] 	subWR	 		= {10f, 20f};
-		PdfPTable 	subTabR 		= new PdfPTable(subWR);
+		cell = setCellWB("1", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
+		cell.setRotation(90);
+		subTab1.addCell(cell);
+		cell = setCellWB("W", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
+		cell.setRotation(90);
+		subTab1.addCell(cell);
+		cell = setCellWB("L", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
+		cell.setRotation(90);
+		subTab1.addCell(cell);
+		cell = setCellWB("L-17", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
+		cell.setRotation(90);
+		subTab1.addCell(cell);
 		
-		table.addCell(setCellWB("", getFont12Bold(), 3, Element.ALIGN_LEFT, 0));
+		cell = setCell(subTab1, 1);
+//		cell.setRotation(90);
+		table.addCell(cell);
 		
-		subTabL.addCell(setCellWB("", getFont6(), 2, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("ชื่อ ", getFont8Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("ห้างหุ้นส่วนจำกัด รุ่งโรจน์ยานยนต์ (สาขาสำนักงานใหญ่) 0103535010232", getFont8(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont6(), 2, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("ที่อยู่ ", getFont8Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("9/250-251 หมู่. 8 แขวง อนุเสาวรีย์ เขต บางเขน จังหวัด กรุงเทพหมานคร 10220", getFont8(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont6(), 2, Element.ALIGN_LEFT, 0));
-		table.addCell(setCell(subTabL, 1));
-		
-		table.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		
-		subTabR.addCell(setCell("\n เลขที่ \n", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		subTabR.addCell(setCell("\n 57MC/2345 \n", getFont8(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n วันที่ \n", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		subTabR.addCell(setCell("\n 1 กันยายน 2557 \n", getFont8(), 1, 1, Element.ALIGN_RIGHT));
-		table.addCell(setCell(subTabR, 1));
+//		cell = setCellWB("BANGKOK UTD", getFont4Bold(), 4, Element.ALIGN_LEFT, 0);
+//		cell.setRotation(90);
+//		table.addCell(cell);
+//		
+//		cell = setCellWB("18.00", getFont3(), 1, Element.ALIGN_LEFT, 0);
+//		cell.setRotation(90);
+//		subTabL.addCell(cell);
+//		
+//		cell = setCellWB("15/02/2015", getFont3(), 1, Element.ALIGN_LEFT, 0);
+//		cell.setRotation(90);
+//		subTabL.addCell(cell);
+//		
+//		cell = setCell(subTabL, 4);
+//		cell.setRotation(90);
+//		table.addCell(cell);
 		
 		table.setWidthPercentage(100);
 	
@@ -180,9 +209,18 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 	
 	private PdfPTable genFooter() throws DocumentException, MalformedURLException, IOException {
 		
-		PdfPTable 	table 			= new PdfPTable(1);
+		float[] 		widths	 		= {1};
+		PdfPTable 		table 			= new PdfPTable(widths);
+		PdfContentByte 	cb 				= writer.getDirectContent();
+		Barcode128 		code128 		= new Barcode128();
 		
-		table.addCell(setCellWB("ผู้รับเงิน......................................................................", getFont8(), 1, Element.ALIGN_RIGHT, 0));
+		code128.setCode("0123456789abcdefg");
+		
+		PdfPCell cell1 = new PdfPCell(code128.createImageWithBarcode(cb, null, null));
+		
+		cell1.setRotation(90);
+		table.addCell(cell1);
+//		table.addCell(code128.createImageWithBarcode(cb, null, null));
 		
 		table.setWidthPercentage(100);
 	
@@ -193,7 +231,7 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 		
 		PdfPTable 	table 			= new PdfPTable(1);
 		
-		table.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB("", getFont3(), 1, Element.ALIGN_LEFT, 0));
 		
 		table.setWidthPercentage(100);
 	

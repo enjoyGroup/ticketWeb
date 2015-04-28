@@ -24,6 +24,8 @@ public class Ticketorder implements Serializable {
 
 	private String saleDate;
 
+	private int season;
+
 	private String seatingNo;
 
 	private String ticketStatus;
@@ -71,6 +73,14 @@ public class Ticketorder implements Serializable {
 
 	public void setSaleDate(String saleDate) {
 		this.saleDate = saleDate;
+	}
+
+	public int getSeason() {
+		return this.season;
+	}
+
+	public void setSeason(int season) {
+		this.season = season;
 	}
 
 	public String getSeatingNo() {
