@@ -1,5 +1,8 @@
 package th.go.ticket.web.enjoy.servlet;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,6 +21,7 @@ import th.go.ticket.app.enjoy.dao.SeatSummaryReservationDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.SeatSummaryReservationForm;
 import th.go.ticket.app.enjoy.main.Constants;
+import th.go.ticket.app.enjoy.pdf.ViewPdfMainForm;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
@@ -179,26 +183,21 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 		JSONObject 							obj 						= null;
 		JSONArray 							detailJSONArray 			= null;
 		JSONObject 							objDetail 					= null;
-//		SessionFactory 						sessionFactory				= null;
-//		Session 							session						= null;
 		List<SeatSummaryReservationBean> 	sumDetailReservationList	= null;
 		String								seatRow						= null;
+		DataOutput 							output 						= null;
+		ByteArrayOutputStream				buffer						= null;
+		byte[] 								bytes						= null;
+		ViewPdfMainForm						viewPdfMainForm				= null;
 		
 		try{
 			obj 						= new JSONObject();
 			detailJSONArray 			= new JSONArray();
-//			sessionFactory 				= HibernateUtil.getSessionFactory();
-//			session 					= sessionFactory.openSession();
 			sumDetailReservationList	= this.form.getResultList();
+			viewPdfMainForm				= new ViewPdfMainForm();
 			
-//			session.beginTransaction();
 			
 			for(SeatSummaryReservationBean bean:sumDetailReservationList){
-				
-//				bean.setMatchId(this.form.getMatchId());
-//				bean.setFieldZoneId(this.form.getFieldZoneId());
-//				
-//				this.dao.updateStatusPendingToActive(session, bean);
 				
 				objDetail 		= new JSONObject();
 				seatRow			= bean.getSeatingNo().equals("-")?"-":bean.getSeatingNo().split("-")[0];
@@ -218,25 +217,26 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 				
 			}
 			
-//			session.getTransaction().commit();
-			
 			obj.put(STATUS, 			SUCCESS);
 			obj.put("detailList", 			detailJSONArray);
 			
+			logger.info("[print] obj.toString() :: " + obj.toString());
+			
+			buffer = viewPdfMainForm.writeTicketPDF("TicketPdfForm", obj);
+			
+			response.setContentType( "application/pdf" );
+			output 	= new DataOutputStream( this.response.getOutputStream() );
+			bytes 	= buffer.toByteArray();
+	
+			this.response.setContentLength(bytes.length);
+			for( int i = 0; i < bytes.length; i++ ) { 
+				output.writeByte( bytes[i] ); 
+			}
+			
 		}catch(Exception e){
-//			session.getTransaction().rollback();
-			obj.put(STATUS, 			ERROR);
-			obj.put(ERR_MSG, 			e.getMessage());
 			e.printStackTrace();
 			throw new EnjoyException("print :: " + e.getMessage());
 		}finally{
-			
-//			session.flush();
-//			session.clear();
-//			session.close();
-			
-			this.enjoyUtil.writeMSG(obj.toString());
-			logger.info("[print] obj.toString() :: " + obj.toString());
 			logger.info("[print][End]");
 		}
 		

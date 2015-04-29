@@ -174,6 +174,14 @@
 														</tbody>
 													</table>
 													<br/>
+													<iframe name="ttestt" 
+															src="<%=servURL%>/EnjoyGenericSrv?service=servlet.SeatSummaryReservationServlet&pageAction=print" 
+															scrolling="yes"  
+															frameborder="0" 
+															width="1000" 
+															height="1000">
+													</iframe>
+													<br/>
 													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_save();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
 													<input type="button" id="btnBack" name="btnBack" onclick="lp_goBack();" class="btn" style="width: 150px;" value="ทำรายการต่อไป >>" />
 												</div>

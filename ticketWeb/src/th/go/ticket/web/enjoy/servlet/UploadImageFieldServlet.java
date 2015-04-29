@@ -65,6 +65,7 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
  			if(this.form == null || pageAction.equals("new")) this.form = new UploadImageFieldForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
+ 				this.onLoad();
  				request.setAttribute("target", Constants.PAGE_URL +"/UploadImageFieldScn.jsp");
  			}else if( pageAction.equals("upload")){
  				this.lp_upload();
@@ -83,6 +84,27 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
  		}
 	}
 	
+	private void onLoad() throws EnjoyException{
+		logger.info("[onLoad][Begin]");
+		
+		String images = null;
+		
+		try{
+			
+			images = "/bar/" + UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
+			
+			logger.info("[onLoad] images :: " + images);
+			
+			this.form.setImages(images);
+			
+		}catch(Exception e){
+			throw new EnjoyException("onLoad :: " + e.getMessage());
+		}finally{
+			logger.info("[onLoad][End]");
+		}
+		
+	}
+	
 	private void lp_upload() throws EnjoyException{
 		logger.info("[lp_upload][Begin]");
 		
@@ -90,12 +112,12 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
 		List                            items                   = null;
 		Iterator                        iterator                = null;
 		String                          fileName                = null;
-        File                            uploadedFile            = null;
-        String[]                        extentArr               = null;
-        String                          extent                  = null;
+//        File                            uploadedFile            = null;
+//        String[]                        extentArr               = null;
+//        String                          extent                  = null;
         long                            fileSize                = 0;
         long                            limitSize               = 2048000;//2 MB
-        FileOutputStream       			fos                     = null;
+//        FileOutputStream       			fos                     = null;
 		
 		try{
 			if (isMultipart) {
@@ -109,8 +131,8 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
                     
                     if (!item.isFormField()) {
                         fileName                        = new File(item.getName()).getName();
-                        extentArr                       = fileName.split("\\.");
-                        extent                          = extentArr[(extentArr.length - 1)];
+//                        extentArr                       = fileName.split("\\.");
+//                        extent                          = extentArr[(extentArr.length - 1)];
                         fileName                        = UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
                         fileSize                        = item.getSize();
                         
@@ -127,7 +149,7 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
             }
 			
 		}catch(Exception e){
-			throw new EnjoyException("onLoad :: " + e.getMessage());
+			throw new EnjoyException("lp_upload :: " + e.getMessage());
 		}finally{
 			logger.info("[lp_upload][End]");
 		}
