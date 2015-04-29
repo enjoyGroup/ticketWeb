@@ -153,6 +153,7 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 			headerTicketDetail = this.dao.getHeaderTicketDetail(bean);
 			
 			this.form.setAwayTeamNameTH(headerTicketDetail.getAwayTeamNameTH());
+			this.form.setAwayTeamNameEN(headerTicketDetail.getAwayTeamNameEN());
 			this.form.setMatchDate(headerTicketDetail.getMatchDate());
 			this.form.setMatchTime(headerTicketDetail.getMatchTime());
 			this.form.setMatchId(matchId);

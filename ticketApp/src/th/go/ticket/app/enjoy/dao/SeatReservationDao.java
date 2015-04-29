@@ -147,7 +147,7 @@ public class SeatReservationDao {
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
 			
-			hql				= "select b.fieldZoneName, b.fieldZoneNameTicket, a.awayTeamNameTH, a.awayTeamNameEN, a.season"
+			hql				= "select b.fieldZoneName, b.fieldZoneNameTicket, a.awayTeamNameTH, a.awayTeamNameEN, a.season,  b.fieldZoneName"
 								+ " from eventmatch a, fieldzonemaster b"
 								+ " where a.matchId 		= '" + matchId + "'"
 									+ " and b.fieldZoneId 	= '" + fieldZoneId + "'";
@@ -158,6 +158,7 @@ public class SeatReservationDao {
 			query.addScalar("awayTeamNameTH"		, new StringType());
 			query.addScalar("awayTeamNameEN"		, new StringType());
 			query.addScalar("season"				, new StringType());
+			query.addScalar("fieldZoneName"			, new StringType());
 				
 			list		 	= query.list();
 			
@@ -170,9 +171,10 @@ public class SeatReservationDao {
 				logger.info("[getHeaderTicketReservation] awayTeamNameTH		:: " + row[2].toString());
 				logger.info("[getHeaderTicketReservation] awayTeamNameEN		:: " + row[3].toString());
 				logger.info("[getHeaderTicketReservation] season				:: " + row[4].toString());
+				logger.info("[getHeaderTicketReservation] fieldZoneName			:: " + row[5].toString());
 				
 				returnObj.setFieldZoneName			(row[0].toString());
-				returnObj.setFieldZoneNameTicket	(row[1].toString());
+				returnObj.setFieldZoneNameTicket	(row[1].toString()==null||row[1].toString().equals("")?row[5].toString():row[1].toString());
 				returnObj.setAwayTeamNameTH			(row[2].toString());
 				returnObj.setAwayTeamNameEN			(row[3].toString());
 				returnObj.setSeason					(row[4].toString());

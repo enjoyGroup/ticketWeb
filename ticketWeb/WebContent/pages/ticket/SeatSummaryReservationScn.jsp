@@ -159,14 +159,14 @@
 																</tr> 
 																<% } %>
 																<tr>
-																	<td align="center" colspan="3"></td>
+																	<td align="center" colspan="4"></td>
 																	<td align="right">
 																		<B><%=seatSummaryReservationForm.getSumBookingPrices()%></B>
 																	</td>
 																</tr> 
 															<%}else{ %>
 															<tr align="center">
-																<td align="center" colspan="4">
+																<td align="center" colspan="5">
 																	<B>ไม่พบข้อมูล</B>
 																</td>
 															</tr> 
@@ -178,8 +178,8 @@
 															src="<%=servURL%>/EnjoyGenericSrv?service=servlet.SeatSummaryReservationServlet&pageAction=print" 
 															scrolling="yes"  
 															frameborder="0" 
-															width="1000" 
-															height="1000">
+															width="800" 
+															height="600">
 													</iframe>
 													<br/>
 													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_save();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
