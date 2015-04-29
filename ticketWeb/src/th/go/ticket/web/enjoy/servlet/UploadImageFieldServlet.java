@@ -1,20 +1,20 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.UploadImageFieldForm;
@@ -65,8 +65,9 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
  			if(this.form == null || pageAction.equals("new")) this.form = new UploadImageFieldForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
- 				this.onLoad();
  				request.setAttribute("target", Constants.PAGE_URL +"/UploadImageFieldScn.jsp");
+ 			}else if( pageAction.equals("upload")){
+ 				this.lp_upload();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -82,26 +83,6 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
  		}
 	}
 	
-	private void onLoad() throws EnjoyException{
-		logger.info("[onLoad][Begin]");
-		
-		List<SeatZoneBean> 				resultList 			= null;
-		List<SeatZoneBean> 				list 				= null;
-		String							season				= null;
-		Map								matchMap			= null;
-		boolean							defaultMatch		= true;
-		
-		try{
-			
-			
-		}catch(Exception e){
-			throw new EnjoyException("onLoad :: " + e.getMessage());
-		}finally{
-			logger.info("[onLoad][End]");
-		}
-		
-	}
-	
 	private void lp_upload() throws EnjoyException{
 		logger.info("[lp_upload][Begin]");
 		
@@ -114,6 +95,7 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
         String                          extent                  = null;
         long                            fileSize                = 0;
         long                            limitSize               = 2048000;//2 MB
+        FileOutputStream       			fos                     = null;
 		
 		try{
 			if (isMultipart) {
@@ -129,17 +111,16 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
                         fileName                        = new File(item.getName()).getName();
                         extentArr                       = fileName.split("\\.");
                         extent                          = extentArr[(extentArr.length - 1)];
-                        fileName                        = UploadImageFieldForm.FILE_NAME + "." + extent;
+                        fileName                        = UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
                         fileSize                        = item.getSize();
                         
                         if(fileSize > limitSize){
                             throw new EnjoyException("Total size limit 2 MB");
                         }
                         
-                        logger.info("[lp_upload] fileName :: " + fileName);
-
-                        uploadedFile = new File(fileName);
-                        item.write(uploadedFile);
+                        for (Part part : this.request.getParts()) {
+                            part.write(UploadImageFieldForm.FILE_PATH + File.separator + fileName);
+                        }
                         
                      }
                 }

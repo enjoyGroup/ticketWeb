@@ -12,6 +12,7 @@ public class EventMatchBean {
 	private String matchDate; 
 	private String matchTime;
 	private boolean active;
+	private String matchDateId;
 	
 	public EventMatchBean(){ 
 		this.matchId         = "";
@@ -21,6 +22,7 @@ public class EventMatchBean {
 		this.matchDate       = "";
 		this.matchTime       = "";
 		this.active          = true;
+		this.matchDateId     = "matchDateId";
 		
 	}
 
@@ -79,6 +81,16 @@ public class EventMatchBean {
 
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	
+
+	public String getMatchDateId() {
+		return matchDateId;
+	}
+
+	public void setMatchDateId(String matchDateId) {
+		this.matchDateId = matchDateId;
 	}
 
 	@Override

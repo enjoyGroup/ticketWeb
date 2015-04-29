@@ -275,7 +275,7 @@ public class SeatReservationDao {
 		return returnList;
 	}
 	
-	public List<SeatReservationBean> getSeatBookingList(String matchId, String fieldZoneId) throws EnjoyException{
+	public List<SeatReservationBean> getSeatBookingList(String matchId, String fieldZoneId, String season) throws EnjoyException{
 		logger.info("[getSeatBookingList][Begin]");
 		
 		List<SeatReservationBean> 		returnList 							= null;
@@ -296,6 +296,7 @@ public class SeatReservationDao {
 								+ " FROM ticketorder"
 								+ " where matchId 			= '" + matchId + "'"
 									+ " and fieldZoneId		= '" + fieldZoneId + "'"
+									+ " and season			= '" + season + "'"
 									+ " and ticketStatus 	<> 'R'";
 			query			= session.createSQLQuery(hql);
 			
@@ -356,6 +357,7 @@ public class SeatReservationDao {
 			ticketorderlDb.setTicketId(seatReservationBean.getTicketId());
 			ticketorderlDb.setSeatingNo(seatReservationBean.getSeatingNo());
 			ticketorderlDb.setMatchId(Integer.parseInt(seatReservationBean.getMatchId()));
+			ticketorderlDb.setSeason(Integer.parseInt(seatReservationBean.getSeason()));
 			ticketorderlDb.setFieldZoneId(Integer.parseInt(seatReservationBean.getFieldZoneId()));
 			ticketorderlDb.setBookingTypeId(Integer.parseInt(seatReservationBean.getBookingTypeId()));
 			ticketorderlDb.setUserUniqueId(Integer.parseInt(seatReservationBean.getUserUniqueId()));

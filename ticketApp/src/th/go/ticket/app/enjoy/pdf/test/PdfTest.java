@@ -25,7 +25,7 @@ public class PdfTest {
 	public static void main(String[] args) {
 		try {
 //			writePDFFromFile("D:/motor/PDF/TicketPdfForm_1.pdf");
-			writePDF("TicketPdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/TicketPdfForm.pdf");
+			writePDF("TicketPdfForm", "D:/motor/JSON/ticket.json", "D:/motor/PDF/TicketPdfForm.pdf");
 //			writePDF("SlipPdfTypeTwoForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SlipPdfTypeTwoForm.pdf");
 //			writePDF("SummarySalePdfForm", "D:/motor/JSON/motor.json", "D:/motor/PDF/SummarySalePdfForm.pdf");
 
@@ -63,7 +63,7 @@ public class PdfTest {
 			fos            				= new FileOutputStream(f.getAbsolutePath());			
 			writer 						= PdfWriter.getInstance( document,fos  );
 	
-			document.addTitle("Motor shop Form");
+			document.addTitle("Ticket Form");
 			System.out.println(formClass);
 	
 			Class c 					= 	Class.forName(formClass);

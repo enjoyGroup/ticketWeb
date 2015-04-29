@@ -3,6 +3,7 @@ package th.go.ticket.app.enjoy.pdf;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import th.go.ticket.app.enjoy.pdf.utils.MotorItext;
@@ -11,7 +12,6 @@ import th.go.ticket.app.enjoy.pdf.utils.PdfFormService;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.Barcode128;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
@@ -36,26 +36,24 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 	public Document createForm(Document document) {
 		System.out.println("[SlipPdfForm][createForm][Begin]");
 		
+		JSONArray		detailList			= null;
+		JSONObject		detail				= null;
+		
 		try{
-			document.add(this.genHeader());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.brLine());
-			document.add(this.genDetail());
-//			document.add(this.brLine());
-//			document.add(this.genProduct());
-//			document.add(this.brLine());
-//			document.add(this.genTotalCost());
-//			document.add(this.brLine());
-//			document.add(this.brLine());
-//			document.add(this.brLine());
-//			document.add(this.genFooter());
 			
+			detailList			= (JSONArray) this.formDataObj.get("detailList");
+			
+			for(int i=0;i<detailList.size();i++){
+				detail = (JSONObject) detailList.get(i);
+				
+				document.add(this.genHeader(detail));
+				document.add(this.brLine(100f));
+				document.add(this.genDetail(detail));
+				document.add(this.brLine(140f));
+				document.add(this.genFooter(detail));
+				
+				document.newPage();
+			}
 			
 		}
 		catch(DocumentException de){
@@ -72,166 +70,104 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 		return document;
 	}
 	
-	private PdfPTable genHeader() throws DocumentException, MalformedURLException, IOException {
+	private PdfPTable genHeader(JSONObject detail) throws DocumentException, MalformedURLException, IOException {
 		
 		float[] 	widths	 		= {60f ,10f ,10f, 10f, 10f};
 		PdfPTable 	table 			= new PdfPTable(widths);
+		String		gate			= "1";
+		String		fieldZoneName	= (String) detail.get("fieldZoneName");
+		String		seatRow			= (String) detail.get("seatRow");
+		String		seatingNo		= (String) detail.get("seatingNo");
+		String		awayTeamNameEN	= (String) detail.get("awayTeamNameEN");
+		String		matchTime		= (String) detail.get("matchTime");
+		String		matchDate		= (String) detail.get("matchDate");
 		
 		
 		table.addCell(setCellWB("THAI PREMEIER LEAGE", getFont3(), 1, Element.ALIGN_LEFT, 0));
 		table.addCell(setCellWB("", getFont3(), 4, Element.ALIGN_LEFT, 0));
 		
 		table.addCell(setCellWB("", getFont3(), 1, Element.ALIGN_LEFT, 0));
-		table.addCell(setCellWB("1", getFont3(), 1, Element.ALIGN_LEFT, 0));
-		table.addCell(setCellWB("W", getFont3(), 1, Element.ALIGN_LEFT, 0));
-		table.addCell(setCellWB("L", getFont3(), 1, Element.ALIGN_LEFT, 0));
-		table.addCell(setCellWB("L-17", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB(gate, getFont3(), 1, Element.ALIGN_LEFT, 0));//ประตู
+		table.addCell(setCellWB(fieldZoneName, getFont3(), 1, Element.ALIGN_LEFT, 0));//อัฒจันทร์
+		table.addCell(setCellWB(seatRow, getFont3(), 1, Element.ALIGN_LEFT, 0));//แถว
+		table.addCell(setCellWB(seatingNo, getFont3(), 1, Element.ALIGN_LEFT, 0));//ที่นั่ง
 		
-		table.addCell(setCellWB("BANGKOK UD         18.00           15/02/2015", getFont3(), 5, Element.ALIGN_LEFT, 0));
+		table.addCell(setCellWB(awayTeamNameEN + "         " + matchTime + "           " + matchDate, getFont3(), 5, Element.ALIGN_LEFT, 0));
 		
 		table.setWidthPercentage(100);
 	
 		return table;
 	}
 	
-	private PdfPTable genDetail() throws DocumentException, MalformedURLException, IOException {
+	private PdfPTable genDetail(JSONObject detail) throws DocumentException, MalformedURLException, IOException {
 		
 		float[] 	widths	 		= {1};
 		PdfPTable 	table 			= new PdfPTable(widths);
-		float[] 	subW1	 		= {25f ,25f ,25f, 25f};
+		float[] 	subW1	 		= {10f ,10f ,10f, 10f};
 		PdfPTable 	subTab1 		= new PdfPTable(subW1);
+		float[] 	subW2	 		= {20f ,20f};
+		PdfPTable 	subTab2 		= new PdfPTable(subW2);
 		PdfPCell 	cell			= null;
+		String		gate			= "1";
+		String		fieldZoneName	= (String) detail.get("fieldZoneName");
+		String		seatRow			= (String) detail.get("seatRow");
+		String		seatingNo		= (String) detail.get("seatingNo");
+		String		awayTeamNameEN	= (String) detail.get("awayTeamNameEN");
+		String		matchTime		= (String) detail.get("matchTime");
+		String		matchDate		= (String) detail.get("matchDate");
 		
-		cell = setCellWB("THAI PREMEIER LEAGE", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
-		cell.setRotation(90);
+		//แถว 1
+		subTab1.addCell(setCellWB("THAI PREMEIER LEAGE", getFont4Bold(), 4, Element.ALIGN_LEFT, 0));
+		
+		//แถว 2
+		subTab1.addCell(setCellWB(gate, getFont4Bold(), 1, Element.ALIGN_LEFT, 0));
+		subTab1.addCell(setCellWB(fieldZoneName, getFont4Bold(), 1, Element.ALIGN_LEFT, 0));
+		subTab1.addCell(setCellWB(seatRow, getFont4Bold(), 1, Element.ALIGN_LEFT, 0));
+		subTab1.addCell(setCellWB(seatingNo, getFont4Bold(), 1, Element.ALIGN_LEFT, 0));
+		
+		//แถว 3
+		subTab1.addCell(setCellWB(awayTeamNameEN, getFont4Bold(), 4, Element.ALIGN_LEFT, 0));
+		
+		//แถว 4
+		subTab2.addCell(setCellWB(matchTime, getFont3(), 1, Element.ALIGN_LEFT, 0));
+		subTab2.addCell(setCellWB(matchDate, getFont3(), 1, Element.ALIGN_LEFT, 0));
+		subTab1.addCell(setCell(subTab2, 4, 0));
+		
+		cell = setCell(subTab1, 1, 0);
+		cell.setRotation(270);
+		cell.setFixedHeight(100f);
 		table.addCell(cell);
 		
-		cell = setCellWB("1", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
-		cell.setRotation(90);
-		subTab1.addCell(cell);
-		cell = setCellWB("W", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
-		cell.setRotation(90);
-		subTab1.addCell(cell);
-		cell = setCellWB("L", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
-		cell.setRotation(90);
-		subTab1.addCell(cell);
-		cell = setCellWB("L-17", getFont4Bold(), 1, Element.ALIGN_LEFT, 0);
-		cell.setRotation(90);
-		subTab1.addCell(cell);
-		
-		cell = setCell(subTab1, 1);
-//		cell.setRotation(90);
-		table.addCell(cell);
-		
-//		cell = setCellWB("BANGKOK UTD", getFont4Bold(), 4, Element.ALIGN_LEFT, 0);
-//		cell.setRotation(90);
-//		table.addCell(cell);
-//		
-//		cell = setCellWB("18.00", getFont3(), 1, Element.ALIGN_LEFT, 0);
-//		cell.setRotation(90);
-//		subTabL.addCell(cell);
-//		
-//		cell = setCellWB("15/02/2015", getFont3(), 1, Element.ALIGN_LEFT, 0);
-//		cell.setRotation(90);
-//		subTabL.addCell(cell);
-//		
-//		cell = setCell(subTabL, 4);
-//		cell.setRotation(90);
-//		table.addCell(cell);
-		
 		table.setWidthPercentage(100);
 	
 		return table;
 	}
 	
-	private PdfPTable genProduct() throws DocumentException, MalformedURLException, IOException {
-		
-		float[] 	widths	 		= {20f ,20f ,20f ,20f ,20f};
-		PdfPTable 	table 			= new PdfPTable(widths);
-		
-		table.addCell(setCell("ยี่ห้อ", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("รุ่น", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("หมายเลขเครื่อง", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("หมายเลขตัวถัง", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("สี", getFont8Bold(), 1, 1, Element.ALIGN_CENTER));
-		
-		table.addCell(setCell("HONDA", getFont8(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("ACG110CSFF TH", getFont8(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("JF382E-0113623", getFont8(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("MLHJF3823F5113623", getFont8(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCell("เหลือง-ดำ", getFont8(), 1, 1, Element.ALIGN_CENTER));
-		
-		table.setWidthPercentage(100);
-	
-		return table;
-	}
-	
-	private PdfPTable genTotalCost() throws DocumentException, MalformedURLException, IOException {
-		
-		float[] 	widths	 		= {55f ,5f ,50f};
-		PdfPTable 	table 			= new PdfPTable(widths);
-		
-		PdfPTable 	subTabL 		= new PdfPTable(1);
-		
-		float[] 	subWR	 		= {20f, 30f};
-		PdfPTable 	subTabR 		= new PdfPTable(subWR);
-		
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		subTabL.addCell(setCell("ห้าหมื่นหนึ่งพันห้าร้อยบาทถ้วน", getFont10(), 1, 1, Element.ALIGN_CENTER));
-		table.addCell(setCellWB(subTabL, 1, Element.ALIGN_LEFT, 0, false, false));
-		
-		table.addCell(setCellWB("", getFont12Bold(), 1, Element.ALIGN_LEFT, 0));
-		
-		subTabR.addCell(setCell("\n มูลค่าสินค้า \n", getFont8Bold(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n 48,130.84 \n", getFont8(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n ภาษีมูลค่าเพิ่ม 7% \n", getFont8Bold(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n 3,369.16 \n", getFont8(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n จำนวนเงินรวมทั้งสิ้น 7% \n", getFont8Bold(), 1, 1, Element.ALIGN_RIGHT));
-		subTabR.addCell(setCell("\n 51,500 \n", getFont8(), 1, 1, Element.ALIGN_RIGHT));
-		table.addCell(setCell(subTabR, 1));
-		
-		table.setWidthPercentage(100);
-	
-		return table;
-	}
-	
-	private PdfPTable genFooter() throws DocumentException, MalformedURLException, IOException {
+	private PdfPTable genFooter(JSONObject detail) throws DocumentException, MalformedURLException, IOException {
 		
 		float[] 		widths	 		= {1};
 		PdfPTable 		table 			= new PdfPTable(widths);
 		PdfContentByte 	cb 				= writer.getDirectContent();
 		Barcode128 		code128 		= new Barcode128();
+		String			ticketId		= (String) detail.get("ticketId");
 		
-		code128.setCode("0123456789abcdefg");
+		code128.setCode(ticketId);
 		
-		PdfPCell cell1 = new PdfPCell(code128.createImageWithBarcode(cb, null, null));
-		
-		cell1.setRotation(90);
-		table.addCell(cell1);
-//		table.addCell(code128.createImageWithBarcode(cb, null, null));
+		table.addCell(code128.createImageWithBarcode(cb, null, null));
 		
 		table.setWidthPercentage(100);
 	
 		return table;
 	}
 
-	public PdfPTable brLine() throws DocumentException, MalformedURLException, IOException {
+	public PdfPTable brLine(float h) throws DocumentException, MalformedURLException, IOException {
 		
 		PdfPTable 	table 			= new PdfPTable(1);
+		PdfPCell 	cell			= null;
 		
-		table.addCell(setCellWB("", getFont3(), 1, Element.ALIGN_LEFT, 0));
+		cell	= setCellWB("", getFont3(), 1, Element.ALIGN_LEFT, 0);
+		cell.setFixedHeight(h);
+		table.addCell(cell);
 		
 		table.setWidthPercentage(100);
 	

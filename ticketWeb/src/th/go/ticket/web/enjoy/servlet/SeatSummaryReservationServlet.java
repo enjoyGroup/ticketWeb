@@ -92,6 +92,7 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 		
 		SeatSummaryReservationBean 			bean 						= null;
 		String								matchId						= null;
+		String								season						= null;
 		String								fieldZoneId					= null;
 		List<SeatSummaryReservationBean> 	sumDetailReservationList	= null;
 		Double								sumBookingPrices			= 0.00;
@@ -107,10 +108,12 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 		
 		try{
 			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
 			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
 			ticketIdList 		= EnjoyUtils.nullToStr(this.request.getParameter("ticketIdList"));
 			
 			logger.info("[getSummaryReserv] matchId 		:: " + matchId);
+			logger.info("[getSummaryReserv] season 			:: " + season);
 			logger.info("[getSummaryReserv] fieldZoneId 	:: " + fieldZoneId);
 			logger.info("[getSummaryReserv] ticketIdList 	:: " + ticketIdList);
 			
@@ -136,6 +139,7 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 			logger.info("[getSummaryReserv] ticketIdDb 	:: " + ticketIdDb);
 			
 			bean.setMatchId(matchId);
+			bean.setSeason(season);
 			bean.setFieldZoneId(fieldZoneId);
 			bean.setUserUniqueId(String.valueOf(this.userBean.getUserUniqueId()));
 			bean.setTicketId(ticketIdDb);
@@ -217,7 +221,7 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 //			session.getTransaction().commit();
 			
 			obj.put(STATUS, 			SUCCESS);
-			obj.put("detail", 			detailJSONArray);
+			obj.put("detailList", 			detailJSONArray);
 			
 		}catch(Exception e){
 //			session.getTransaction().rollback();

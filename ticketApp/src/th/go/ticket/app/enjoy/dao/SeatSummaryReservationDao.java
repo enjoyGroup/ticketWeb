@@ -147,7 +147,8 @@ public class SeatSummaryReservationDao {
 			
 			hql				= "select awayTeamNameTH , awayTeamNameEN, DATE_FORMAT( matchDate, '%d/%m/%Y') matchDate , matchTime"
 								+ " from eventmatch"
-								+ " where matchId = '" + bean.getMatchId() + "'";
+								+ " where matchId = '" + bean.getMatchId() + "'"
+									+ " and season = '" + bean.getSeason() + "'";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("awayTeamNameTH"			, new StringType());

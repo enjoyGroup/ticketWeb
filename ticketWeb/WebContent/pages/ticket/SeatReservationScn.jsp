@@ -333,7 +333,8 @@
 									   + "&fieldZoneId=" 	+ $("#fieldZoneId").val()
 									   + "&bookingTypeId=" 	+ $("#bookingTypeId").val()
 									   + "&userUniqueId=" 	+ $("#userUniqueId").val()
-									   + "&ticketStatus=" 	+ la_ticketStatus[av_index].value;
+									   + "&ticketStatus=" 	+ la_ticketStatus[av_index].value
+									   + "&season=" 		+ $("#season").val();
 				
 				$.ajax({
 					async:false,
@@ -447,7 +448,7 @@
 		            		//alert(status);
 		            		if(status=="SUCCESS"){
 		            			//alert(gp_sanitizeURLString(JSON.stringify(jsonObj)));
-		            			params = "&matchId=" + $("#matchId").val() + "&fieldZoneId=" + $("#fieldZoneId").val() + "&ticketIdList=" + gp_sanitizeURLString(JSON.stringify(jsonObj));
+		            			params = "&matchId=" + $("#matchId").val() + "&season=" + $("#season").val() + "&fieldZoneId=" + $("#fieldZoneId").val() + "&ticketIdList=" + gp_sanitizeURLString(JSON.stringify(jsonObj));
 		            			
 		            			window.location = gv_url + "?service=servlet.SeatSummaryReservationServlet&pageAction=getSummaryReserv" + params;
 		            		}else{

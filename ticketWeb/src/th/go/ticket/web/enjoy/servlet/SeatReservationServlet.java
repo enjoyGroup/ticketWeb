@@ -279,13 +279,15 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 		JSONObject 					obj 				= null;
 		JSONArray 					detailJSONArray 	= null;
 		JSONObject 					objDetail 			= null;
+		String						season				= null;
 		
 		try{
 			obj 				= new JSONObject();
 			detailJSONArray 	= new JSONArray();
 			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
 			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
-			seatBookingList		= this.dao.getSeatBookingList(matchId, fieldZoneId);
+			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+			seatBookingList		= this.dao.getSeatBookingList(matchId, fieldZoneId, season);
 			
 			obj.put(STATUS, 			SUCCESS);
 			
@@ -332,6 +334,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 		String 						ticketId 			= null;
 		String 						seatingNo 			= null;
 		String 						matchId 			= null;
+		String						season				= null;
 		String 						fieldZoneId 		= null;
 		String 						bookingTypeId 		= null;
 		String 						userUniqueId 		= null;
@@ -349,6 +352,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			ticketId 			= EnjoyUtils.nullToStr(this.request.getParameter("ticketId"));
 			seatingNo 			= EnjoyUtils.nullToStr(this.request.getParameter("seatingNo"));
 			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
 			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
 			bookingTypeId 		= EnjoyUtils.nullToStr(this.request.getParameter("bookingTypeId"));
 			userUniqueId 		= EnjoyUtils.nullToStr(this.request.getParameter("userUniqueId"));
@@ -358,6 +362,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			logger.info("[booking] ticketId 		:: " + ticketId);
 			logger.info("[booking] seatingNo 		:: " + seatingNo);
 			logger.info("[booking] matchId 			:: " + matchId);
+			logger.info("[booking] season 			:: " + season);
 			logger.info("[booking] fieldZoneId 		:: " + fieldZoneId);
 			logger.info("[booking] bookingTypeId 	:: " + bookingTypeId);
 			logger.info("[booking] userUniqueId 	:: " + userUniqueId);
@@ -370,6 +375,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 				bean.setTicketId(EnjoyUtil.genPassword(17));//ใช้รอสูตรการ gen TicketId จากพี่เอ
 				bean.setSeatingNo(seatingNo);
 				bean.setMatchId(matchId);
+				bean.setSeason(season);
 				bean.setFieldZoneId(fieldZoneId);
 				bean.setBookingTypeId(bookingTypeId);
 				bean.setUserUniqueId(userUniqueId);
@@ -516,6 +522,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 		String						fieldZoneId			= null;
 		String						ticketId			= null;
 		List<String>				ticketIdList		= null;
+		String						season				= null;
 		
 		try{
 			obj 				= new JSONObject();
@@ -525,6 +532,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			sessionFactory 		= HibernateUtil.getSessionFactory();
 			session 			= sessionFactory.openSession();
 			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
 			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
 			
 			session.beginTransaction();
@@ -545,6 +553,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 						bean.setTicketId(ticketId);//ใช้รอสูตรการ gen TicketId จากพี่เอ
 						bean.setSeatingNo("");
 						bean.setMatchId(matchId);
+						bean.setSeason(season);
 						bean.setFieldZoneId(fieldZoneId);
 						bean.setBookingTypeId(key.toString());
 						bean.setUserUniqueId(String.valueOf(this.userBean.getUserUniqueId()));

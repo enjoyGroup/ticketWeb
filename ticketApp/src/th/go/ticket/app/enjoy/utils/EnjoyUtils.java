@@ -441,5 +441,100 @@ public class EnjoyUtils {
 		return t_formay;
 		
 	}
+
+	public static String dateToThaiDB(String dDate){
+        String 	stDate 	= "";
+        String  day     = "";
+        String  month   = "";
+        String  year    = "";
+        String  dateDB  = "";
+        try{  
+        	dDate  = dDate.replaceAll("\\s", ""); 
+        	stDate = dDate.replaceAll("/", "");  
+        	day    = stDate.substring(0, 2);
+			month  = stDate.substring(2, 4);
+		    year   = stDate.substring(4, 8);
+		    dateDB = year+month+day;
+		    System.out.println("EnjoyUtils dateToThaiDB : "+ dateDB);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return dateDB;
+    }
+    
+    public static String dateToThaiDisplay(String dDate){
+        String 	stDate 	= "";
+        String  day     = "";
+        String  month   = "";
+        String  year    = "";
+        String  display  = "";
+        try{     
+            day    = dDate.substring(6, 8);
+       		month  = dDate.substring(4, 6);
+       		year   = dDate.substring(0, 4);
+       		display = day+"/"+month+"/"+year;
+		    System.out.println("EnjoyUtils dateToThaiDisplay : "+ display);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return display;
+    }
+    
+    public static String timeToDB(String dTime){
+        String 	stDate 	= ""; 
+        try{ 
+        	dTime  = dTime.replaceAll("\\s", ""); 
+        	stDate = dTime.replaceAll(":", "");  
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return stDate;
+    }
+    
+    public static String timeToDisplay(String dTime){
+        String 	display = ""; 
+        String  hr      = "";
+        String  minute  = "";
+        try{ 
+        	   hr       = dTime.substring(0,2);
+        	   minute   = dTime.substring(2,4);
+        	   display  = hr + ":" + minute;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return display;
+    }
+
+    public static List<Integer>  generateListOfHour(){
+    	List<Integer>  	returnList = null; 
+        try{ 
+    		returnList = new ArrayList<>();
+    		for(int i = 0 ; i < 24 ; i++){
+    			returnList.add(i);
+    		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return returnList;
+    }
+    
+    public static List<Integer>  generateListOfMinute(){
+    	List<Integer>  	returnList = null; 
+        try{ 
+    		returnList = new ArrayList<>();
+    		for(int i = 0 ; i < 60 ; i++){
+    			returnList.add(i);
+    		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+           
+        return returnList;
+    }
 	
 }

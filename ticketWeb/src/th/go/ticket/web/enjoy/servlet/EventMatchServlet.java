@@ -2,6 +2,7 @@ package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException; 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -255,7 +256,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 	}
 	 
  
-	@SuppressWarnings("unused")
+	
 	private void lp_onclick_saveEventMatch() throws EnjoyException{
 		logger.info("[lp_onclick_saveEventMatch][Begin]");  
 			String 			       getDelList 	            = null;
@@ -274,17 +275,13 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			String                 status                   = null;
 			String  			   matchId	                = null; 
 			EventMatchBean 	       bean 		    		= null; 
-			JSONObject 			   obj 			    		= new JSONObject();
-			SessionFactory 		   sessionFactory			= null;
-			Session 			   session					= null;
+			JSONObject 			   obj 			    		= new JSONObject(); 
 			List<EventMatchBean>   delList                  = null;
 			int					   deleteResult				= 1; 
 			int                    insertResult			    = 1;
 			int                    updateResult				= 1;
 			
-			try{
-				sessionFactory 				= HibernateUtil.getSessionFactory();
-				session 					= sessionFactory.openSession();
+			try{ 
 				obj 						= new JSONObject();
 				getAwayTeamNameENList		= this.request.getParameterValues("awayTeamNameEN"); 
 				getAwayTeamNameTHList		= this.request.getParameterValues("awayTeamNameTH"); 
@@ -293,80 +290,68 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				statusList                  = this.request.getParameterValues("hidStartus");
 				getMatchIdList    		    = this.request.getParameterValues("matchId");
 				getDelList      		    = EnjoyUtils.nullToStr(this.request.getParameter("deleteList"));
-				seasonSelect                = EnjoyUtils.nullToStr(this.request.getParameter("hidSeason"));
-				System.out.println("[lp_onclick_saveEventMatch][seasonSelect  : ]" + seasonSelect);
+				seasonSelect                = EnjoyUtils.nullToStr(this.request.getParameter("hidSeason")); 
 				int seasonInt           	= Integer.parseInt(seasonSelect);  
+				System.out.println("[lp_onclick_saveEventMatch][seasonSelect  : ]" + seasonSelect);
 				System.out.println("[lp_onclick_saveEventMatch][seasonInt  : ]" + seasonInt); 
 				
-				if(getAwayTeamNameENList.length>0){
-					 
-					for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){  
-						session.beginTransaction(); 
+				if(getAwayTeamNameENList.length>0){ 
+					for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){   
 						nameTh        = EnjoyUtils.nullToStr(getAwayTeamNameTHList[i]);     
-						nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);  
-//						matchDate     = EnjoyUtils.nullToStr(EnjoyUtils.dateFormatToDb(getDateList[i], "dd/MM/yyyy"));  
-//						matchTime     = EnjoyUtils.nullToStr(EnjoyUtils.timeFormatToDb(getTimeList[i])); 
-						matchDate     = EnjoyUtils.nullToStr(EnjoyUtils.nullToStr(getDateList[i]));  
-						matchTime     = EnjoyUtils.nullToStr(EnjoyUtils.nullToStr(getTimeList[i]));  
+						nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);   
+						matchDate     = EnjoyUtils.nullToStr(getDateList[i]);   
+						matchTime     = EnjoyUtils.nullToStr(getTimeList[i]);  
 						status        = EnjoyUtils.nullToStr(statusList[i]); 
 						matchId       = EnjoyUtils.nullToStr(getMatchIdList[i]);
 						 
 						bean = new EventMatchBean(); 
 						bean.setAwayTeamNameEN(nameEn);
 						bean.setAwayTeamNameTH(nameTh);
-						bean.setMatchDate(matchDate);
-						bean.setMatchTime(matchTime);
+						bean.setMatchDate(EnjoyUtils.dateToThaiDB(matchDate));
+						bean.setMatchTime(EnjoyUtils.timeToDB(matchTime));
 						bean.setSeason(seasonSelect);
 						bean.setMatchId(matchId);
 			            
 						System.out.print("bean:"+bean.toString());	
 						
 						if(status.equals("N")){ 
-							this.dao.insertEventMatch(session,bean);   
+							this.dao.insertEventMatch(bean);    
 						}else if(status.equals("U")){
-							this.dao.updateEventMatch(session,bean);   
+							this.dao.updateEventMatch(bean);  
 						}
-						
-						session.getTransaction().commit(); 
-					 
+						 
 					}
 					 
 				}
+				System.out.print("getDelList:"+getDelList);	
 				
-				
-				List<String> deleteList = EnjoyUtils.getListFromArr(getDelList);
-				System.out.print("deleteList : size ::"+deleteList.size());
-				int matchDel ;
-				if(deleteList.size()>0){
-					for(String del :deleteList){
-						System.out.print("del"+deleteList.size());
-						if(del != ""){
-							session.beginTransaction(); 
-							matchDel = Integer.valueOf(del); 
-							System.out.print("delete : id is ::" +matchDel); 
-							this.dao.deleteEventMatch(session,matchDel);
-							session.getTransaction().commit(); 
+				if(!"none".equals(getDelList)){   
+					List<String> deleteList = EnjoyUtils.getListFromArr(getDelList);
+					System.out.print("deleteList : size ::"+deleteList.size());
+					int matchDel ;
+					if(deleteList.size()>0){
+						for(String del :deleteList){
+							System.out.print("del"+deleteList.size());
+							if(del != ""){ 
+								matchDel = Integer.valueOf(del); 
+								System.out.print("delete : id is ::" +matchDel); 
+								this.dao.deleteEventMatch(matchDel); 
+							}
 						}
-					}
-					
-				}  
-				
-				obj.put(STATUS, SUCCESS); 
-			}catch(EnjoyException error){
-				session.getTransaction().rollback();
-				obj.put("status", 		"ERROR");
-				throw new EnjoyException("saveEventMatch : " + error.getMessage()); 
+						
+					} 
+				}
+				 
+				this.onLoad();
+				obj.put("status",   "SUCCESS"); 
+
 			}catch(Exception e){
-				session.getTransaction().rollback();
-				obj.put(STATUS, 	ERROR);
+				obj.put("status", 		"ERROR"); 
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
 				throw new EnjoyException("saveEventMatch : " +"เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-			}finally{ 
-				this.enjoyUtil.writeMSG(obj.toString());
-				session.flush();
-				session.clear();
-				session.close();
-				sessionFactory			 = null;
-				session					 = null; 
+				
+			}finally{   
+				this.enjoyUtil.writeMSG(obj.toString());  
 				getAwayTeamNameENList    = null;
 			   	getAwayTeamNameTHList    = null;
 				getDateList 	        = null;
@@ -406,15 +391,11 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			String                 status                   = null;
 			String  			   matchId	                = null; 
 			EventMatchBean 	       bean 		    		= null; 
-			JSONObject 			   obj 			    		= new JSONObject();
-			SessionFactory 		   sessionFactory			= null;
-			Session 			   session					= null; 
+			JSONObject 			   obj 			    		= new JSONObject(); 
 			int                    insertResult			    = 1; 
 			
 			try{
-				obj 		                = new JSONObject();
-				sessionFactory 				= HibernateUtil.getSessionFactory();
-				session 	    			= sessionFactory.openSession();
+				obj 		                = new JSONObject(); 
 				getAwayTeamNameENList		= this.request.getParameterValues("awayTeamNameEN"); 
 				getAwayTeamNameTHList		= this.request.getParameterValues("awayTeamNameTH"); 
 				getDateList					= this.request.getParameterValues("matchDate"); 
@@ -428,56 +409,41 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 					int seasonInt           	= Integer.parseInt(seasonNew);  
 					System.out.println("[lp_onclick_saveNewEventMatch][seasonInt  : ]" + seasonInt);
 					 
-					if(getAwayTeamNameENList.length>0){
-						 
-						for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){  
-							session.beginTransaction();
+					if(getAwayTeamNameENList.length>0){ 
+						for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){   
 							nameTh        = EnjoyUtils.nullToStr(getAwayTeamNameTHList[i]);     
-							nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);  
-//							matchDate     = EnjoyUtils.nullToStr(EnjoyUtils.dateFormatToDb(getDateList[i], "dd/MM/yyyy"));  
-//							matchTime     = EnjoyUtils.nullToStr(EnjoyUtils.timeFormatToDb(getTimeList[i])); 
-							matchDate     = EnjoyUtils.nullToStr(EnjoyUtils.nullToStr(getDateList[i]));  
-							matchTime     = EnjoyUtils.nullToStr(EnjoyUtils.nullToStr(getTimeList[i])); 
+							nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);    
+							matchDate     = EnjoyUtils.nullToStr(getDateList[i]); 
+							matchTime     = EnjoyUtils.nullToStr(getTimeList[i]); 
 							status        = EnjoyUtils.nullToStr(statusList[i]); 
 							matchId       = EnjoyUtils.nullToStr(getMatchIdList[i]);
 							 
 							bean = new EventMatchBean(); 
 							bean.setAwayTeamNameEN(nameEn);
 							bean.setAwayTeamNameTH(nameTh);
-							bean.setMatchDate(matchDate);
-							bean.setMatchTime(matchTime);
+							bean.setMatchDate(EnjoyUtils.dateToThaiDB(matchDate));
+							bean.setMatchTime(EnjoyUtils.timeToDB(matchTime));
 							bean.setSeason(seasonNew);
 							bean.setMatchId(matchId);
 							 
-							this.dao.insertEventMatch(session,bean);   
-							 
-							session.getTransaction().commit(); 
+							this.dao.insertEventMatch(bean);    
 						 
-						}
+						} 
 						 
 					}
 				}
 				 
-				if(insertResult == 1){ 
-					obj.put(STATUS, 	SUCCESS); 
-				}else{ 
-					session.getTransaction().rollback();
-					obj.put(STATUS, 	ERROR);
-					throw new EnjoyException("saveEventMatch : " + "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
-				}
-			 
+				obj.put("status",   "SUCCESS"); 
+			}catch(EnjoyException error){ 
+				obj.put("status", 		"ERROR");
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
+				throw new EnjoyException("saveEventMatch : " + error.getMessage()); 
 			}catch(Exception e){
-				session.getTransaction().rollback();
-				obj.put(STATUS, 			"ERROR");
-				obj.put(ERR_MSG, 			e.getMessage());
-				throw new EnjoyException("saveEventMatch : " + e.getMessage());
-			}finally{  
-				this.enjoyUtil.writeMSG(obj.toString());
-				session.flush();
-				session.clear();
-				session.close();
-				sessionFactory			= null;
-				session					= null; 
+				obj.put("status", 		"ERROR"); 
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
+				throw new EnjoyException("saveEventMatch : " +"เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+				
+			}finally{   
 				getAwayTeamNameENList   = null;
 			   	getAwayTeamNameTHList   = null;
 				getDateList 	        = null;
@@ -489,6 +455,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				matchDate               = null;
 				matchTime               = null;
 				bean 		    		= null; 
+				this.enjoyUtil.writeMSG(obj.toString());
 				obj 			    	= null;  
 				insertResult			= 0; 
 				System.out.println("[lp_onclick_saveNewEventMatch][End]");
@@ -512,22 +479,23 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				System.out.println("[lp_onclick_deleteMatch][matchId is ]" + matchId);
 				Integer countOrder = this.dao.countOrderFromMatch(session,matchId);
 				System.out.println("[lp_onclick_deleteMatch][countOrder is ]" + countOrder.intValue());
-	 
-				if(countOrder>0){
-					throw new EnjoyException("ไม่สามารถลบ  Match นี้ได้ เนื่องจากมีรายการขายแล้ว");  
-				}else{  
-				   obj.put("status", 			"SUCCESS");  
-				}  
-				   
-				
-			}catch(EnjoyException error){
-				session.getTransaction().rollback();
+	  
+				obj 			        = new JSONObject(); 
+				obj.put(STATUS, 		SUCCESS);
+				obj.put("COUNT", 		countOrder);
+				 
+				obj.put("status",   "SUCCESS"); 
+			}catch(EnjoyException error){ 
 				obj.put("status", 		"ERROR");
-				throw new EnjoyException("deleteMatch : " + error.getMessage());
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการลบข้อมูล");
+				session.getTransaction().rollback(); 
+				throw new EnjoyException("deleteMatch : " + error.getMessage()); 
 			}catch(Exception e){
-				session.getTransaction().rollback();
-				obj.put("status", 	    "ERROR");
-				throw new EnjoyException("deleteMatch : " + e.getMessage());
+				obj.put("status", 		"ERROR"); 
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการลบข้อมูล");
+				session.getTransaction().rollback(); 
+				throw new EnjoyException("deleteMatch : " +"เกิดข้อผิดพลาดในการลบข้อมูล");
+				
 			}finally{  
 				this.enjoyUtil.writeMSG(obj.toString()); 
 				session.clear();

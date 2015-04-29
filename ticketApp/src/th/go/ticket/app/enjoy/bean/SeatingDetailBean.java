@@ -1,5 +1,7 @@
 package th.go.ticket.app.enjoy.bean;
 
+import java.util.List;
+
 /**
  * @author acer
  *
@@ -14,12 +16,13 @@ public class SeatingDetailBean {
 	private int seating;
 
 	private int totalSeating;
-	  
-	private int bookingTypeId;
-
-	private String bookingTypeName;
+	 
+	private String nameRow;
 	
-	private double bookingPrices;
+	private int typeRowName; 
+	
+	private List<FieldZoneDetailBean> fieldZoneDetailBeans;
+
  
 	public SeatingDetailBean(){ 
 		 
@@ -64,29 +67,31 @@ public class SeatingDetailBean {
 	public void setTotalSeating(int totalSeating) {
 		this.totalSeating = totalSeating;
 	}
-
-	public int getBookingTypeId() {
-		return bookingTypeId;
+ 
+	public String getNameRow() {
+		return nameRow;
 	}
 
-	public void setBookingTypeId(int bookingTypeId) {
-		this.bookingTypeId = bookingTypeId;
+	public void setNameRow(String nameRow) {
+		this.nameRow = nameRow;
+	}
+	
+
+	public int getTypeRowName() {
+		return typeRowName;
 	}
 
-	public String getBookingTypeName() {
-		return bookingTypeName;
+	public void setTypeRowName(int typeRowName) {
+		this.typeRowName = typeRowName;
 	}
 
-	public void setBookingTypeName(String bookingTypeName) {
-		this.bookingTypeName = bookingTypeName;
+	public List<FieldZoneDetailBean> getFieldZoneDetailBeans() {
+		return fieldZoneDetailBeans;
 	}
 
-	public double getBookingPrices() {
-		return bookingPrices;
-	}
-
-	public void setBookingPrices(double bookingPrices) {
-		this.bookingPrices = bookingPrices;
+	public void setFieldZoneDetailBeans(
+			List<FieldZoneDetailBean> fieldZoneDetailBeans) {
+		this.fieldZoneDetailBeans = fieldZoneDetailBeans;
 	}
 
 	@Override
@@ -94,10 +99,11 @@ public class SeatingDetailBean {
 		return "SeatingDetailBean [fieldZoneId=" + fieldZoneId
 				+ ", fieldZoneName=" + fieldZoneName + ", rows=" + rows
 				+ ", seating=" + seating + ", totalSeating=" + totalSeating
-				+ ", bookingTypeId=" + bookingTypeId + ", bookingTypeName="
-				+ bookingTypeName + ", bookingPrices=" + bookingPrices + "]";
+				+ ", nameRow=" + nameRow + ", typeRowName=" + typeRowName
+				+ ", fieldZoneDetailBeans=" + fieldZoneDetailBeans + "]";
 	}
-	
-	
+	 
+ 
+  
  
 }

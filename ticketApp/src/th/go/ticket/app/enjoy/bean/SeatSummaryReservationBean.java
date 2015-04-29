@@ -17,6 +17,7 @@ public class SeatSummaryReservationBean {
 	private String ticketId;
 	private String fieldZoneName;
 	private String seatRow;
+	private String season;
 	
 	public SeatSummaryReservationBean(){
 		this.seatingNo 				= "";
@@ -32,6 +33,7 @@ public class SeatSummaryReservationBean {
 		this.ticketId				= "";
 		this.fieldZoneName			= "";
 		this.seatRow				= "";
+		this.season					= "";
 	}
 
 	public String getSeatingNo() {
@@ -136,6 +138,14 @@ public class SeatSummaryReservationBean {
 
 	public void setSeatRow(String seatRow) {
 		this.seatRow = seatRow;
+	}
+
+	public String getSeason() {
+		return season;
+	}
+
+	public void setSeason(String season) {
+		this.season = season;
 	}
 	
 }

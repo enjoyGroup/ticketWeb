@@ -34,8 +34,7 @@ public class EventMatchDao {
 	
 	private static final EnjoyLogger logger = EnjoyLogger.getLogger(EventMatchDao.class);
  
-	
-	@SuppressWarnings("unchecked")
+	 
 	public List<String> seasonList() throws EnjoyException{
 		logger.info("[seasonList][Begin]");
 		
@@ -53,7 +52,7 @@ public class EventMatchDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<String>();
 		     
-			 hql        = "select season from Eventmatch GROUP BY season order by  season desc" ;  
+			 hql        = "select season from Eventmatch GROUP BY season order by  season asc" ;  
 			 query 		= session.createQuery(hql);
 			 list 		= (List<Integer>)query.list();
 			
@@ -81,7 +80,7 @@ public class EventMatchDao {
 		return returnList;
 	}
 	 
-	@SuppressWarnings("unchecked")
+ 
 	public List<EventMatchBean> detailEventMatchByYear(String season) throws EnjoyException{
 		logger.info("[detailEventMatchByYear][Begin] and season = " + season);
 		
@@ -92,6 +91,7 @@ public class EventMatchDao {
 		EventMatchBean		    returnObj							= null;
 		List<Eventmatch>        eventlist                           = null;
 		Query 					query 								= null;
+		int                     genId                               = 1;
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
@@ -108,18 +108,18 @@ public class EventMatchDao {
 //				logger.info("[detailEventMatchByYear] matchId 			:: " + row.getMatchId());
 				logger.info("[detailEventMatchByYear] awayTeamNameTH 	:: " + row.getAwayTeamNameTH());
 				logger.info("[detailEventMatchByYear] awayTeamNameEN 	:: " + row.getAwayTeamNameEN());
-				logger.info("[detailEventMatchByYear] matchDate 	    :: " + EnjoyUtils.dateFormat(row.getMatchDate(), "YYYYMMDD", "dd/MM/yyyy"));
+				logger.info("[detailEventMatchByYear] matchDate 	    :: " + row.getMatchDate());
 				logger.info("[detailEventMatchByYear] matchTime 	    :: " + row.getMatchTime());
 				
 //				returnObj.setMatchId(String.valueOf(row.getMatchId()));
 				returnObj.setAwayTeamNameTH(row.getAwayTeamNameTH());
 				returnObj.setAwayTeamNameEN(row.getAwayTeamNameEN());
-				returnObj.setMatchDate(EnjoyUtils.dateFormat(row.getMatchDate(), "YYYYMMDD", "dd/MM/yyyy"));
-				returnObj.setMatchTime(row.getMatchTime());
-//				returnObj.setMatchTime(EnjoyUtils.timeFormat(row.getMatchTime()));
+				returnObj.setMatchDate(EnjoyUtils.dateToThaiDisplay(row.getMatchDate()));
+				returnObj.setMatchTime(EnjoyUtils.timeToDisplay(row.getMatchTime())); 
 //				returnObj.setSeason(String.valueOf(row.getSeason()));
+				returnObj.setMatchDateId("matchDateId"+genId);
 				returnList.add(returnObj);
-				
+				genId++;
 			}
  
 		}catch(Exception e){
@@ -175,15 +175,19 @@ public class EventMatchDao {
 	}
  
 	 
-	public void insertEventMatch(Session session,EventMatchBean eventMatchBean) throws EnjoyException{
+	public void insertEventMatch(EventMatchBean eventMatchBean) throws EnjoyException{
 		logger.info("[addEventMatchList][Begin]");
 		  
 		String							sql				  = null; 
 		SQLQuery 						query 			  = null; 
 		int                             result            = 0;
 		Eventmatch                      evMatchDB         = null;
-		
+		SessionFactory 		   			sessionFactory	  = null;
+		Session 			   			session  		  = null;
 		try{
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			session.getTransaction().begin();
 			evMatchDB = new Eventmatch();
 //			evMatchDB.setActiveFlag(true);
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
@@ -191,13 +195,19 @@ public class EventMatchDao {
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
 			evMatchDB.setMatchTime(eventMatchBean.getMatchTime()); 
 //			evMatchDB.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
-			session.persist(evMatchDB);
-  
+			session.save(evMatchDB);
+			session.getTransaction().commit(); 
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
+			session.getTransaction().rollback(); 
 			throw new EnjoyException("เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
 		}finally{  
+			session.flush();
+			session.clear();
+			session.close();
+			sessionFactory			 			= null;
+			session					 			= null;
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
@@ -208,26 +218,35 @@ public class EventMatchDao {
 	}
 
 	 
-	public void deleteEventMatch(Session session,int matchId) throws EnjoyException{
+	public void deleteEventMatch(int matchId) throws EnjoyException{
 		logger.info("[deleteMatch][Begin]");
 		  
 		String							hql									= null; 
 		Query 						    query 								= null; 
-		 Eventmatch                     matchDB                             = null;
-		
+		Eventmatch                      matchDB                             = null;
+		SessionFactory 		   			sessionFactory						= null;
+		Session 			   			session  							= null;
 		try{  
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			session.getTransaction().begin();
 			 System.out.print("[deleteMatch]input to delete :"+matchId);
-			 hql        = "FROM Eventmatch WHERE matchId = :matchId";  
-			 query      = session.createQuery(hql).setParameter("matchId", matchId);  
-			 matchDB = (Eventmatch)query.uniqueResult();
-//			 System.out.println("matchDB.getMatchId() :: "+matchDB.getMatchId());
-			 session.delete(matchDB);  
-			
+			 hql        = "DELETE from Eventmatch WHERE matchId = :matchId";  
+			 query      = session.createQuery(hql);
+			 query.setInteger("matchId", matchId);  
+			 System.out.println(query.executeUpdate()); 
+			 session.getTransaction().commit(); 
 		}catch(Exception e){ 
 			e.printStackTrace();
 			logger.info(e.getMessage());
+			session.getTransaction().rollback(); 
 			throw new EnjoyException("เกิดข้อผิดพลาดในการลบข้อมูล"); 
-		}finally{   
+		}finally{ 
+			session.flush();
+			session.clear();
+			session.close();
+			sessionFactory			 			= null;
+			session					 			= null; 
 			query 								= null;
 			hql                                 = null;
 			matchDB								= null;
@@ -235,38 +254,51 @@ public class EventMatchDao {
 		} 
 	}
 	
-	public void updateEventMatch(Session session,EventMatchBean eventMatchBean) throws EnjoyException{
+	public void updateEventMatch(EventMatchBean eventMatchBean) throws EnjoyException{
 		logger.info("[addEventMatchList][Begin]");
 		  
-		String							sql									= null; 
-		SQLQuery 						query 								= null;  
+		String							hql									= null; 
+		Query 						    query 								= null;  
 		int                             result                              = 0;
 		Eventmatch                      evMatchDB                           = null;
-		
+		SessionFactory 		   			sessionFactory						= null;
+		Session 			   			session  							= null;
 		try{
-			evMatchDB = new Eventmatch();
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			hql        = "FROM Eventmatch WHERE matchId = :matchId";  
+			query      = session.createQuery(hql).setParameter("matchId", Integer.valueOf(eventMatchBean.getMatchId()));  
+			evMatchDB    = (Eventmatch)query.uniqueResult();
+			System.out.println("matchDB.getMatchId() :: "+eventMatchBean.getMatchId());
+			session.getTransaction().begin();
+//			evMatchDB.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
 //			evMatchDB.setActiveFlag(eventMatchBean.isActive());
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
-			evMatchDB.setMatchTime(eventMatchBean.getMatchTime());
-//			evMatchDB.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
+			evMatchDB.setMatchTime(eventMatchBean.getMatchTime()); 
 //			evMatchDB.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
-			session.saveOrUpdate(evMatchDB);  
-
+			session.merge(evMatchDB);  
+			session.getTransaction().commit(); 
 		}catch(Exception e){ 
 			e.printStackTrace();
 			logger.info(e.getMessage());
+			session.getTransaction().rollback(); 
 			throw new EnjoyException("เกิดข้อผิดพลาดในการแก้ไขข้อมูล"); 
 		}finally{  
+			session.flush();
+			session.clear();
+			session.close();
+			sessionFactory			 			= null;
+			session					 			= null; 
 			query 								= null;
-			sql                                 = null; 
+			hql                                 = null; 
 			evMatchDB                           = null;
 			logger.info("[addEventMatchList][End]");
 		}
 		 
 	}
-	 
+	
  
 	
 }
