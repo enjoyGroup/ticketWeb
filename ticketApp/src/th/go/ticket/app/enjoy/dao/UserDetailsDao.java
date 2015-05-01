@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.hibernate.CacheMode;
@@ -23,6 +24,7 @@ import th.go.ticket.app.enjoy.model.Userdetail;
 import th.go.ticket.app.enjoy.model.Userprivilege;
 import th.go.ticket.app.enjoy.utils.EnjoyEncryptDecrypt;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
+import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
 
 public class UserDetailsDao {
@@ -190,42 +192,112 @@ logger.info("pass ==> " + passWord);
 		
 	}
 	
-	/*ดึงรายละเอียดของผู้ใช้*/
-//	public Userdetail getUserdetailTest(int userUniqueId) throws EnjoyException{
-//		logger.info("[getUserdetail][Begin]");
-//		
-//		List<Userdetail> 	refuserstatusList		= null;
-//		String				hql						= null;
-//		Userdetail			userdetail				= null;
-//		SessionFactory 		sessionFactory		= null;
-//		Session 			session				= null;
-//		
-//		try{
-//			sessionFactory 				= HibernateUtil.getSessionFactory();
-//			session 					= sessionFactory.openSession();
-//			hql							= "from Userdetail where userUniqueId = " + userUniqueId;
-//			session.setCacheMode(CacheMode.IGNORE);
-//			refuserstatusList 	= session.createQuery(hql).list();
-//			
-//			for(Userdetail userDetail:refuserstatusList){
-//				logger.info("[getUserdetail] userId 			:: " + userDetail.getUserId());
-//				logger.info("[getUserdetail] userUniqueId 		:: " + userDetail.getUserUniqueId());
-//			}
-//		}catch(Exception e){
-//			logger.info("[getUserdetail] " + e.getMessage());
-//			throw new EnjoyException("เกิดข้อผิดพลาดในการดึงรายละเอียดผู้ใช้");
-//		}finally{
-//			session.flush();
-//			session.clear();
-//			session.close();
-//			
-//			hql						= null;
-//			logger.info("[getUserdetail][End]");
-//		}
-//		
-//		return userdetail;
-//		
-//	}
+
+	/*ดึง List ของผู้ใช้*/
+	public List<UserDetailsBean> getListUserdetail(	Session 					session, 
+													UserDetailsBean 			userdetailForm,
+													Hashtable<String, String>	fUserprivilege) throws EnjoyException{
+		logger.info("[getListUserdetail][Begin]");
+		
+		String					hql						= null;
+		Userdetail				userdetail				= null;
+		SQLQuery 				query 					= null;
+		List<Object[]>			list					= null;
+		UserDetailsBean			userDetailsBean			= null;
+		Object[] 				row 					= null;
+		List<UserDetailsBean> 	listUserDetailsBean 	= new ArrayList<UserDetailsBean>();
+		String[]				arrPrivilegeCode		= null;			
+		String					privilegeName			= "";
+		
+		try{			
+			hql					= "select a.userUniqueId"
+										+ ", a.userId"
+										+ ", a.userName"
+										+ ", a.userSurname"
+										+ ", a.userEmail"
+										+ ", a.userPrivilege"
+										+ ", a.userLevel"
+										+ ", a.userStatus"
+										+ ", a.flagChangePassword"
+										+ ", b.userStatusName"
+								+ "	from userdetails a, refuserstatus b "
+								+ "	where a.userStatus = b.userStatusCode ";
+			
+			if(!userdetailForm.getUserName().equals("")){
+				hql += " and CONCAT(a.userName, ' ', a.userSurname) like ('" + userdetailForm.getUserName() + "%')";
+			}
+			if(!userdetailForm.getUserId().equals("")){
+				hql += " and a.userId = '" + userdetailForm.getUserId() + "'";
+			}
+			if(!userdetailForm.getUserStatus().equals("")){
+				hql += " and a.userStatus = '" + userdetailForm.getUserStatus() + "'";
+			}
+
+			query			= session.createSQLQuery(hql);			
+			query.addScalar("userUniqueId"			, new IntegerType());
+			query.addScalar("userId"				, new StringType());
+			query.addScalar("userName"				, new StringType());
+			query.addScalar("userSurname"			, new StringType());
+			query.addScalar("userEmail"				, new StringType());
+			query.addScalar("userPrivilege"			, new StringType());
+			query.addScalar("userLevel"				, new StringType());
+			query.addScalar("userStatus"			, new StringType());
+			query.addScalar("flagChangePassword"	, new StringType());
+			query.addScalar("userStatusName"		, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[getListUserdetail] list :: " + list);
+			
+			if(list!=null && list.size() > 0){
+				logger.info("[getListUserdetail] list.size() :: " + list.size());
+				
+				for(int i=0;i<list.size();i++){
+					row 				= list.get(0);
+					userDetailsBean 	= new UserDetailsBean();
+					
+					logger.info("[getListUserdetail] userUniqueId 		:: " + row[0]);
+					logger.info("[getListUserdetail] userId 			:: " + row[1]);
+					logger.info("[getListUserdetail] userName 			:: " + row[2]);
+					logger.info("[getListUserdetail] userSurname 		:: " + row[3]);
+					logger.info("[getListUserdetail] userEmail 			:: " + row[4]);
+					logger.info("[getListUserdetail] userPrivilege 		:: " + row[5]);
+					logger.info("[getListUserdetail] userLevel 			:: " + row[6]);
+					logger.info("[getListUserdetail] userStatus 		:: " + row[7]);
+					logger.info("[getListUserdetail] flagChangePassword :: " + row[8]);
+					logger.info("[getListUserdetail] userStatusName 	:: " + row[9]);
+					
+					arrPrivilegeCode	= EnjoyUtils.nullToStr(row[5].toString()).split("\\,");
+					for(int j=0;j<arrPrivilegeCode.length;j++){
+						if (! privilegeName.equals("")) privilegeName = privilegeName + "<br>";
+						privilegeName   = privilegeName + "- " +fUserprivilege.get(arrPrivilegeCode[j]);
+					}
+					userDetailsBean.setUserUniqueId			(Integer.parseInt(row[0].toString()));
+					userDetailsBean.setUserId				(EnjoyUtils.nullToStr(row[1].toString()));
+					userDetailsBean.setUserName				(EnjoyUtils.nullToStr(row[2].toString()) + "  " + EnjoyUtils.nullToStr(row[3].toString()));
+					userDetailsBean.setUserSurname			(EnjoyUtils.nullToStr(row[3].toString()));
+					userDetailsBean.setUserEmail			(EnjoyUtils.nullToStr(row[4].toString()));
+					userDetailsBean.setUserPrivilege		(privilegeName);
+					userDetailsBean.setUserLevel			(EnjoyUtils.nullToStr(row[6].toString()));
+					userDetailsBean.setFlagChangePassword	(EnjoyUtils.nullToStr(row[8].toString()));
+					userDetailsBean.setUserStatus			(EnjoyUtils.nullToStr(row[9].toString()));
+					
+					listUserDetailsBean.add(userDetailsBean);
+				}	
+			}
+			
+		}catch(Exception e){
+			logger.info("[getListUserdetail AAA] " + e.getMessage());
+			e.printStackTrace();
+			throw new EnjoyException("เกิดข้อผิดพลาดในการดึงรายละเอียดผู้ใช้");
+		}finally{
+			hql						= null;
+			logger.info("[getListUserdetail][End]");
+		}
+		
+		return listUserDetailsBean;
+		
+	}
 	
 	/*ดึงรายละเอียดของผู้ใช้*/
 	public UserDetailsBean getUserdetail(Session session, int userUniqueId) throws EnjoyException{
@@ -313,7 +385,8 @@ logger.info("pass ==> " + passWord);
 		int 							result								= 0;
 		
 		try{
-			hql				= "update  Userdetail set userPassword 			= :userPassword"
+			hql				= "update  Userdetail set userPassword = :userPassword"
+										+ ",flagChangePassword = 'N'"
 										+ " where userUniqueId = :userUniqueId";
 			
 			query = session.createQuery(hql);

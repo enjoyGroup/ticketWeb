@@ -17,6 +17,7 @@ public class UserDetailsMaintananceForm {
 	private UserDetailsBean 		userDetailsBean;
 	private List<RefuserstatusBean> refuserstatusCombo;
 	private List<Userprivilege> 	userprivilegeList;
+	private List<UserDetailsBean> 	userDetailsBeanList;
 	private String					errMsg;
 	private String					pageMode;
 	private String					titlePage;
@@ -25,6 +26,7 @@ public class UserDetailsMaintananceForm {
 		this.userDetailsBean 		= new UserDetailsBean();
 		this.refuserstatusCombo		= new ArrayList<RefuserstatusBean>();
 		this.userprivilegeList		= new ArrayList<Userprivilege>();
+		this.userDetailsBeanList	= new ArrayList<UserDetailsBean>();
 		this.errMsg					= "";
 		this.pageMode				= NEW;
 		this.titlePage				= "";
@@ -52,6 +54,14 @@ public class UserDetailsMaintananceForm {
 
 	public void setUserprivilegeList(List<Userprivilege> userprivilegeList) {
 		this.userprivilegeList = userprivilegeList;
+	}
+
+	public List<UserDetailsBean> getUserDetailsBeanList() {
+		return userDetailsBeanList;
+	}
+
+	public void setUserDetailsBeanList(List<UserDetailsBean> userDetailsBeanList) {
+		this.userDetailsBeanList = userDetailsBeanList;
 	}
 
 	public String getErrMsg() {

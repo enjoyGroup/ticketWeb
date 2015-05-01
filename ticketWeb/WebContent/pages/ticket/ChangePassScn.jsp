@@ -75,7 +75,8 @@
 			            		status	= jsonObj.status;
 			            		
 			            		if(status=="SUCCESS"){
-			            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");			            			
+			            			alert("บันทึกข้อมูลเรียบร้อยแล้ว กรุณาทำการ Login ใหม่อีกครั้ง");	
+			            			window.location.replace('/ticketWeb');
 			            		}else{
 			            			errMsg 	= jsonObj.errMsg;
 			            			alert(errMsg);
@@ -92,30 +93,26 @@
 			});
 		
 			$('#btnReset').click(function(){
-			    var lo_pageAction			= null;
-			    var lo_frm					= null;
-			    var url 					= '<%=servURL%>/EnjoyGenericSrv';
-			    
+				var pageAction			= "new";
+				var lv_params			= gv_service;  
+			 
 			    try{
-			    	
-					document.getElementById("pageAction").value 	= "new";
-			    	params 	= $('#frm').serialize();// + "&pageAction=new";
+			    	lv_params 	+= "&pageAction=" + pageAction ; 
 					$.ajax({
 						async:false,
 			            type: "POST",
-			            url: url,
-			            data: params,
+			            url: gv_url,
+			            data: lv_params,
 			            beforeSend: "",
-			            success: function(data){
-			            	window.location.replace('/motorcyclesWeb/pages/motor/SummarySaleDetailScn.jsp');
+			            success: function(data){  
 			            }
 			        });
-			    	
+			    	  
 			    }catch(e){
-			    	alert("btnReset :: " + e);
-			    }
-			    
+			    	alert("lp_reset_page :: " + e);
+			    }			    
 			});
+			
 		});
 	</script>
 </head>
