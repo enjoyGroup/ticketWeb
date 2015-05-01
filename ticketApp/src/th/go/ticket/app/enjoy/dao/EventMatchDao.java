@@ -11,6 +11,7 @@ import java.util.List;
 
 
 
+
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -23,9 +24,11 @@ import org.hibernate.type.IntegerType;
 
 
 
+
 import th.go.ticket.app.enjoy.bean.EventMatchBean;  
 import th.go.ticket.app.enjoy.exception.EnjoyException; 
 import th.go.ticket.app.enjoy.model.Eventmatch;
+import th.go.ticket.app.enjoy.model.EventmatchPK;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
@@ -163,7 +166,7 @@ public class EventMatchDao {
 			}catch(Exception e){
 				e.printStackTrace();
 				logger.info(e.getMessage());
-				throw new EnjoyException("เกิดข้อผิดพลาด");
+				throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
 			}finally{  
 				sqlQuery 							= null;
 				sql                                 = null;
@@ -175,39 +178,34 @@ public class EventMatchDao {
 	}
  
 	 
-	public void insertEventMatch(EventMatchBean eventMatchBean) throws EnjoyException{
+	public void insertEventMatch(Session session,EventMatchBean eventMatchBean) throws EnjoyException{
 		logger.info("[addEventMatchList][Begin]");
 		  
 		String							sql				  = null; 
 		SQLQuery 						query 			  = null; 
 		int                             result            = 0;
-		Eventmatch                      evMatchDB         = null;
-		SessionFactory 		   			sessionFactory	  = null;
-		Session 			   			session  		  = null;
-		try{
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
+		Eventmatch                      evMatchDB         = null; 
+		EventmatchPK                    evMatchPK         = null;  
+		
+		try{ 
+			evMatchPK = new EventmatchPK(); 
+			evMatchPK.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
+			evMatchPK.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
+			
 			evMatchDB = new Eventmatch();
-//			evMatchDB.setActiveFlag(true);
+			evMatchDB.setId(evMatchPK);
+			evMatchDB.setActiveFlag("A");
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
-			evMatchDB.setMatchTime(eventMatchBean.getMatchTime()); 
-//			evMatchDB.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
-			session.save(evMatchDB);
-			session.getTransaction().commit(); 
+			evMatchDB.setMatchTime(eventMatchBean.getMatchTime());  
+			session.persist(evMatchDB); 
+			
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null;
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธ�เธฑเธ�เธ—เธถเธ�เธ�เน�เธญเธกเธนเธฅ"); 
+		}finally{    
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
@@ -218,35 +216,26 @@ public class EventMatchDao {
 	}
 
 	 
-	public void deleteEventMatch(int matchId) throws EnjoyException{
+	public void deleteEventMatch(Session session,int matchId,int season) throws EnjoyException{
 		logger.info("[deleteMatch][Begin]");
 		  
 		String							hql									= null; 
 		Query 						    query 								= null; 
-		Eventmatch                      matchDB                             = null;
-		SessionFactory 		   			sessionFactory						= null;
-		Session 			   			session  							= null;
-		try{  
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
-			 System.out.print("[deleteMatch]input to delete :"+matchId);
-			 hql        = "DELETE from Eventmatch WHERE matchId = :matchId";  
+		Eventmatch                      matchDB                             = null; 
+		
+		try{   
+			  hql	    = "update Eventmatch m set m.ActiveFlag = 'C'"
+					    + " where matchId = :matchId" 
+					    + " and season = :season" ;
+	 
 			 query      = session.createQuery(hql);
 			 query.setInteger("matchId", matchId);  
-			 System.out.println(query.executeUpdate()); 
-			 session.getTransaction().commit(); 
+			 System.out.println(query.executeUpdate());  
 		}catch(Exception e){ 
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("เกิดข้อผิดพลาดในการลบข้อมูล"); 
-		}finally{ 
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null; 
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธฅเธ�เธ�เน�เธญเธกเธนเธฅ"); 
+		}finally{  
 			query 								= null;
 			hql                                 = null;
 			matchDB								= null;
@@ -254,43 +243,35 @@ public class EventMatchDao {
 		} 
 	}
 	
-	public void updateEventMatch(EventMatchBean eventMatchBean) throws EnjoyException{
+	public void updateEventMatch(Session session ,EventMatchBean eventMatchBean) throws EnjoyException{
 		logger.info("[addEventMatchList][Begin]");
 		  
 		String							hql									= null; 
 		Query 						    query 								= null;  
 		int                             result                              = 0;
-		Eventmatch                      evMatchDB                           = null;
-		SessionFactory 		   			sessionFactory						= null;
-		Session 			   			session  							= null;
-		try{
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
+		Eventmatch                      evMatchDB                           = null;  
+		
+		try{ 
 			hql        = "FROM Eventmatch WHERE matchId = :matchId";  
 			query      = session.createQuery(hql).setParameter("matchId", Integer.valueOf(eventMatchBean.getMatchId()));  
 			evMatchDB    = (Eventmatch)query.uniqueResult();
 			System.out.println("matchDB.getMatchId() :: "+eventMatchBean.getMatchId());
-			session.getTransaction().begin();
-//			evMatchDB.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
-//			evMatchDB.setActiveFlag(eventMatchBean.isActive());
+			EventmatchPK eventPK = new EventmatchPK();
+			eventPK.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
+			eventPK.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
+			evMatchDB.setId(eventPK);  
+			evMatchDB.setActiveFlag(eventMatchBean.getActive());
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
 			evMatchDB.setMatchTime(eventMatchBean.getMatchTime()); 
-//			evMatchDB.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
 			session.merge(evMatchDB);  
-			session.getTransaction().commit(); 
+		 
 		}catch(Exception e){ 
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("เกิดข้อผิดพลาดในการแก้ไขข้อมูล"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null; 
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเน�เธ�เน�เน�เธ�เธ�เน�เธญเธกเธนเธฅ"); 
+		}finally{    
 			query 								= null;
 			hql                                 = null; 
 			evMatchDB                           = null;
@@ -298,6 +279,38 @@ public class EventMatchDao {
 		}
 		 
 	}
+	
+	public int selectMaxMatchId(Session session,String season) throws EnjoyException{
+		logger.info("[countOrderFromMatch][Begin]"); 
+		String							sql									= null;   
+		SQLQuery 						sqlQuery 							= null;   
+		List<Integer>                   list                                = null;
+		Integer                         matchId 							= null;
+		
+		try{ 
+			sql             = "SELECT MAX(matchId) as matchId from Eventmatch WHERE season = "+ season;
+			sqlQuery		= session.createSQLQuery(sql); 
+			sqlQuery.addScalar("matchId"	, new IntegerType());
+			list            =  sqlQuery.list(); 
+			System.out.println("list.get(0): "+list.get(0));
+			if(list !=null && list.size() > 0){
+				matchId = list.get(0);
+				logger.info("selectMaxMatchId order of matchId ::  "+ matchId); 
+			}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
+		}finally{  
+			sqlQuery 							= null;
+			sql                                 = null;
+			list                                = null;  
+			logger.info("[countOrderFromMatch][End]");
+		}
+		
+	return matchId;
+}
 	
  
 	

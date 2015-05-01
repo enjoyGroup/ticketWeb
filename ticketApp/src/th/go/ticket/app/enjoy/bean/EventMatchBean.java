@@ -11,7 +11,7 @@ public class EventMatchBean {
 	private String awayTeamNameTH; 
 	private String matchDate; 
 	private String matchTime;
-	private boolean active;
+	private String active;
 	private String matchDateId;
 	
 	public EventMatchBean(){ 
@@ -21,7 +21,7 @@ public class EventMatchBean {
 		this.awayTeamNameTH  = "";
 		this.matchDate       = "";
 		this.matchTime       = "";
-		this.active          = true;
+		this.active          = "A";
 		this.matchDateId     = "matchDateId";
 		
 	}
@@ -72,18 +72,15 @@ public class EventMatchBean {
 
 	public void setMatchTime(String matchTime) {
 		this.matchTime = matchTime;
-	}
+	} 
 
-	
-	public boolean isActive() {
+	public String getActive() {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(String active) {
 		this.active = active;
 	}
-	
-	
 
 	public String getMatchDateId() {
 		return matchDateId;
