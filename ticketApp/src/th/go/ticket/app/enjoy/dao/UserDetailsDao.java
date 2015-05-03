@@ -247,6 +247,7 @@ logger.info("pass ==> " + passWord);
 			
 			list		 	= query.list();
 			
+			logger.info("[getListUserdetail] hql :: " + hql);
 			logger.info("[getListUserdetail] list :: " + list);
 			
 			if(list!=null && list.size() > 0){
