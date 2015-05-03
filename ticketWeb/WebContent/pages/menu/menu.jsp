@@ -7,6 +7,20 @@
 	final String servURL1		= Constants.SERV_URL;
 	UserDetailsBean userDeatil 	= (UserDetailsBean) request.getSession().getAttribute("userBean");
 %>
+	<script>
+		$(document).ready(function(){
+			$('#logOut').click(function(){ 
+				try{
+					if(confirm("ต้องการออกจากระบบ?")){   
+						window.location.replace('/ticketWeb');
+					}	
+				}catch(err){
+					alert("logOut :: " + err);
+				}
+				
+			});		
+		});
+	</script>
 <div class="headwrap">
 	<div class="row">
     	<div class="brand span4">
@@ -48,7 +62,7 @@
 		}
 	%>
  	<li><a href="/ticketWeb/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
- 	<li><a href="#">ออกจากระบบ</a></li>
+ 	<li><a href="#" id="logOut" name="logOut" >ออกจากระบบ</a></li>
   	<!-- 
 	<li><a href="#">รายงาน</a>
 		<ul>
