@@ -75,12 +75,21 @@
 			            data: params,
 			            beforeSend: "",
 			            success: function(data){
-			            	if(data.indexOf('OK') > -1){
-			            		window.location.replace('/ticketWeb/pages/menu/index.jsp');
-			            		//window.location.replace('/ticketWeb/EnjoyGenericSrv?service=servlet.DetailRevenueOfYearServlet&pageAction=new');
-							}else{
-								alert(data);
-							}
+			            	var jsonObj 			= null;
+			            	var status				= null;
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		
+		            		if(status=="SUCCESS"){
+		            			
+		            			if (jsonObj.FlagChange == "Y"){
+		            				window.location.replace('/ticketWeb/pages/ticket/ChangePassScn.jsp');
+		            			} else {
+		            				window.location.replace('/ticketWeb/pages/menu/index.jsp');
+		            			}
+		            		}else{
+		            			alert(jsonObj.errMsg);
+		            		}
 			            }
 			        });
 				}catch(err){

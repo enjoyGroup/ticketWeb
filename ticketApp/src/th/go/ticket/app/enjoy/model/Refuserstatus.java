@@ -14,18 +14,18 @@ public class Refuserstatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int userStatusCode;
+	private String userStatusCode;
 
 	private String userStatusName;
 
 	public Refuserstatus() {
 	}
 
-	public int getUserStatusCode() {
+	public String getUserStatusCode() {
 		return this.userStatusCode;
 	}
 
-	public void setUserStatusCode(int userStatusCode) {
+	public void setUserStatusCode(String userStatusCode) {
 		this.userStatusCode = userStatusCode;
 	}
 

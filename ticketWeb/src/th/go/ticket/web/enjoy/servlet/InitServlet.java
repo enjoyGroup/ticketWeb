@@ -44,7 +44,7 @@ public class InitServlet extends javax.servlet.http.HttpServlet implements javax
 			ConfigFile.init(realPath + getServletContext().getInitParameter(Constants.CONFIG_FILE));
 			MailConFigFile.init(realPath + getServletContext().getInitParameter(Constants.MAIL_CONFIG_FILE));
 			System.out.println("[InitServlet][init] :: 2");
-			EnjoyLogger.initial(false);
+			EnjoyLogger.initial(true);
 			System.out.println("[InitServlet][init] :: 3");
 			
 		} catch(Exception e){
