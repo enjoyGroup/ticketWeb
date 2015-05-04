@@ -267,7 +267,7 @@
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
 					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 					                  "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='4' value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value='"+av_matchTime+ "'/>";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -290,7 +290,7 @@
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
 					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 									 "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='4'  value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  value='"+av_matchTime+ "'/>";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -334,7 +334,7 @@
 				cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100'  value=''/>" ;
 				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='4' value=''/>";
+				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value=''/>";
 				cell6.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='matchId' id='matchId'  value='0'/></td>";
@@ -412,7 +412,7 @@
 				cell3.innerHTML = "<input type='text' id='awayTeamNameEN'  name='awayTeamNameEN' maxlength='100' value=''/>";	
 				cell4.innerHTML = "<input type='text' id='matchDate1'   name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text' id='matchTime' name='matchTime' maxlength='4' value=''/>";
+				cell5.innerHTML = "<input type='text' id='matchTime' name='matchTime' maxlength='5' value=''/>";
 				cell6.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='matchId' id='matchId'  value='0'/>";
@@ -778,7 +778,7 @@
 																 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
 															</td>
 															<td align="center">
-																<input type="text" id="matchTime" name="matchTime" maxlength="4"  value="<%=detail.getMatchTime()%>"/>
+																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>"/>
 															</td>
 															<td style="text-align: center;">  
 									                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
