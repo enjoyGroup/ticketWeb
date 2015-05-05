@@ -1,6 +1,6 @@
 <%@ include file="/pages/include/checkLogin.jsp"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.SeatZoneBean"%>
+<%@ page import="th.go.ticket.app.enjoy.bean.SeatZoneBean,th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean"%>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="cancelSeatForm" class="th.go.ticket.app.enjoy.form.CancelSeatForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -24,15 +24,18 @@
 			
 			 
 			$('#btnSearch').click(function(){ 
+				var pageAction			= "searchTicketDetail";
+				var lv_params			= gv_service;  
 				try{
+			    	lv_params 	+= "&pageAction=" + pageAction + "&" + $('#frm').serialize(); 
 					$.ajax({
 						async:false,
 			            type: "POST",
 			            url: gv_url,
-			            data: gv_service + "&pageAction=searchUserDetail&" + $('#frm').serialize(),
+			            data: lv_params,
 			            beforeSend: "",
 			            success: function(data){
-			            	window.location.replace('/ticketWeb/pages/ticket/UserDetailsSearchScn.jsp');
+			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
 			            }
 			        });
 				}catch(err){
@@ -62,6 +65,48 @@
 			    }				
 			}); 
 			
+			
+			$('#btnSave').click(function(){ 
+				var pageAction			= "save";
+				var lv_params			= gv_service;  
+			 
+			    try{
+					$.ajax({
+						async:false,
+			            type: "POST",
+			            url: gv_url,
+			            data: gv_service + "&pageAction=searchTicketDetail&" + $('#frm').serialize(),
+			            beforeSend: "",
+			            success: function(data){
+			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
+			            }
+			        });
+			    }catch(e){
+			    	alert("lp_save_page :: " + e);
+			    }				
+			}); 
+
+			
+			$('#btnCancel').click(function(){ 
+				var pageAction			= "new";
+				var lv_params			= gv_service;  
+			 
+			    try{
+			    	lv_params 	+= "&pageAction=" + pageAction ; 
+					$.ajax({
+						async:false,
+			            type: "POST",
+			            url: gv_url,
+			            data: lv_params,
+			            beforeSend: "",
+			            success: function(data){  
+			            }
+			        });
+			    	  
+			    }catch(e){
+			    	alert("lp_cancel_page :: " + e);
+			    }				
+			}); 
 		});
 	</script>
 </head>
@@ -103,14 +148,15 @@
 									        		</tr>
 									        		<tr>
 									        			<td align="right" width="150px;">
-									        				เลขบาร์โค้ด  : &nbsp;
+									        				Ticket Id  : &nbsp;
 									        			</td>
 									        			<td align="left" colspan="3">
 									        				<input type='text' id="ticketId" name='ticketId' maxlength="17" />
 									        				<input type="button" id="btnSearch" class='btn btn-danger' value='ค้นหา'/>&nbsp;&nbsp;&nbsp;
-									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มใหม่' />
+									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มค้นใหม่' />
 									        			</td>
 									        		</tr>
+													<!-- 
 									        		<tr>
 									        			<td align="right">
 									        				Zone :&nbsp;
@@ -127,6 +173,7 @@
 									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มใหม่' />
 									        			</td>
 									        		</tr>
+									        		 -->
 									        	</table>
 								        	</div>
 										</section>
@@ -136,29 +183,84 @@
 							
 							<section class="scrollable padder">
 								<div class="alert alert-block alert-error fade in">
-					            	<h4 class="alert-heading">ข้อมูลผู้ใช้งานระบบ</h4>
+					            	<h4 class="alert-heading">รายละเอียดตั๋วฟุตบอล</h4>
 					          	</div>
 								<div class="row">
 									<div class="col-sm-12">
 										<section class="panel panel-default">
 											<div class="panel-body" align="center">
-												<table id="tb_result" cellpadding="6" cellspacing="6" border="1" style="overflow-y:auto;width:800px;">
-									               <tr bgcolor="#473636"  class="text_white" height="26px;">
-														<th  style="text-align: center;" width="30px;" ><B>ลำดับ</B></th>
-														<th  style="text-align: left;"   width="20px;"><B>ชื่อ-นามสกุล</B></th>
-														<th  style="text-align: left;"   width="100px;"><B>User Id</B></th> 
-														<th  style="text-align: left;"   width="150px;"><B>E-mail</B></th>
-														<th  style="text-align: left;"   width="100px;"><B>สถานะ</B></th> 
-														<th  style="text-align: center;" width="150px;"><B>สิทธิ์การใช้งาน</B></th>
-													</tr> 
-													<tr height="26px;"><td colspan="6"><b>ไม่พบข้อมูลที่ระบุ</b></td></tr>
-												</table> 
-								        	</div>
+												<table class="table sim-panel-result-table" id="tbl_result" border="1" style="border: 2; width:60%" >
+													<tr class="headerRow">
+														<th width="5%"  style="text-align: center;"><B></B></th>
+														<th width="3%"  style="text-align: center;"><B>ลำดับ</B></th>
+														<th width="15%" style="text-align: center;"><B>Ticket Id</B></th>
+														<th width="10%" style="text-align: center;"><B>เลขที่นั่ง</B></th>
+														<th width="10%" style="text-align: center;"><B>ฤดูกาล</B></th>
+														<th width="30%" style="text-align: center;"><B>ทีมคู่แข่งขัน</B></th>
+														<th width="15%" style="text-align: center;"><B>ประเภทตั๋ว</B></th>
+														<th width="25%" style="text-align: center;"><B>ราคา</B></th>
+													</tr>
+													<%
+													List<SeatSummaryReservationBean>  	list			=   cancelSeatForm.getResultList();
+													SeatSummaryReservationBean 			bean			=   null;
+													int 								rowNumber		=   0;
+													 
+													if(list.size()>0){
+														for(int i=0;i<list.size();i++){
+															bean = list.get(i);
+															rowNumber = i+1; 
+														
+														%>
+														 <tr>
+															<td align="center">
+																<B><input type="checkbox" id="i_chk_cancel" name="i_chk_cancel"></B>
+															</td>
+															<td align="center">
+																<B><%=rowNumber%></B>
+															</td>
+															<td align="center" >
+																<B><%=bean.getTicketId()%></B>
+															</td>
+															<td align="center" >
+																<B><%=bean.getSeatingNo()%></B>
+															</td>
+															<td align="center" >
+																<B><%=bean.getSeason()%></B>
+															</td>
+															<td align="center" >
+																<B><%=bean.getAwayTeamNameTH()%></B>
+															</td>
+															<td align="center">
+																<B><%=bean.getBookingTypeName()%></B>
+															</td>
+															<td align="right">
+																<B><%=bean.getBookingPrices()%></B>
+															</td>
+														</tr> 
+														<% } %>
+														<tr>
+															<td align="right" colspan="7"><B>รวม</B></td>
+															<td align="right">
+																<B>0</B>
+															</td>
+														</tr> 
+													<%}else{ %>
+														<tr align="center">
+															<td align="center" colspan="8">
+																<B>ไม่พบข้อมูล</B>
+															</td>
+														</tr> 
+													<%} %>
+												</table>	
+											</div>	
 										</section>
+									</div>
+									<div align="center" class="panel-body">
+				        				<input type="button" id="btnSave"   class='btn btn-danger' value='บันทึก'/>&nbsp;&nbsp;&nbsp;
+				        				<input type="reset"  id="btnCancel" class='btn btn-danger' value='เริ่มเลือกใหม่' />
 									</div>
 								</div>
 							</section>
-
 						</section>
 					</section>
 					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>

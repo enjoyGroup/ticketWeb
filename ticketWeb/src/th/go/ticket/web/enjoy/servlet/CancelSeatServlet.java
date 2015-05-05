@@ -12,7 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.dao.CancelSeatDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
@@ -65,13 +69,13 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
  			
              logger.info("[execute] pageAction : " + pageAction );
              
- 			if(this.form == null || pageAction.equals("new") || pageAction.equals("getUserDetail")) this.form = new CancelSeatForm();
+ 			if(this.form == null || pageAction.equals("new")) this.form = new CancelSeatForm();
  			
  			if( pageAction.equals("") || pageAction.equals("new") ){
  				this.onLoad();
 				request.setAttribute("target", Constants.PAGE_URL +"/CancelSeatScn.jsp");
-// 			}else if(pageAction.equals("searchUserDetail")){
-// 				this.onSearchUserDetail();
+ 			}else if(pageAction.equals("searchTicketDetail")){
+ 				this.onSearchTicketDetail();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -126,66 +130,94 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		}
 	}
 	
-//	
-//	private void onSearchUserDetail() throws EnjoyException{
-//		logger.info("[onSearchUserDetail][Begin]");
-//		
-//		UserDetailsBean 			userdetailForm		= null;
-//		Userprivilege				userprivilege		= null;
-//		SessionFactory 				sessionFactory		= null;
-//		Session 					session				= null;
-//		List<UserDetailsBean> 		listUserDetailsBean = null;
-//		List<Userprivilege> 		listUserprivilege   = null;
-//		Hashtable<String, String> 	fUserprivilege		= null;
-//
-//		try{
-//			listUserDetailsBean 		= new ArrayList<UserDetailsBean>();
-//			listUserprivilege   		= new ArrayList<Userprivilege>();
-//			fUserprivilege				= new Hashtable<String, String>();
-//
-//			sessionFactory 				= HibernateUtil.getSessionFactory();
-//			session 					= sessionFactory.openSession();			
-//			session.beginTransaction();
+	
+	private void onSearchTicketDetail() throws EnjoyException{
+		logger.info("[onSearchTicketDetail][Begin]");
+		
+		SeatSummaryReservationBean 			bean 						= null;
+//		String								matchId						= null;
+//		String								season						= null;
+//		String								fieldZoneId					= null;
+//		List<SeatSummaryReservationBean> 	sumDetailReservationList	= null;
+//		Double								sumBookingPrices			= 0.00;
+//		SeatSummaryReservationBean			headerTicketDetail			= null;
+//		String								ticketIdList				= null;
+//		JSONParser 							parser 						= null;
+//		Object 								obj 						= null;
+//		JSONObject 							jsonObject 					= null;
+//		JSONArray							jsonTicketIdList			= null;
+//		JSONObject							jsonTicketIdObj				= null;
+//		String								ticketId					= null;
+//		String								ticketIdDb					= null;
+		
+		try{
+//			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+//			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+//			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
+//			ticketIdList 		= EnjoyUtils.nullToStr(this.request.getParameter("ticketIdList"));
 //			
-//			userdetailForm				= new UserDetailsBean();
+//			logger.info("[getSummaryReserv] matchId 		:: " + matchId);
+//			logger.info("[getSummaryReserv] season 			:: " + season);
+//			logger.info("[getSummaryReserv] fieldZoneId 	:: " + fieldZoneId);
+//			logger.info("[getSummaryReserv] ticketIdList 	:: " + ticketIdList);
+			
+			bean 				= new SeatSummaryReservationBean();
+//			parser 				= new JSONParser();
+//			obj 				= parser.parse(ticketIdList);
+//			jsonObject 			= (JSONObject) obj;
+//			jsonTicketIdList	= (JSONArray) jsonObject.get("ticketIdList");
 //			
-//			userdetailForm.setUserName	(EnjoyUtils.nullToStr(this.request.getParameter("userName")));
-//			userdetailForm.setUserId	(EnjoyUtils.nullToStr(this.request.getParameter("userId")));
-//			userdetailForm.setUserStatus(EnjoyUtils.nullToStr(this.request.getParameter("userStatus")));
+//			for(int i=0;i<jsonTicketIdList.size();i++){
+//				jsonTicketIdObj = (JSONObject) jsonTicketIdList.get(i);
+//				
+//				ticketId = (String) jsonTicketIdObj.get("ticketId");
+//				
+//				if(ticketIdDb==null){
+//					ticketIdDb = "'" + ticketId + "'";
+//				}else{
+//					ticketIdDb = ticketIdDb + ", '" + ticketId + "'";
+//				}
+//				
+//			}
 //			
-//			logger.info("[onSearchUserDetail] userdetailForm.getUserName() 	 :: " + userdetailForm.getUserName());
-//			logger.info("[onSearchUserDetail] userdetailForm.getUserId() 	 :: " + userdetailForm.getUserId());
-//			logger.info("[onSearchUserDetail] userdetailForm.getUserStatus() :: " + userdetailForm.getUserStatus());
+//			logger.info("[getSummaryReserv] ticketIdDb 	:: " + ticketIdDb);
+			
+//			bean.setMatchId(matchId);
+//			bean.setSeason(season);
+//			bean.setFieldZoneId(fieldZoneId);
+//			bean.setUserUniqueId(String.valueOf(this.userBean.getUserUniqueId()));
+//			bean.setTicketId(ticketIdDb);
+			
+			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
+			
+//			headerTicketDetail = this.dao.getHeaderTicketDetail(bean);
+			
+//			this.form.setAwayTeamNameTH(headerTicketDetail.getAwayTeamNameTH());
+//			this.form.setAwayTeamNameEN(headerTicketDetail.getAwayTeamNameEN());
+//			this.form.setMatchDate(headerTicketDetail.getMatchDate());
+//			this.form.setMatchTime(headerTicketDetail.getMatchTime());
+//			this.form.setMatchId(matchId);
+//			this.form.setFieldZoneId(fieldZoneId);
 //			
-//			listUserprivilege 			= this.dao.getUserprivilege(session);
-//			for(int i=0;i<listUserprivilege.size();i++){
-//				userprivilege			= listUserprivilege.get(i);
-//				fUserprivilege.put(userprivilege.getPrivilegeCode() , userprivilege.getPrivilegeName());
-//			}	
-//			listUserDetailsBean	 		= this.dao.getListUserdetail(session, userdetailForm, fUserprivilege);
-//
-//			//logger.info("[onSearchUserDetail] listUserDetailsBean.size :: " + listUserDetailsBean.size());
+//			sumDetailReservationList = this.form.getResultList();
 //			
-//			if(listUserDetailsBean.size() > 0){				
-//				this.form.setUserDetailsBeanList(listUserDetailsBean);		
-//				//logger.info("มีข้อมูลจะแสดงคือ :: " + this.form.getUserDetailsBeanList().size());
-//			}else{
-//				throw new EnjoyException("ไม่พบรายการตามเงื่อนไขที่ระบุ");
-//			}			
-//		}catch(EnjoyException e){
-//			throw new EnjoyException(e.getMessage());
-//		}catch(Exception e){
-//			logger.info(e.getMessage());
-//			throw new EnjoyException("onSearchUserDetail is error");
-//		}finally{
-//			session.close();
-//			sessionFactory	= null;
-//			session			= null;
+//			for(SeatSummaryReservationBean beanDb:sumDetailReservationList){
+//				sumBookingPrices = sumBookingPrices + EnjoyUtils.parseDouble(beanDb.getBookingPrices());
+//				
+//				beanDb.setBookingPrices(EnjoyUtils.convertFloatToDisplay(beanDb.getBookingPrices(), 2));
+//			}
 //			
-//			this.setRefference();
-//			logger.info("[onSearchUserDetail][End]");
-//		}
-//		
-//	}
+//			this.form.setSumBookingPrices(EnjoyUtils.convertFloatToDisplay(String.valueOf(sumBookingPrices), 2));
+		}catch(EnjoyException e){
+			throw new EnjoyException(e.getMessage());
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException("onSearchTicketDetail is error");
+		}finally{
+			this.setRefference();
+			logger.info("[onSearchTicketDetail][End]");
+		}
+		
+	}
 	
 }

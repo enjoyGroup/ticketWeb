@@ -12,7 +12,6 @@ public class CancelSeatForm {
 	public static final String NEW 	= "NEW";
 	public static final String EDIT = "EDIT";
 	
-	private List<SeatSummaryReservationBean> 	resultList;
 	private String								sumBookingPrices;
 	private String 								awayTeamNameTH;
 	private String 								awayTeamNameEN;
@@ -22,6 +21,7 @@ public class CancelSeatForm {
 //	private String								fieldZoneId;
 
 	private List<SeatZoneBean> 					fieldZoneList;
+	private List<SeatSummaryReservationBean> 	resultList;
 	private String								errMsg;
 	private String								pageMode;
 	private String								seatingNoBegin;
@@ -31,29 +31,24 @@ public class CancelSeatForm {
 	
 
 	public CancelSeatForm() {
-		this.resultList 		= new ArrayList<SeatSummaryReservationBean>();
 		this.sumBookingPrices 	= "";
 		this.awayTeamNameTH 	= "";
 		this.awayTeamNameEN 	= "";
 		this.matchDate 			= "";
 		this.matchTime 			= "";
 		this.matchId 			= "";
-		this.fieldZoneId 		= "";
 
 		this.errMsg				= "";
 		this.pageMode			= NEW;
 		this.fieldZoneList 		= new ArrayList<SeatZoneBean>();
+		this.resultList 		= new ArrayList<SeatSummaryReservationBean>();
+
+		this.seatingNoBegin		= "";
+		this.seatingNoEnd		= "";
+		this.ticketId			= "";
+		this.fieldZoneId 		= "";
 	}
 
-
-	public List<SeatSummaryReservationBean> getResultList() {
-		return resultList;
-	}
-
-
-	public void setResultList(List<SeatSummaryReservationBean> resultList) {
-		this.resultList = resultList;
-	}
 
 
 	public String getSumBookingPrices() {
@@ -147,6 +142,13 @@ public class CancelSeatForm {
 	}
 	public void setFieldZoneList(List<SeatZoneBean> fieldZoneList) {
 		this.fieldZoneList = fieldZoneList;
+	}
+
+	public List<SeatSummaryReservationBean> getResultList() {
+		return resultList;
+	}
+	public void setResultList(List<SeatSummaryReservationBean> resultList) {
+		this.resultList = resultList;
 	}
 
 	public String getSeatingNoBegin() {

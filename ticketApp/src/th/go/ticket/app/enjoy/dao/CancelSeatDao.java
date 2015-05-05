@@ -56,81 +56,6 @@ public class CancelSeatDao {
 //		}
 //	}
 	
-	public List<SeatSummaryReservationBean> getSumDetailReservationList(SeatSummaryReservationBean bean) throws EnjoyException{
-		logger.info("[getSumDetailReservationList][Begin]");
-		
-		List<SeatSummaryReservationBean> 	returnList 							= null;
-		SeatSummaryReservationBean			returnObj							= null;
-		SessionFactory 						sessionFactory						= null;
-		Session 							session								= null;
-		String								hql									= null;
-		List<Object[]>			 			list								= null;
-		SQLQuery 							query 								= null;
-		
-		
-		try{
-			sessionFactory 	= HibernateUtil.getSessionFactory();
-			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<SeatSummaryReservationBean>();
-			
-			hql				= "select a.ticketId, a.seatingNo, b.bookingPrices, c.bookingTypeName, d.fieldZoneName"
-								+ " from ticketorder a,  fieldzonedetail b, bookingtype c, fieldzonemaster d"
-								+ " where b.fieldZoneId        	= a.fieldZoneId"
-									+ " and b.bookingTypeId  	= a.bookingTypeId"
-									+ " and c.bookingTypeId   	= a.bookingTypeId"
-									+ " and d.fieldZoneId  		= a.fieldZoneId"
-									+ " and a.ticketId    		in (" + bean.getTicketId() + ")"
-//									+ " and a.fieldZoneId    	= " + bean.getFieldZoneId()
-//									+ " and a.userUniqueId    	= " + bean.getUserUniqueId()
-//									+ " and a.ticketStatus	  	= 'P'"
-								+ " order by a.seatingNo, a.ticketId asc";
-			query			= session.createSQLQuery(hql);
-			
-			query.addScalar("ticketId"			, new StringType());
-			query.addScalar("seatingNo"			, new StringType());
-			query.addScalar("bookingPrices"		, new StringType());
-			query.addScalar("bookingTypeName"	, new StringType());
-			query.addScalar("fieldZoneName"		, new StringType());
-			
-			list		 	= query.list();
-			
-			logger.info("[getSumDetailReservationList] list :: " + list.size());
-			for(Object[] row : list){
-				returnObj 		= new SeatSummaryReservationBean();
-				
-				logger.info("[getSumDetailReservationList] ticketId 			:: " + row[0].toString());
-				logger.info("[getSumDetailReservationList] seatingNo 			:: " + row[1].toString());
-				logger.info("[getSumDetailReservationList] bookingPrices		:: " + row[2].toString());
-				logger.info("[getSumDetailReservationList] bookingTypeName		:: " + row[3].toString());
-				logger.info("[getSumDetailReservationList] fieldZoneName		:: " + row[4].toString());
-				
-				returnObj.setTicketId			(row[0].toString());
-				returnObj.setSeatingNo			(row[1].toString()==null||row[1].toString().equals("")?"-":row[1].toString());
-				returnObj.setBookingPrices		(row[2].toString());
-				returnObj.setBookingTypeName	(row[3].toString());
-				returnObj.setFieldZoneName		(row[4].toString());
-				
-				returnList.add(returnObj);
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.info(e.getMessage());
-			throw new EnjoyException(e.getMessage());
-		}finally{
-			session.close();
-			
-			sessionFactory						= null;
-			session								= null;
-			hql									= null;
-			list								= null;
-			query 								= null;
-			logger.info("[getSumDetailReservationList][End]");
-		}
-		
-		return returnList;
-	}
-	
 	public SeatSummaryReservationBean getHeaderTicketDetail(SeatSummaryReservationBean bean) throws EnjoyException{
 		logger.info("[getHeaderTicketDetail][Begin]");
 		
@@ -254,5 +179,84 @@ public class CancelSeatDao {
 		
 		return returnList;
 	}
-	
+		
+	public List<SeatSummaryReservationBean> getSumDetailReservationList(SeatSummaryReservationBean bean) throws EnjoyException{
+		logger.info("[getSumDetailReservationList][Begin]");
+		
+		List<SeatSummaryReservationBean> 	returnList 							= null;
+		SeatSummaryReservationBean			returnObj							= null;
+		SessionFactory 						sessionFactory						= null;
+		Session 							session								= null;
+		String								hql									= null;
+		List<Object[]>			 			list								= null;
+		SQLQuery 							query 								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			returnList		= new ArrayList<SeatSummaryReservationBean>();
+			
+			hql				= "select a.ticketId, a.seatingNo, b.bookingPrices, c.bookingTypeName, d.fieldZoneName, a.season, e.awayTeamNameTH "
+								+ " from ticketorder a,  fieldzonedetail b, bookingtype c, fieldzonemaster d,eventmatch e"
+								+ " where b.fieldZoneId     = a.fieldZoneId"
+								+ " and b.bookingTypeId  	= a.bookingTypeId"
+								+ " and c.bookingTypeId   	= a.bookingTypeId"
+								+ " and d.fieldZoneId  		= a.fieldZoneId"
+								+ " and e.matchId  			= a.matchId"
+								+ " and e.season	  		= a.season"
+//								+ " and a.ticketId    		in (" + bean.getTicketId() + ")"
+								+ " order by a.season, e.awayTeamNameTH, a.seatingNo, a.ticketId asc";
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("ticketId"			, new StringType());
+			query.addScalar("seatingNo"			, new StringType());
+			query.addScalar("bookingPrices"		, new StringType());
+			query.addScalar("bookingTypeName"	, new StringType());
+			query.addScalar("fieldZoneName"		, new StringType());
+			query.addScalar("season"			, new StringType());
+			query.addScalar("awayTeamNameTH"	, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[getSumDetailReservationList] list :: " + list.size());
+			for(Object[] row : list){
+				returnObj 		= new SeatSummaryReservationBean();
+				
+				logger.info("[getSumDetailReservationList] ticketId 			:: " + row[0].toString());
+				logger.info("[getSumDetailReservationList] seatingNo 			:: " + row[1].toString());
+				logger.info("[getSumDetailReservationList] bookingPrices		:: " + row[2].toString());
+				logger.info("[getSumDetailReservationList] bookingTypeName		:: " + row[3].toString());
+				logger.info("[getSumDetailReservationList] fieldZoneName		:: " + row[4].toString());
+				logger.info("[getSumDetailReservationList] season				:: " + row[5].toString());
+				logger.info("[getSumDetailReservationList] awayTeamNameTH		:: " + row[6].toString());
+				
+				returnObj.setTicketId			(row[0].toString());
+				returnObj.setSeatingNo			(row[1].toString()==null||row[1].toString().equals("")?"-":row[1].toString());
+				returnObj.setBookingPrices		(row[2].toString());
+				returnObj.setBookingTypeName	(row[3].toString());
+				returnObj.setFieldZoneName		(row[4].toString());
+				returnObj.setSeason				(row[5].toString());
+				returnObj.setAwayTeamNameTH		(row[6].toString());
+				
+				returnList.add(returnObj);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			session.close();
+			
+			sessionFactory						= null;
+			session								= null;
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getSumDetailReservationList][End]");
+		}
+		
+		return returnList;
+	}
 }
