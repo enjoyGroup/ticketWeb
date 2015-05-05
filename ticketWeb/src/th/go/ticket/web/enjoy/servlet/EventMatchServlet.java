@@ -280,6 +280,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			SessionFactory 		   sessionFactory		    = null;
 			Session 			   session				    = null;
 			int                    matchIdLast              = 0;
+			int                    newMatchid               = 0;
 			
 			try{ 
 				sessionFactory 				= HibernateUtil.getSessionFactory();
@@ -307,7 +308,12 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 						matchTime     = EnjoyUtils.nullToStr(getTimeList[i]);  
 						status        = EnjoyUtils.nullToStr(statusList[i]); 
 						matchId       = EnjoyUtils.nullToStr(getMatchIdList[i]);
-						 
+						
+						matchIdLast = this.dao.selectMaxMatchId(session,seasonSelect);
+						System.out.println("matchIdLast :: "+matchIdLast);
+						newMatchid  = matchIdLast + 1;
+						System.out.println("newMatchid :: "+newMatchid);
+						
 						bean = new EventMatchBean(); 
 						bean.setAwayTeamNameEN(nameEn);
 						bean.setAwayTeamNameTH(nameTh);
@@ -318,14 +324,12 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			            
 						System.out.print("bean:"+bean.toString());	
 						
-						if(status.equals("N")){ 
-							matchIdLast = this.dao.selectMaxMatchId(session,seasonSelect);
-							System.out.println("newMatchid :: "+matchIdLast);
-							int newMatchid  = matchIdLast++;
-							System.out.println("newMatchid :: "+newMatchid);
+						if(status.equals("N")){  
+							System.out.println("insert : " + " seasonSelect = "+seasonSelect+" match = "+newMatchid );
 							bean.setMatchId(String.valueOf(newMatchid));
 							this.dao.insertEventMatch(session,bean);    
 						}else if(status.equals("U")){
+							System.out.println("update : " + " seasonSelect = "+seasonSelect+" match = "+matchId );
 							this.dao.updateEventMatch(session,bean);  
 						}
 						 

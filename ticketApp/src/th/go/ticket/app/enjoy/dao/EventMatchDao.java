@@ -12,6 +12,10 @@ import java.util.List;
 
 
 
+
+
+
+
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -25,6 +29,9 @@ import org.hibernate.type.IntegerType;
 
 
 
+import org.hibernate.type.StringType;
+
+import th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean;
 import th.go.ticket.app.enjoy.bean.EventMatchBean;  
 import th.go.ticket.app.enjoy.exception.EnjoyException; 
 import th.go.ticket.app.enjoy.model.Eventmatch;
@@ -45,8 +52,8 @@ public class EventMatchDao {
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
 		String							hql									= null;
-		List<Integer>			 		list								= null;
-		Query 						    query 								= null;
+		List<String>			 		list								= null;
+		SQLQuery 						query 								= null;
 		String							season								= null;
 		
 		
@@ -54,15 +61,19 @@ public class EventMatchDao {
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<String>();
-		     
-			 hql        = "select season from Eventmatch GROUP BY season order by  season asc" ;  
-			 query 		= session.createQuery(hql);
-			 list 		= (List<Integer>)query.list();
+			
+			hql				= "SELECT b.season FROM eventmatch b GROUP BY b.season order by  b.season desc";
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("season"			, new StringType());
+			
+			list		 	= query.list();
 			
 			logger.info("[seasonList] list :: " + list.size());
 			for(int i=0;i<list.size();i++){
-				season 	= String.valueOf(list.get(i));
-				logger.info("[seasonList] season :: " + season); 
+				season 	= list.get(i);
+				logger.info("[seasonList] season :: " + season);
+				
 				returnList.add(season);
 			}
 			
@@ -92,8 +103,8 @@ public class EventMatchDao {
 		Session 				session								= null;
 		String					hql									= null; 
 		EventMatchBean		    returnObj							= null;
-		List<Eventmatch>        eventlist                           = null;
-		Query 					query 								= null;
+		List<Object[]>			list								= null;
+		SQLQuery 				query 								= null;
 		int                     genId                               = 1;
 		
 		try{
@@ -102,28 +113,45 @@ public class EventMatchDao {
 			returnList		= new ArrayList<EventMatchBean>();
             int seasonInt   = Integer.valueOf(season);
   
-            hql				= "FROM Eventmatch WHERE season  = :season " + "and activeFlag = true" + " order by matchId" ; 
-            eventlist		= session.createQuery(hql).setParameter("season", seasonInt).list();
- 
-			logger.info("[detailEventMatchByYear][Begin] list = " + eventlist.size());
-			for(Eventmatch row : eventlist){
-				returnObj = new EventMatchBean(); 
-//				logger.info("[detailEventMatchByYear] matchId 			:: " + row.getMatchId());
-				logger.info("[detailEventMatchByYear] awayTeamNameTH 	:: " + row.getAwayTeamNameTH());
-				logger.info("[detailEventMatchByYear] awayTeamNameEN 	:: " + row.getAwayTeamNameEN());
-				logger.info("[detailEventMatchByYear] matchDate 	    :: " + row.getMatchDate());
-				logger.info("[detailEventMatchByYear] matchTime 	    :: " + row.getMatchTime());
+            hql				= "select * from Eventmatch WHERE season  = "+ season + " and activeFlag = 'A'" + " order by matchId" ; 
+            query			= session.createSQLQuery(hql);
+            System.out.println("[detailEventMatchByYear][Begin] hql = " + hql);
+			query.addScalar("matchId"			, new StringType());
+			query.addScalar("season"	        , new StringType());
+			query.addScalar("awayTeamNameTH"	, new StringType());
+			query.addScalar("awayTeamNameEN"	, new StringType());
+			query.addScalar("matchDate"		    , new StringType());
+			query.addScalar("matchTime"		    , new StringType());
+			
+			list		 	= query.list();
+
+			System.out.println("[detailEventMatchByYear][Begin] list = " + list.size());
+			logger.info("[detailEventMatchByYear][Begin] list = " + list.size());
+			
+			for(Object[] row : list){
+				returnObj = new EventMatchBean();
 				
-//				returnObj.setMatchId(String.valueOf(row.getMatchId()));
-				returnObj.setAwayTeamNameTH(row.getAwayTeamNameTH());
-				returnObj.setAwayTeamNameEN(row.getAwayTeamNameEN());
-				returnObj.setMatchDate(EnjoyUtils.dateToThaiDisplay(row.getMatchDate()));
-				returnObj.setMatchTime(EnjoyUtils.timeToDisplay(row.getMatchTime())); 
-//				returnObj.setSeason(String.valueOf(row.getSeason()));
+				logger.info("[detailEventMatchByYear] matchId 			:: " + row[0].toString());
+				logger.info("[detailEventMatchByYear] season 			:: " + row[1].toString());
+				logger.info("[detailEventMatchByYear] awayTeamNameTH 	:: " + row[2].toString());
+				logger.info("[detailEventMatchByYear] awayTeamNameEN 	:: " + row[3].toString());
+				logger.info("[detailEventMatchByYear] matchDate 	    :: " + row[4].toString());
+				logger.info("[detailEventMatchByYear] matchTime 	    :: " + row[5].toString());
+			
+				
+				returnObj.setMatchId(String.valueOf(row[0].toString()));
+				returnObj.setSeason(String.valueOf(row[1].toString()));
+				returnObj.setAwayTeamNameTH(row[2].toString());
+				returnObj.setAwayTeamNameEN(row[3].toString());
+				returnObj.setMatchDate(EnjoyUtils.dateToThaiDisplay(row[4].toString()));
+				returnObj.setMatchTime(EnjoyUtils.timeToDisplay(row[5].toString()));  
 				returnObj.setMatchDateId("matchDateId"+genId);
 				returnList.add(returnObj);
 				genId++;
+					
+				
 			}
+ 
  
 		}catch(Exception e){
 			logger.info(e.getMessage());
@@ -135,7 +163,7 @@ public class EventMatchDao {
 			hql									= null; 
 			query 								= null;
 			returnObj							= null;
-			eventlist                           = null;
+			list                                = null;
 			logger.info("[detailEventMatchByYear][End]");
 		}
 		
@@ -199,17 +227,18 @@ public class EventMatchDao {
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
 			evMatchDB.setMatchTime(eventMatchBean.getMatchTime());  
-			session.persist(evMatchDB); 
+			session.saveOrUpdate(evMatchDB); 
 			
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage()); 
-			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธ�เธฑเธ�เธ—เธถเธ�เธ�เน�เธญเธกเธนเธฅ"); 
+			throw new EnjoyException(e.getMessage()); 
 		}finally{    
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
 			evMatchDB       					= null;
+			evMatchPK                           = null;
 			logger.info("[addEventMatchList][End]");
 		}
 		 
@@ -224,17 +253,18 @@ public class EventMatchDao {
 		Eventmatch                      matchDB                             = null; 
 		
 		try{   
-			  hql	    = "update Eventmatch m set m.ActiveFlag = 'C'"
+			  hql	    = "update Eventmatch m set m.activeFlag = 'C'"
 					    + " where matchId = :matchId" 
 					    + " and season = :season" ;
 	 
 			 query      = session.createQuery(hql);
 			 query.setInteger("matchId", matchId);  
+			 query.setInteger("season", season);
 			 System.out.println(query.executeUpdate());  
 		}catch(Exception e){ 
 			e.printStackTrace();
 			logger.info(e.getMessage()); 
-			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธฅเธ�เธ�เน�เธญเธกเธนเธฅ"); 
+			throw new EnjoyException(e.getMessage());
 		}finally{  
 			query 								= null;
 			hql                                 = null;
@@ -250,16 +280,16 @@ public class EventMatchDao {
 		Query 						    query 								= null;  
 		int                             result                              = 0;
 		Eventmatch                      evMatchDB                           = null;  
-		
+		EventmatchPK                    evMatchPK                           = null;
 		try{ 
-			hql        = "FROM Eventmatch WHERE matchId = :matchId";  
-			query      = session.createQuery(hql).setParameter("matchId", Integer.valueOf(eventMatchBean.getMatchId()));  
+			hql        = "FROM Eventmatch WHERE matchId = :matchId" + " and season = :season";  
+			query      = session.createQuery(hql).setParameter("matchId", Integer.valueOf(eventMatchBean.getMatchId())).setParameter("season", Integer.valueOf(eventMatchBean.getSeason()));  
 			evMatchDB    = (Eventmatch)query.uniqueResult();
 			System.out.println("matchDB.getMatchId() :: "+eventMatchBean.getMatchId());
-			EventmatchPK eventPK = new EventmatchPK();
-			eventPK.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
-			eventPK.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
-			evMatchDB.setId(eventPK);  
+			evMatchPK = new EventmatchPK();
+			evMatchPK.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
+			evMatchPK.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
+			evMatchDB.setId(evMatchPK);  
 			evMatchDB.setActiveFlag(eventMatchBean.getActive());
 			evMatchDB.setAwayTeamNameEN(eventMatchBean.getAwayTeamNameEN());
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
@@ -270,11 +300,12 @@ public class EventMatchDao {
 		}catch(Exception e){ 
 			e.printStackTrace();
 			logger.info(e.getMessage()); 
-			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเน�เธ�เน�เน�เธ�เธ�เน�เธญเธกเธนเธฅ"); 
+			throw new EnjoyException(e.getMessage());
 		}finally{    
 			query 								= null;
 			hql                                 = null; 
 			evMatchDB                           = null;
+			evMatchPK                           = null;
 			logger.info("[addEventMatchList][End]");
 		}
 		 
@@ -301,7 +332,7 @@ public class EventMatchDao {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
-			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
+			throw new EnjoyException(e.getMessage());
 		}finally{  
 			sqlQuery 							= null;
 			sql                                 = null;
