@@ -12,6 +12,7 @@ import org.hibernate.type.StringType;
 import th.go.ticket.app.enjoy.bean.SeatReservationBean;
 import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
+import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
@@ -21,104 +22,6 @@ public class CancelSeatDao {
 	
 	private static final EnjoyLogger logger = EnjoyLogger.getLogger(CancelSeatDao.class);
 	
-//	public static void main(String[] args) {
-//		
-//		SeatReservationBean 		seatReservationBean = new SeatReservationBean();
-//		SessionFactory 				sessionFactory		= HibernateUtil.getSessionFactory();
-//		Session 					session				= sessionFactory.openSession();
-//		
-//		try {
-//			EnjoyLogger.initial(false);
-//			
-//			session.beginTransaction();
-//			
-//			seatReservationBean.setTicketId("0000000000000");
-//			seatReservationBean.setSeatingNo("A1");
-//			seatReservationBean.setMatchId("1");
-//			seatReservationBean.setFieldZoneId("1");
-//			seatReservationBean.setBookingTypeId("1");
-//			seatReservationBean.setUserUniqueId("1");
-//			seatReservationBean.setTicketStatus("P");
-//			
-//			insertTicketorder(session, seatReservationBean);
-//			
-//			session.getTransaction().commit();
-//			
-//			
-//		} catch (EnjoyException e) {
-//			session.getTransaction().rollback();
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}finally{
-//			session.flush();
-//			session.clear();
-//			session.close();
-//		}
-//	}
-	
-	public SeatSummaryReservationBean getHeaderTicketDetail(SeatSummaryReservationBean bean) throws EnjoyException{
-		logger.info("[getHeaderTicketDetail][Begin]");
-		
-		SeatSummaryReservationBean		returnObj							= null;
-		SessionFactory 					sessionFactory						= null;
-		Session 						session								= null;
-		String							hql									= null;
-		List<Object[]>			 		list								= null;
-		SQLQuery 						query 								= null;
-		
-		
-		try{
-			sessionFactory 	= HibernateUtil.getSessionFactory();
-			session 		= sessionFactory.openSession();
-			
-			hql				= "select awayTeamNameTH , awayTeamNameEN, DATE_FORMAT( matchDate, '%d/%m/%Y') matchDate , matchTime"
-								+ " from eventmatch"
-								+ " where matchId = '" + bean.getMatchId() + "'"
-									+ " and season = '" + bean.getSeason() + "'";
-			query			= session.createSQLQuery(hql);
-			
-			query.addScalar("awayTeamNameTH"			, new StringType());
-			query.addScalar("awayTeamNameEN"			, new StringType());
-			query.addScalar("matchDate"					, new StringType());
-			query.addScalar("matchTime"					, new StringType());
-			
-			list		 	= query.list();
-			
-			logger.info("[getheaderTicketDetail] list :: " + list.size());
-			for(Object[] row : list){
-				returnObj = new SeatSummaryReservationBean();
-				
-				logger.info("[getHeaderTicketDetail] awayTeamNameTH 		:: " + row[0].toString());
-				logger.info("[getHeaderTicketDetail] awayTeamNameEN		 	:: " + row[1].toString());
-				logger.info("[getHeaderTicketDetail] matchDate		 		:: " + row[2].toString());
-				logger.info("[getHeaderTicketDetail] matchTime		 		:: " + row[3].toString());
-				
-				returnObj.setAwayTeamNameTH		(row[0].toString());
-				returnObj.setAwayTeamNameEN		(row[1].toString());
-				returnObj.setMatchDate			(row[2].toString());
-				returnObj.setMatchTime			(EnjoyUtils.formatTime(row[3].toString()));
-			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.info(e.getMessage());
-			throw new EnjoyException(e.getMessage());
-		}finally{
-			session.close();
-			
-			sessionFactory						= null;
-			session								= null;
-			hql									= null;
-			list								= null;
-			query 								= null;
-			logger.info("[getHeaderTicketDetail][End]");
-		}
-		
-		return returnObj;
-	}
-	
-	
-	//*******************************************************************//
 	public List<SeatZoneBean> getFieldZoneMaster() throws EnjoyException{
 		logger.info("[getFieldZoneMaster][Begin]");
 		
@@ -205,6 +108,7 @@ public class CancelSeatDao {
 								+ " and d.fieldZoneId  		= a.fieldZoneId"
 								+ " and e.matchId  			= a.matchId"
 								+ " and e.season	  		= a.season"
+								+ " and a.ticketStatus      = 'A'"
 //								+ " and a.ticketId    		in (" + bean.getTicketId() + ")"
 								+ " order by a.season, e.awayTeamNameTH, a.seatingNo, a.ticketId asc";
 			query			= session.createSQLQuery(hql);
@@ -258,5 +162,32 @@ public class CancelSeatDao {
 		}
 		
 		return returnList;
+	}
+	
+	public void cancelTicketByTicketId(Session session, String ticketIdList) throws EnjoyException{
+		logger.info("[cancelTicketByTicketId][Begin]");
+		
+		String	hql		= null;
+		Query 	query 	= null;
+		int 	result	= 0;
+		
+		try{
+			hql				= "update ticketOrder a set a.ticketStatus = 'R'"
+//								+ " where a.ticketId in (:ticketId)";
+								+ " where a.ticketId = ':ticketId'";
+			
+			query = session.createQuery(hql);
+			query.setParameter("ticketId"		, ticketIdList);
+			
+			result = query.executeUpdate();			
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
+		}finally{
+			
+			hql									= null;
+			query 								= null;
+			logger.info("[cancelTicketByTicketId][End]");
+		}
 	}
 }

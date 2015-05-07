@@ -24,6 +24,7 @@ import th.go.ticket.app.enjoy.form.CancelSeatForm;
 import th.go.ticket.app.enjoy.form.UserDetailsMaintananceForm;
 import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.model.Userprivilege;
+import th.go.ticket.app.enjoy.utils.EnjoyEncryptDecrypt;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
@@ -76,6 +77,8 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 				request.setAttribute("target", Constants.PAGE_URL +"/CancelSeatScn.jsp");
  			}else if(pageAction.equals("searchTicketDetail")){
  				this.onSearchTicketDetail();
+ 			}else if(pageAction.equals("save")){
+ 				this.saveCancelTicket();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -135,20 +138,6 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		logger.info("[onSearchTicketDetail][Begin]");
 		
 		SeatSummaryReservationBean 			bean 						= null;
-//		String								matchId						= null;
-//		String								season						= null;
-//		String								fieldZoneId					= null;
-//		List<SeatSummaryReservationBean> 	sumDetailReservationList	= null;
-//		Double								sumBookingPrices			= 0.00;
-//		SeatSummaryReservationBean			headerTicketDetail			= null;
-//		String								ticketIdList				= null;
-//		JSONParser 							parser 						= null;
-//		Object 								obj 						= null;
-//		JSONObject 							jsonObject 					= null;
-//		JSONArray							jsonTicketIdList			= null;
-//		JSONObject							jsonTicketIdObj				= null;
-//		String								ticketId					= null;
-//		String								ticketIdDb					= null;
 		
 		try{
 //			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
@@ -162,52 +151,8 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 //			logger.info("[getSummaryReserv] ticketIdList 	:: " + ticketIdList);
 			
 			bean 				= new SeatSummaryReservationBean();
-//			parser 				= new JSONParser();
-//			obj 				= parser.parse(ticketIdList);
-//			jsonObject 			= (JSONObject) obj;
-//			jsonTicketIdList	= (JSONArray) jsonObject.get("ticketIdList");
-//			
-//			for(int i=0;i<jsonTicketIdList.size();i++){
-//				jsonTicketIdObj = (JSONObject) jsonTicketIdList.get(i);
-//				
-//				ticketId = (String) jsonTicketIdObj.get("ticketId");
-//				
-//				if(ticketIdDb==null){
-//					ticketIdDb = "'" + ticketId + "'";
-//				}else{
-//					ticketIdDb = ticketIdDb + ", '" + ticketId + "'";
-//				}
-//				
-//			}
-//			
-//			logger.info("[getSummaryReserv] ticketIdDb 	:: " + ticketIdDb);
-			
-//			bean.setMatchId(matchId);
-//			bean.setSeason(season);
-//			bean.setFieldZoneId(fieldZoneId);
-//			bean.setUserUniqueId(String.valueOf(this.userBean.getUserUniqueId()));
-//			bean.setTicketId(ticketIdDb);
-			
+
 			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
-			
-//			headerTicketDetail = this.dao.getHeaderTicketDetail(bean);
-			
-//			this.form.setAwayTeamNameTH(headerTicketDetail.getAwayTeamNameTH());
-//			this.form.setAwayTeamNameEN(headerTicketDetail.getAwayTeamNameEN());
-//			this.form.setMatchDate(headerTicketDetail.getMatchDate());
-//			this.form.setMatchTime(headerTicketDetail.getMatchTime());
-//			this.form.setMatchId(matchId);
-//			this.form.setFieldZoneId(fieldZoneId);
-//			
-//			sumDetailReservationList = this.form.getResultList();
-//			
-//			for(SeatSummaryReservationBean beanDb:sumDetailReservationList){
-//				sumBookingPrices = sumBookingPrices + EnjoyUtils.parseDouble(beanDb.getBookingPrices());
-//				
-//				beanDb.setBookingPrices(EnjoyUtils.convertFloatToDisplay(beanDb.getBookingPrices(), 2));
-//			}
-//			
-//			this.form.setSumBookingPrices(EnjoyUtils.convertFloatToDisplay(String.valueOf(sumBookingPrices), 2));
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
 		}catch(Exception e){
@@ -220,4 +165,47 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		
 	}
 	
+	private void saveCancelTicket() throws Exception{
+		logger.info("[cancelTicket][Begin]");
+		
+		SessionFactory 		   sessionFactory		= null;
+		Session 			   session				= null;
+		JSONObject 			   obj 			    	= null;
+		String				   ticketIdList		    = null; 
+		
+		try{	 		
+			sessionFactory 		= HibernateUtil.getSessionFactory();
+			session 			= sessionFactory.openSession();
+			obj 				= new JSONObject();
+			
+			ticketIdList		= EnjoyUtils.nullToStr(this.request.getParameter("ticketIdList"));
+
+			session.beginTransaction();
+logger.info("ticketIdList ==> " + ticketIdList);
+			this.dao.cancelTicketByTicketId(session, ticketIdList);
+			
+			obj.put(STATUS, 			SUCCESS);
+			
+			session.getTransaction().commit();
+			session.flush();			
+		}catch(EnjoyException e){
+			session.getTransaction().rollback();
+			obj.put("status", 			"ERROR");
+			obj.put("errMsg", 			e.getMessage());
+			e.printStackTrace();
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			obj.put("status", 			"ERROR");
+			obj.put("errMsg", 			"เกิดข้อผิดพลาดในการยกเลิกตั๋วการแข่งขัน");
+			e.printStackTrace();
+		}finally{ 
+			session.close();
+			sessionFactory		= null;
+			session				= null;
+			
+			this.enjoyUtil.writeMSG(obj.toString());
+
+			logger.info("[cancelTicket][End]");
+		}
+	}
 }

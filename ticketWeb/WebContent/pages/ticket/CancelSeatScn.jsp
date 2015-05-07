@@ -71,14 +71,15 @@
 				var lv_params			= gv_service;  
 			 
 			    try{
+			    	lv_params 	+= "&pageAction=" + pageAction + "&ticketIdList=8"; 
 					$.ajax({
 						async:false,
 			            type: "POST",
 			            url: gv_url,
-			            data: gv_service + "&pageAction=searchTicketDetail&" + $('#frm').serialize(),
+			            data: lv_params,
 			            beforeSend: "",
 			            success: function(data){
-			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
+	            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");	
 			            }
 			        });
 			    }catch(e){
