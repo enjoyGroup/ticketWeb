@@ -1,7 +1,6 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -10,10 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.simple.JSONObject;
 
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
@@ -30,12 +29,11 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
 	
     private static final String FORM_NAME = "uploadImageFieldForm";
     
-    private EnjoyUtil               	easUtil                     = null;
+    private EnjoyUtil               	enjoyUtil                   = null;
     private HttpServletRequest          request                     = null;
     private HttpServletResponse         response                    = null;
     private HttpSession                 session                     = null;
     private UserDetailsBean             userBean                    = null;
-//    private SeatZoneDao					dao							= null;
     private UploadImageFieldForm		form						= null;
     
 	@Override
@@ -52,7 +50,7 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
  		
  		try{
  			 pageAction 				= EnjoyUtil.nullToStr(request.getParameter("pageAction"));
- 			 this.easUtil 				= new EnjoyUtil(request, response);
+ 			 this.enjoyUtil 			= new EnjoyUtil(request, response);
  			 this.request            	= request;
              this.response           	= response;
              this.session            	= request.getSession(false);
@@ -91,7 +89,7 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
 		
 		try{
 			
-			images = "/bar/" + UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
+			images = UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
 			
 			logger.info("[onLoad] images :: " + images);
 			
@@ -112,14 +110,15 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
 		List                            items                   = null;
 		Iterator                        iterator                = null;
 		String                          fileName                = null;
-//        File                            uploadedFile            = null;
-//        String[]                        extentArr               = null;
-//        String                          extent                  = null;
+        File                            uploadedFile            = null;
         long                            fileSize                = 0;
         long                            limitSize               = 2048000;//2 MB
-//        FileOutputStream       			fos                     = null;
+        JSONObject 						obj 					= null;
 		
 		try{
+			
+			obj 				= new JSONObject();
+			
 			if (isMultipart) {
                 items                   = (List) this.request.getAttribute(Constants.LIST_FILE);
                 iterator                = items.iterator();
@@ -131,8 +130,6 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
                     
                     if (!item.isFormField()) {
                         fileName                        = new File(item.getName()).getName();
-//                        extentArr                       = fileName.split("\\.");
-//                        extent                          = extentArr[(extentArr.length - 1)];
                         fileName                        = UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
                         fileSize                        = item.getSize();
                         
@@ -140,17 +137,27 @@ public class UploadImageFieldServlet extends EnjoyStandardSvc {
                             throw new EnjoyException("Total size limit 2 MB");
                         }
                         
-                        for (Part part : this.request.getParts()) {
-                            part.write(UploadImageFieldForm.FILE_PATH + File.separator + fileName);
-                        }
+                        uploadedFile = new File(UploadImageFieldForm.FILE_PATH + "\\" + fileName);
+                        item.write(uploadedFile);
                         
                      }
                 }
+                
+                obj.put(STATUS, 			SUCCESS);
+                
             }
 			
+		}catch(EnjoyException e){
+			obj.put(STATUS, 			ERROR);
+			obj.put(ERR_MSG, 			e.getMessage());
+			throw new EnjoyException(e.getMessage());
 		}catch(Exception e){
+			obj.put(STATUS, 			ERROR);
+			obj.put(ERR_MSG, 			"Upload Error");
+			e.printStackTrace();
 			throw new EnjoyException("lp_upload :: " + e.getMessage());
 		}finally{
+			this.enjoyUtil.writeMSG(obj.toString());
 			logger.info("[lp_upload][End]");
 		}
 		

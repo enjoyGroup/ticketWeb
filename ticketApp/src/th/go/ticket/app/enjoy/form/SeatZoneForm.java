@@ -7,8 +7,13 @@ import java.util.Map;
 
 import th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
+import th.go.ticket.app.enjoy.main.ConfigFile;
 
 public class SeatZoneForm {
+	
+	public final static String FILE_PATH 			= ConfigFile.getFilePath();
+	public final static String FILE_NAME 			= ConfigFile.getFileName();
+	public final static String FILE_EXT 			= ConfigFile.getFileExt();
 
 	private Map 				matchMap;
 	private List<SeatZoneBean> 	fieldZoneList;
@@ -16,6 +21,7 @@ public class SeatZoneForm {
 	private String 				awayTeamNameTH;
 	private List<String> 		seasonList;
 	private String 				season;
+	private String 				images;
 
 	public SeatZoneForm() {
 		this.matchMap 			= new Hashtable();
@@ -24,6 +30,7 @@ public class SeatZoneForm {
 		this.awayTeamNameTH		= "";
 		this.season				= "";
 		this.seasonList 		= new ArrayList<String>();
+		this.images 			= UploadImageFieldForm.FILE_NAME + "." + UploadImageFieldForm.FILE_EXT;
 	}
 
 	public Map getMatchMap() {
@@ -73,6 +80,14 @@ public class SeatZoneForm {
 	public void setSeason(String season) {
 		this.season = season;
 	}
-	
 
+	public String getImages() {
+		return images;
+	}
+
+	public void setImages(String images) {
+		this.images = images;
+	}
+	
+	
 }

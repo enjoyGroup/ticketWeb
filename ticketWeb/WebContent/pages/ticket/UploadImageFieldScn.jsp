@@ -21,36 +21,55 @@
 		
 		$(document).ready(function(){
 			gp_progressBarOn();
-			gp_progressBarOff();
 			
-			$('input[type="file"]').ajaxfileupload({
-                'params': {'ac':'sss'},
-	            'action': gv_url + '?service=' + $('#service').val() + "&pageAction=upload",           
-	        'onComplete': function(response) {
-	        	  gp_progressBarOff();
-	        	  lp_refesh();
-	              
-	            },
-	            'onStart': function() {
-	            	gp_progressBarOn();
-	            },
-	            'submit_button' :  $('#btnUpload')
-	       });
+			gv_service = gv_url + "?service=" + $("#service").val();
+			
+			 $('input[type="file"]').ajaxfileupload({
+				   'params': {'ac':'sss'},
+			       'action': gv_service + "&pageAction=upload",           
+			   'onComplete': function(response) {
+				   		gp_progressBarOff();
+				   		lp_uploadReturn(response);
+			         
+			       },
+			       'onStart': function() {
+			    	   gp_progressBarOn();
+			       },
+			       'submit_button' :  $('#btnUpload')
+			 });
+			
+			 gp_progressBarOff();
 			
 		});
 		
-		function lp_refesh(){
+		function lp_uploadReturn(ao_val){//alert(JSON.stringify(av_val));
+			var jsonObj 			= null;
+        	var status				= null;
+        	var errMsg				= null;
+	        
 	        try{
-	            window.location = gv_url + '?service=' + $('#service').val() + '&pageAction=new';
-	        }catch(err){
-	            alert("lp_uploadReturn :: " + err);
+	        	jsonObj = ao_val;
+        		status	= jsonObj.status;
+        		
+        		//alert(status);
+        		if(status=="SUCCESS"){
+        			location.reload();
+        		}else{
+        			errMsg = jsonObj.errMsg;
+        			alert(errMsg);
+        		}
+        		
+        		
+	        }catch(e){
+	        	alert("lp_uploadReturn :: " + e);
 	        }
+	        
 	    }
 		
   </script>
 </head>
 <body>
-	<form id="frm" action="<%=servURL%>/EnjoyGenericSrv">
+	<form id="frm" method="post" action="<%=servURL%>/EnjoyGenericSrv">
 		<input type="hidden" id="service" 		name="service" 		value="servlet.UploadImageFieldServlet" />
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
@@ -70,23 +89,25 @@
 											<div class="panel-body" align="center">
 												<!-- Begin contents -->
 												<div style="margin-top: 30px;" align="center">
-													<table border="0"  width="100%" cellspacing="1" cellpadding="0">    
-														<tr>
-											                <td colspan="2" >
-											                    <img alt="<%=uploadImageFieldForm.FILE_NAME%>" src="/images/Soccer.jpg" border="0" />
-											                </td>
-											            </tr>        
-											            <tr>
+													<table border="0"  width="100%" cellspacing="1" cellpadding="0">
+														<tr valign="middle">
 											                <td width="10%">เลือกแผนผังสนาม :</td>
-											                <td width="90%">
+											                <td width="20%">
 											                    <input type="file" name="datafile" id="datafile" />
 											                </td>
-											                
-											            </tr>
-											             <tr>
-											                <td colspan="2" >
+											                <td width="70%">
 											                    <input type="button" name="btnUpload" id="btnUpload"  value="Upload" class="btn" />
-											                    <input type="button" name="btnClear" id="btnClear"  value="Clear" class="btn" onclick="lp_refesh();" />
+											                    <input type="reset" name="btnClear" id="btnClear"  value="Clear" class="btn" />
+											                </td>
+											            </tr> 
+														<tr>
+											                <td colspan="3" >
+											                    <img alt="<%=uploadImageFieldForm.FILE_NAME%>" 
+											                    	 title="<%=uploadImageFieldForm.FILE_NAME%>"
+											                    	 src="/ticketWeb/upload/<%=uploadImageFieldForm.getImages()%>" 
+											                    	 border="0" 
+											                    	 width="651px" 
+											                    	 height="376px" />
 											                </td>
 											            </tr>
 											        </table>
@@ -103,6 +124,13 @@
 				</section>
 			</section>
 		</section>
+		<iframe name="ttestt" 
+			src="" 
+			scrolling="no"  
+			frameborder="0" 
+			width="0" 
+			height="0">
+	</iframe>
 	</form>
 	<div align="center" class="FreezeScreen" style="display:none;">
         <center>

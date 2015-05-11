@@ -160,7 +160,12 @@
 																			ปี :&nbsp;<%=seatZoneForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatZoneForm.getAwayTeamNameTH()%>
 																		</div><br/><br/>
 						                  	 							<div class='sim-panel-result' style="padding:10px;">
-									                        				<img src="<%=imgURL%>/Soccer.jpg">
+									                        				<img alt="<%=seatZoneForm.FILE_NAME%>" 
+														                    	 title="<%=seatZoneForm.FILE_NAME%>"
+														                    	 src="/ticketWeb/upload/<%=seatZoneForm.getImages()%>" 
+														                    	 border="0" 
+														                    	 width="651px" 
+														                    	 height="376px" />
 								               							</div>
 						                  	 						</td>
 						                  	 						<td style="vertical-align: top;">
