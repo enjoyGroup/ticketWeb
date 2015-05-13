@@ -903,11 +903,11 @@
 					              							</tr>
 					              						</table>
 									   				</td>
-						                   				<td style='width:80%;padding:0px !important;text-align: center;vertical-align: top;'>
-						                   					<table width="800px" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
+						                   				<td style='width:100%;padding:0px !important;text-align: center;vertical-align: top;'>
+						                   					<table width="90%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
 						                   						<tr>
-						                   							<td align="right" width="150px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
-						                   							<td align="left" width="350px;">
+						                   							<td align="right" width="200px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
+						                   							<td align="left" width="100px;">
 												        				<input type='text' 
 												        					id="fieldZoneName" 
 												        					name='fieldZoneName' 
@@ -919,7 +919,7 @@
 												        			    		value="<%=detail.getFieldZoneId()%>"/> 
 												        			</td>
 												        			<td align="right" width="150px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
-						                   							<td align="left" width="350px;" colspan="3">
+						                   							<td align="left" colspan="3">
 												        				<input type='text' 
 												        					id="nameTicket" 
 												        					name='nameTicket' 
@@ -928,16 +928,16 @@
 												        			</td>
 						                   						</tr>
 												        		<tr>
-												        			<td align="right" width="150px;">จำนวนแถว : &nbsp;</td>
-												        			<td align="left" width="350px;">
+												        			<td align="right" width="200px;">จำนวนแถว : &nbsp;</td>
+												        			<td align="left" width="100px;">
 												        				<input type='text' id="rows" 
 												        				       name='rows' maxlength="50"      
 												        				       class="numberOnly" 
                                                      						   value="<%=detail.getRows()%>" 
                                                      						   onblur="lp_calTotalSeating(),onKeyDownNumber(event);"/>
 												        			</td>
-												        			<td align="right">จำนวนที่นั่งต่อแถว : &nbsp;</td>
-												        			<td align="left">
+												        			<td align="right" width="150px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
+												        			<td align="left" width="150px;">
 												        				<input  type='text' 
 												        						id="seating" 
 												        						name="seating" 
@@ -946,8 +946,8 @@
 												        						value="<%=detail.getSeating()%>"
 												        						onblur="lp_calTotalSeating();"/>
 												        			</td>
-												        			<td align="right">เลขที่นั่งเริ่มต้น : &nbsp;</td>
-												        			<td align="left">
+												        			<td align="right" width="150px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
+												        			<td align="left" width="150px;">
 												        				<input  type='text' 
 												        						id="startNo" 
 												        						name="startNo" 
@@ -957,7 +957,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
+												        			<td align="right" width="200px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
 												        			<td align="left" colspan="5">
 												        				<input type='text' 
 												        					id="totalSeating" 
@@ -969,7 +969,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="150px;">ชื่อแถว: &nbsp;</td>
+												        			<td align="right" width="200px;">ชื่อแถว: &nbsp;</td>
 												        			<td align="left">
 												        			 <input type='radio' 
 												        					id="nameRowInd1" 
@@ -989,8 +989,8 @@
 												        			 		</td>
 												        		</tr>
 												        		<tr></tr>
-												        		<tr>
-												        			<td align="right">รายชื่อแถว : &nbsp;</td>
+												        		<tr> 
+												        			<td align="right" width="200px;">รายชื่อแถว : &nbsp;</td>
 												        			<td align="left"  colspan="3">
 												        				<textarea   id="nameRow" 
 												        							name='nameRow'
@@ -1002,8 +1002,8 @@
 												        			</td>
 												        		</tr>
 												        	</table>
-						                  	 				<table class="table"  border="2" bordercolor="#ffffff" id="result_zone_detail">
-																	<tr bgcolor="656659"  class="text_white" >
+						                  	 				<table class="table sim-panel-result-table" id="result_zone_detail">
+																	<tr >
 											                            <th align="center">ลำดับ</th>
 											                            <th align="center">ประเภทตั๋ว</th> 
 											                            <th align="center">ราคา</th> 
@@ -1100,16 +1100,17 @@
 																</div>
 				                   						</td>
 				                 					</tr>
-				             					</table>	
-											</section>
-										</div>
+				             					</table>
+				             				</div>	
+										</section>
 									</div>
-								</section>
+								</div>
 							</section>
-						</section>  
-					</section>
-					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+						</section>
+					</section>  
 				</section>
+				<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+			</section>
 		</section>
 		<div align="center" class="FreezeScreen" style="display:none;">
 	        <center>
