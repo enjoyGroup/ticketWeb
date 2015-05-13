@@ -207,15 +207,12 @@ public class EventMatchDao {
  
 	 
 	public void insertEventMatch(Session session,EventMatchBean eventMatchBean) throws EnjoyException{
-		logger.info("[addEventMatchList][Begin]");
-		  
-		String							sql				  = null; 
-		SQLQuery 						query 			  = null; 
-		int                             result            = 0;
+		logger.info("[insertEventMatch][Begin]");
+		   
 		Eventmatch                      evMatchDB         = null; 
-		EventmatchPK                    evMatchPK         = null;  
+		EventmatchPK                    evMatchPK         = null;    
 		
-		try{ 
+		try{    
 			evMatchPK = new EventmatchPK(); 
 			evMatchPK.setMatchId(Integer.valueOf(eventMatchBean.getMatchId()));
 			evMatchPK.setSeason(Integer.valueOf(eventMatchBean.getSeason()));
@@ -227,19 +224,17 @@ public class EventMatchDao {
 			evMatchDB.setAwayTeamNameTH(eventMatchBean.getAwayTeamNameTH());
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
 			evMatchDB.setMatchTime(eventMatchBean.getMatchTime());  
-			session.saveOrUpdate(evMatchDB); 
-			
+			session.save(evMatchDB);  
+			session.flush(); 
+			session.clear(); 
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage()); 
 			throw new EnjoyException(e.getMessage()); 
-		}finally{    
-			query 								= null;
-			sql                                 = null;
-			result                              = 0;
+		}finally{     
 			evMatchDB       					= null;
-			evMatchPK                           = null;
-			logger.info("[addEventMatchList][End]");
+			evMatchPK                           = null;   
+			logger.info("[insertEventMatch][End]");
 		}
 		 
 	}
@@ -274,7 +269,7 @@ public class EventMatchDao {
 	}
 	
 	public void updateEventMatch(Session session ,EventMatchBean eventMatchBean) throws EnjoyException{
-		logger.info("[addEventMatchList][Begin]");
+		logger.info("[updateEventMatch][Begin]");
 		  
 		String							hql									= null; 
 		Query 						    query 								= null;  
@@ -306,7 +301,7 @@ public class EventMatchDao {
 			hql                                 = null; 
 			evMatchDB                           = null;
 			evMatchPK                           = null;
-			logger.info("[addEventMatchList][End]");
+			logger.info("[updateEventMatch][End]");
 		}
 		 
 	}
@@ -340,8 +335,10 @@ public class EventMatchDao {
 			logger.info("[countOrderFromMatch][End]");
 		}
 		
-	return matchId;
-}
+		return matchId;
+	}
+	
+  
 	
  
 	

@@ -918,6 +918,14 @@
 												        			    		id="fieldZoneMasterId"  
 												        			    		value="<%=detail.getFieldZoneId()%>"/> 
 												        			</td>
+												        			<td align="right" width="150px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
+						                   							<td align="left" width="350px;" colspan="3">
+												        				<input type='text' 
+												        					id="nameTicket" 
+												        					name='nameTicket' 
+												        					maxlength="50"  
+												        					value="<%=detail.getFieldZoneNameTicket()%>"/>  
+												        			</td>
 						                   						</tr>
 												        		<tr>
 												        			<td align="right" width="150px;">จำนวนแถว : &nbsp;</td>
@@ -938,10 +946,19 @@
 												        						value="<%=detail.getSeating()%>"
 												        						onblur="lp_calTotalSeating();"/>
 												        			</td>
+												        			<td align="right">เลขที่นั่งเริ่มต้น : &nbsp;</td>
+												        			<td align="left">
+												        				<input  type='text' 
+												        						id="startNo" 
+												        						name="startNo" 
+												        						maxlength="20"  
+												        					    class="numberOnly" 
+												        						value="<%=detail.getStartSeatingNo()%>" />
+												        			</td>
 												        		</tr>
 												        		<tr>
 												        			<td align="right">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
-												        			<td align="left">
+												        			<td align="left" colspan="5">
 												        				<input type='text' 
 												        					id="totalSeating" 
 												        					name='totalSeating' 

@@ -123,7 +123,8 @@ public class SeatingDetailDao {
 			
 			sql				= "SELECT 	a.fieldZoneId,a.typeRowName,a.rowName"
 									+ ", a.fieldZoneName, a.rows, a.seating, a.totalSeating"
-									+ ", b.bookingTypeId, c.bookingTypeName, b.bookingPrices ,b.seq" 
+									+ ", b.bookingTypeId, c.bookingTypeName, b.bookingPrices ,b.seq"
+									+ ", a.fieldZoneNameTicket, a.startSeatingNo "
 									+ " FROM fieldzonemaster a, fieldzonedetail  b, bookingtype  c"
 									+ " WHERE a.fieldZoneId  = b.fieldZoneId "
 									+ " and b.bookingTypeId = c.bookingTypeId " 
@@ -142,6 +143,8 @@ public class SeatingDetailDao {
 			query.addScalar("bookingTypeName"	, new StringType());
 			query.addScalar("bookingPrices"		, new DoubleType()); 
 			query.addScalar("seq"		        , new IntegerType());
+			query.addScalar("fieldZoneNameTicket" , new StringType());
+			query.addScalar("startSeatingNo"	  , new IntegerType());
 			
 			
 			list		 	= query.list();
@@ -160,6 +163,8 @@ public class SeatingDetailDao {
 				logger.info("[DetailSeatingByZoneName] bookingTypeName 	:: " + row[8].toString());
 				logger.info("[DetailSeatingByZoneName] bookingPrices 	:: " + row[9].toString());
 				logger.info("[DetailSeatingByZoneName] seq 	:: " + row[10].toString());
+				logger.info("[DetailSeatingByZoneName] fieldZoneNameTicket 	:: " + row[11].toString());
+				logger.info("[DetailSeatingByZoneName] startSeatingNo 	:: " + row[12].toString());
 				
 				returnObj.setFieldZoneId(Integer.valueOf(row[0].toString()));
 				returnObj.setTypeRowName(Integer.valueOf(row[1].toString()));
@@ -167,8 +172,9 @@ public class SeatingDetailDao {
 				returnObj.setFieldZoneName(row[3].toString());
 				returnObj.setRows(Integer.valueOf(row[4].toString()));
 				returnObj.setSeating(Integer.valueOf(row[5].toString()));
-				returnObj.setTotalSeating(Integer.valueOf(row[6].toString())); 
-				 
+				returnObj.setTotalSeating(Integer.valueOf(row[6].toString()));
+				returnObj.setFieldZoneNameTicket(row[11].toString());
+				returnObj.setStartSeatingNo(Integer.valueOf(row[12].toString())); 
 			}
 			
 			returnObj.setFieldZoneDetailBeans(this.getDetailSeatingByZoneId(zoneId));
@@ -305,20 +311,15 @@ public class SeatingDetailDao {
 		return returnList;
 	}
 	
-	public void insertSeatingMaster(SeatingDetailBean seatingDetailBean) throws EnjoyException{
+	public void insertSeatingMaster(Session session,SeatingDetailBean seatingDetailBean) throws EnjoyException{
 		logger.info("[insertSeatingMaster][Begin]");
 		  
 		String							sql				  		= null; 
 		SQLQuery 						query 			  		= null; 
 		int                             result            		= 0;
-		Fieldzonemaster                 fieldzonemasterDB       = null;
-		SessionFactory 		   			sessionFactory	  		= null;
-		Session 			   			session  		  		= null;
+		Fieldzonemaster                 fieldzonemasterDB       = null; 
 		int 							zoneId 					= 0;
-		try{
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
+		try{ 
 			fieldzonemasterDB = new Fieldzonemaster(); 
 			fieldzonemasterDB.setFieldZoneName(seatingDetailBean.getFieldZoneName());
 			fieldzonemasterDB.setRows(seatingDetailBean.getRows());
@@ -326,21 +327,13 @@ public class SeatingDetailDao {
 			fieldzonemasterDB.setTotalSeating(seatingDetailBean.getTotalSeating());
 			fieldzonemasterDB.setTypeRowName(seatingDetailBean.getTypeRowName());
 			fieldzonemasterDB.setRowName(seatingDetailBean.getNameRow());
-			session.save(fieldzonemasterDB);  
-			session.getTransaction().commit(); 
-			  
-	
+			session.save(fieldzonemasterDB);   
+			   
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null;
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ บันทึกข้อมูล"); 
+		}finally{   
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
@@ -381,7 +374,7 @@ public class SeatingDetailDao {
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการค้นหาข้อมูล"); 
 		}finally{    
 			query 								= null;
 			sql                                 = null;
@@ -393,40 +386,31 @@ public class SeatingDetailDao {
 		 
 	}
 	
-	public void insertNewSeatingDetail(FieldZoneDetailBean fielZoneDetailBean) throws EnjoyException{
+	public void insertNewSeatingDetail(Session 	session ,FieldZoneDetailBean fielZoneDetailBean) throws EnjoyException{
 		logger.info("[insertNewSeatingDetail][Begin]");
 		  
 		String							hql				  		= null; 
 		Query   						query 			  		= null; 
 		int                             result            		= 0;
 		Fieldzonedetail                 fieldzoneDB             = null;  
-		Fieldzonemaster                 fieldzonemasterDB       = null;
-		SessionFactory 		   			sessionFactory	  		= null;
-		Session 			   			session  		  		= null;
-		try{  
-			
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
+		Fieldzonemaster                 fieldzonemasterDB       = null; 
+		FieldzonedetailPK               fieldzonedetailPK       = null;
+		try{   
+			fieldzonedetailPK = new FieldzonedetailPK();
+			fieldzonedetailPK.setSeq(fielZoneDetailBean.getSeq());
+			fieldzonedetailPK.setFieldZoneId(fielZoneDetailBean.getFieldZoneId());
 			fieldzoneDB 	  = new Fieldzonedetail();  
-//			fieldzoneDB.setSeq(fielZoneDetailBean.getSeq());
-//			fieldzoneDB.setFieldZoneId(fielZoneDetailBean.getFieldZoneId());
+			fieldzoneDB.setId(fieldzonedetailPK);  
 			fieldzoneDB.setBookingTypeId(fielZoneDetailBean.getBookingTypeId());
 			fieldzoneDB.setBookingPrices(fielZoneDetailBean.getBookingPrices()); 
-			session.save(fieldzoneDB);
-			session.getTransaction().commit();  
+			session.save(fieldzoneDB); 
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
+			logger.info(e.getMessage());  
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ บันทึกข้อมูล"); 
 		}finally{ 
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null;
+			fieldzonedetailPK                   = null;
 			query 								= null;
 			hql                                 = null;
 			result                              = 0;
@@ -467,7 +451,7 @@ public class SeatingDetailDao {
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการดึงข้อมูล"); 
 		}finally{    
 			query 								= null;
 			sql                                 = null;
@@ -479,64 +463,49 @@ public class SeatingDetailDao {
 		 
 	}
 	
-	public void insertSeatingDetail(SeatingDetailBean seatingDetailBean) throws EnjoyException{
+	public void insertSeatingDetail(Session session,FieldZoneDetailBean seatingDetailBean) throws EnjoyException{
 		logger.info("[insertSeatingDetail][Begin]");
 		  
 		String							sql				  		= null; 
 		SQLQuery 						query 			  		= null; 
 		int                             result            		= 0;
-		Fieldzonedetail                 fieldzoneDB             = null;  
-		SessionFactory 		   			sessionFactory	  		= null;
-		Session 			   			session  		  		= null;
-		try{ 
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
+		Fieldzonedetail                 fieldzoneDB             = null;   
+		FieldzonedetailPK               fieldzonedetailPK       = null;
+		try{  
 			
-//			FieldzonedetailPK fieldzonedetailPK = new FieldzonedetailPK();
-//			fieldzonedetailPK.setSeq(seatingDetailBean.getSeq());
-//			fieldzonedetailPK.setFieldZoneId(seatingDetailBean.getFieldZoneId());
-//			FieldzonedetailPK PK = (FieldzonedetailPK) session.save(fieldzonedetailPK);  
+			fieldzonedetailPK = new FieldzonedetailPK();
+			fieldzonedetailPK.setSeq(seatingDetailBean.getSeq());
+			fieldzonedetailPK.setFieldZoneId(seatingDetailBean.getFieldZoneId()); 
 			
-//			fieldzoneDB 	  = new Fieldzonedetail();  
-//			fieldzoneDB.setSeq(seatingDetailBean.getSeq());
-//			fieldzoneDB.setFieldZoneId(seatingDetailBean.getFieldZoneId());
-//			fieldzoneDB.setBookingTypeId(seatingDetailBean.getBookingTypeId());
-//			fieldzoneDB.setBookingPrices(seatingDetailBean.getBookingPrices());
+			fieldzoneDB 	  = new Fieldzonedetail();   
+			fieldzoneDB.setId(fieldzonedetailPK);
+			fieldzoneDB.setBookingTypeId(seatingDetailBean.getBookingTypeId());
+			fieldzoneDB.setBookingPrices(seatingDetailBean.getBookingPrices());
 		 
 			session.persist(fieldzoneDB);  
-			session.getTransaction().commit(); 
-			 
+			  
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close(); 
-			session					 			= null;
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ บันทึกข้อมูล"); 
+		}finally{   
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
 			fieldzoneDB       			        = null;
+			fieldzonedetailPK                   = null;
 			logger.info("[insertSeatingDetail][End]");
 		}
 		 
 	}
 	
-	public void deleteSeatingDetail(int fieldZoneId,int seq) throws EnjoyException{
+	public void deleteSeatingDetail(Session session,int fieldZoneId,int seq) throws EnjoyException{
 		logger.info("[deleteSeatingDetail][Begin]");
 		  
 		String							hql									= null; 
-		Query 						    query 								= null;  
-		SessionFactory 		   			sessionFactory						= null;
-		Session 			   			session  							= null;
-		try{  
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin();
+		Query 						    query 								= null;   
+		try{ 
 			 System.out.print("[deleteSeatingDetail]input to delete :"+fieldZoneId);
 			 hql        = "DELETE from Fieldzonedetail where fieldZoneId = :fieldZoneId" + 
 			              " and seq = :seq";  
@@ -544,41 +513,31 @@ public class SeatingDetailDao {
 			 query.setInteger("fieldZoneId", fieldZoneId);  
 			 query.setInteger("seq", seq);  
 			 System.out.println(query.executeUpdate()); 
-			 session.getTransaction().commit(); 
+		 
 		}catch(Exception e){ 
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡��ź������"); 
-		}finally{ 
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null; 
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ ลบข้อมูล"); 
+		}finally{  
 			query 								= null;
 			hql                                 = null; 
 			logger.info("[deleteSeatingDetail][End]");
 		} 
 	}
 	
-	public void updateSeatingDetail(SeatingDetailBean seatingDetailBean) throws EnjoyException{
+	public void updateSeatingDetail(Session session,SeatingDetailBean seatingDetailBean) throws EnjoyException{
 		logger.info("[updateSeatingDetail][Begin]"+seatingDetailBean.toString());
 		  
 		String							hql									= null; 
 		Query 						    query 								= null;  
 		int                             result                              = 0;
-		Fieldzonemaster                 fieldzonemasterDB                   = null;
-		SessionFactory 		   			sessionFactory						= null;
-		Session 			   			session  							= null;
-		try{
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
+		Fieldzonemaster                 fieldzonemasterDB                   = null; 
+		try{ 
 			hql        					= "FROM Fieldzonemaster WHERE fieldZoneId  = :fieldZoneId ";  
 			query      					= session.createQuery(hql).setParameter("fieldZoneId", seatingDetailBean.getFieldZoneId());  
 			fieldzonemasterDB    		= (Fieldzonemaster)query.uniqueResult();
 			System.out.println("matchDB.getFieldZoneId() :: "+seatingDetailBean.getFieldZoneId());
-			session.getTransaction().begin();
+		 
 			fieldzonemasterDB.setFieldZoneId(seatingDetailBean.getFieldZoneId());
 			fieldzonemasterDB.setFieldZoneName(seatingDetailBean.getFieldZoneName());
 			fieldzonemasterDB.setRows(seatingDetailBean.getRows());
@@ -586,19 +545,15 @@ public class SeatingDetailDao {
 			fieldzonemasterDB.setTotalSeating(seatingDetailBean.getTotalSeating());
 			fieldzonemasterDB.setTypeRowName(seatingDetailBean.getTypeRowName());
 			fieldzonemasterDB.setRowName(seatingDetailBean.getNameRow());
+			fieldzonemasterDB.setFieldZoneNameTicket(seatingDetailBean.getFieldZoneNameTicket());
+			fieldzonemasterDB.setStartSeatingNo(seatingDetailBean.getStartSeatingNo());
 			session.merge(fieldzonemasterDB);  
-			session.getTransaction().commit(); 
+		
 		}catch(Exception e){ 
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡����䢢�����"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null; 
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ แก้ไขข้อมูล"); 
+		}finally{ 
 			query 								= null;
 			hql                                 = null; 
 			fieldzonemasterDB                   = null;
@@ -607,42 +562,29 @@ public class SeatingDetailDao {
 		 
 	}
 	
-	public void updateFieldZoneDetail(FieldZoneDetailBean bean) throws EnjoyException{
+	public void updateFieldZoneDetail(Session session,FieldZoneDetailBean bean) throws EnjoyException{
 		logger.info("[updateFieldZoneDetail][Begin]"+bean.toString());
 		  
 		String							hql									= null; 
 		Query 						    query 								= null;  
 		int                             result                              = 0;
-		Fieldzonedetail                 fieldzoneDB                         = null;
-		SessionFactory 		   			sessionFactory						= null;
-		Session 			   			session  							= null;
-		try{
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
+		Fieldzonedetail                 fieldzoneDB                         = null; 
+		try{ 
 			hql        					= "FROM Fieldzonedetail WHERE fieldZoneId  = :fieldZoneId and seq = :seq";  
 			query      					= session.createQuery(hql).setParameter("fieldZoneId", bean.getFieldZoneId()).setParameter("seq", bean.getSeq()); ;  
 			fieldzoneDB    		        = (Fieldzonedetail)query.uniqueResult();
 			System.out.println("matchDB.getFieldZoneId() :: "+bean.getFieldZoneId());
 			System.out.println("matchDB.getSeq() :: "+bean.getSeq());
-			session.getTransaction().begin();
-//			fieldzoneDB.setFieldZoneId(bean.getFieldZoneId());
+ 
 			fieldzoneDB.setBookingTypeId(bean.getBookingTypeId());
-			fieldzoneDB.setBookingPrices(bean.getBookingPrices());
-//			fieldzoneDB.setSeq(bean.getSeq()); 
+			fieldzoneDB.setBookingPrices(bean.getBookingPrices()); 
 			session.merge(fieldzoneDB);  
-			session.getTransaction().commit(); 
-			session.flush();
+	 
 		}catch(Exception e){ 
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡����䢢�����"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close();
-			sessionFactory			 			= null;
-			session					 			= null; 
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ แก้ไขข้อมูล"); 
+		}finally{ 
 			query 								= null;
 			hql                                 = null; 
 			fieldzoneDB                         = null;
@@ -651,40 +593,32 @@ public class SeatingDetailDao {
 		 
 	}
 	
-	public void  insertFieldZoneDetail(FieldZoneDetailBean bean)throws EnjoyException{
+	public void  insertFieldZoneDetail(Session session ,FieldZoneDetailBean bean)throws EnjoyException{
 		String							sql				  		= null; 
 		SQLQuery 						query 			  		= null; 
 		int                             result            		= 0;
-		Fieldzonedetail                 fieldzoneDB             = null;  
-		SessionFactory 		   			sessionFactory	  		= null;
-		Session 			   			session  		  		= null;
-		try{ 
-			sessionFactory 				= HibernateUtil.getSessionFactory();
-			session 					= sessionFactory.openSession();
-			session.getTransaction().begin(); 
-			
+		Fieldzonedetail                 fieldzoneDB             = null;
+		FieldzonedetailPK               fieldzonedetailPK       = null;
+		try{  
+			fieldzonedetailPK = new FieldzonedetailPK();
+			fieldzonedetailPK.setSeq(bean.getSeq());
+			fieldzonedetailPK.setFieldZoneId(bean.getFieldZoneId());
 			fieldzoneDB 	  = new Fieldzonedetail();  
-//			fieldzoneDB.setSeq(bean.getSeq());
-//			fieldzoneDB.setFieldZoneId(bean.getFieldZoneId());
+			fieldzoneDB.setId(fieldzonedetailPK); 
 			fieldzoneDB.setBookingTypeId(bean.getBookingTypeId());
 			fieldzoneDB.setBookingPrices(bean.getBookingPrices());
-			session.persist(fieldzoneDB);  
-			session.getTransaction().commit(); 
+			session.persist(fieldzoneDB);    
 			 
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.info(e.getMessage());
-			session.getTransaction().rollback(); 
-			throw new EnjoyException("�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
-		}finally{  
-			session.flush();
-			session.clear();
-			session.close(); 
-			session					 			= null;
+			logger.info(e.getMessage()); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการ บันทึกข้อมูล"); 
+		}finally{   
 			query 								= null;
 			sql                                 = null;
 			result                              = 0;
 			fieldzoneDB       			        = null;
+			fieldzonedetailPK                   = null;
 			logger.info("[insertFieldZoneDetail][End]");
 		}
 		

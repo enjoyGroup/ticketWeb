@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -279,12 +280,14 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			List<EventMatchBean>   delList                  = null;
 			SessionFactory 		   sessionFactory		    = null;
 			Session 			   session				    = null;
+			Transaction            tx                       = null;
 			int                    matchIdLast              = 0;
-			int                    newMatchid               = 0;
+			int                    newMatchid               = 0; 
 			
 			try{ 
 				sessionFactory 				= HibernateUtil.getSessionFactory();
 				session 					= sessionFactory.openSession();
+				tx                          = session.beginTransaction();
 				obj 						= new JSONObject();
 				getAwayTeamNameENList		= this.request.getParameterValues("awayTeamNameEN"); 
 				getAwayTeamNameTHList		= this.request.getParameterValues("awayTeamNameTH"); 
@@ -297,45 +300,8 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				int seasonInt           	= Integer.parseInt(seasonSelect);  
 				System.out.println("[lp_onclick_saveEventMatch][seasonSelect  : ]" + seasonSelect);
 				System.out.println("[lp_onclick_saveEventMatch][seasonInt  : ]" + seasonInt); 
+			
 				
-				session.beginTransaction();
-				
-				if(getAwayTeamNameENList.length>0){ 
-					for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){   
-						nameTh        = EnjoyUtils.nullToStr(getAwayTeamNameTHList[i]);     
-						nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);   
-						matchDate     = EnjoyUtils.nullToStr(getDateList[i]);   
-						matchTime     = EnjoyUtils.nullToStr(getTimeList[i]);  
-						status        = EnjoyUtils.nullToStr(statusList[i]); 
-						matchId       = EnjoyUtils.nullToStr(getMatchIdList[i]);
-						
-						matchIdLast = this.dao.selectMaxMatchId(session,seasonSelect);
-						System.out.println("matchIdLast :: "+matchIdLast);
-						newMatchid  = matchIdLast + 1;
-						System.out.println("newMatchid :: "+newMatchid);
-						
-						bean = new EventMatchBean(); 
-						bean.setAwayTeamNameEN(nameEn);
-						bean.setAwayTeamNameTH(nameTh);
-						bean.setMatchDate(EnjoyUtils.dateToThaiDB(matchDate));
-						bean.setMatchTime(EnjoyUtils.timeToDB(matchTime));
-						bean.setSeason(seasonSelect);
-						bean.setMatchId(matchId);
-			            
-						System.out.print("bean:"+bean.toString());	
-						
-						if(status.equals("N")){  
-							System.out.println("insert : " + " seasonSelect = "+seasonSelect+" match = "+newMatchid );
-							bean.setMatchId(String.valueOf(newMatchid));
-							this.dao.insertEventMatch(session,bean);    
-						}else if(status.equals("U")){
-							System.out.println("update : " + " seasonSelect = "+seasonSelect+" match = "+matchId );
-							this.dao.updateEventMatch(session,bean);  
-						}
-						 
-					}
-					 
-				}
 				System.out.print("getDelList:"+getDelList);	
 				
 				if(!"none".equals(getDelList)){   
@@ -355,8 +321,47 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 					} 
 				}
 				
-				session.getTransaction().commit();
-				this.onLoad();
+				matchIdLast = this.dao.selectMaxMatchId(session,seasonSelect);
+				System.out.println("matchIdLast :: "+matchIdLast);
+				newMatchid  = matchIdLast;
+				
+				if(getAwayTeamNameENList.length>0){  
+					for(int i = 0 ; i < getAwayTeamNameENList.length ; i++){   
+				 
+						nameTh        = EnjoyUtils.nullToStr(getAwayTeamNameTHList[i]);     
+						nameEn        = EnjoyUtils.nullToStr(getAwayTeamNameENList[i]);   
+						matchDate     = EnjoyUtils.nullToStr(getDateList[i]);   
+						matchTime     = EnjoyUtils.nullToStr(getTimeList[i]);  
+						status        = EnjoyUtils.nullToStr(statusList[i]); 
+						matchId       = EnjoyUtils.nullToStr(getMatchIdList[i]);
+						
+						bean = new EventMatchBean(); 
+						bean.setAwayTeamNameEN(nameEn);
+						bean.setAwayTeamNameTH(nameTh);
+						bean.setMatchDate(EnjoyUtils.dateToThaiDB(matchDate));
+						bean.setMatchTime(EnjoyUtils.timeToDB(matchTime));
+						bean.setSeason(seasonSelect);
+						bean.setMatchId(matchId);
+			            
+						System.out.print("bean:"+bean.toString());	
+						
+						if(status.equals("N")){  
+							newMatchid    = newMatchid + 1;
+							System.out.println("newMatchid :: "+newMatchid); 
+							System.out.println("insert : " + " seasonSelect = "+seasonSelect+" match = "+newMatchid );
+							bean.setMatchId(String.valueOf(newMatchid)); 
+							this.dao.insertEventMatch(session,bean);   
+						}else if(status.equals("U")){
+							System.out.println("update : " + " seasonSelect = "+seasonSelect+" match = "+matchId );
+							this.dao.updateEventMatch(session,bean);  
+						}
+						 
+					}
+					 
+				} 
+				
+				tx.commit(); 
+				session.close();
 				obj.put("status",   "SUCCESS"); 
 
 			}catch(Exception e){
@@ -380,9 +385,9 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				bean 		    		= null; 
 				obj 			    	= null;
 				delList                 = null; 
-				session.flush();
-				session.clear();
-				session.close();
+				session                 = null;
+				sessionFactory	        = null;
+				tx                      = null;
 				System.out.println("[lp_onclick_saveEventMatch][End]");
 			}
 		}

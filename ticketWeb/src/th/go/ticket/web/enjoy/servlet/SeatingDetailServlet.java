@@ -262,6 +262,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 					objDetail.put("totalSeating", 	detail.getTotalSeating());
 					objDetail.put("typeRowName", 	detail.getTypeRowName());
 					objDetail.put("rowName", 		detail.getNameRow());
+					objDetail.put("fieldZoneNameTicket", detail.getFieldZoneNameTicket());
+					objDetail.put("startSeatingNo", 	detail.getStartSeatingNo());
 					
 					if(detail.getFieldZoneDetailBeans() != null){
 						for(int j = 0 ; j < detail.getFieldZoneDetailBeans().size() ; j++){ 
@@ -294,7 +296,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				
 			}else{
 				obj.put(STATUS, 			ERROR);
-				obj.put(ERR_MSG, 			"Zone ��ͧ�����ҡѺ�����ҧ");
+				obj.put(ERR_MSG, 			"Zone ต้องไม่เท่ากับค่าว่าง");
 			}
 			
 			
@@ -360,6 +362,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			String[]			   statusList 	            = null;  
 			int		  			   zoneSelect               = 0; 
 			String                 fieldZoneName            = null;
+			String                 fieldNameTicket          = null;
+			int                    startSeating             = 0;
 			int                    rows                     = 0;
 			int                    seating                	= 0;
 			int                    totalSeating             = 0;
@@ -378,8 +382,12 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			FieldZoneDetailBean    fieldZoneDetailBean      = null;
 			int                    hidZoneId                = 0;
 			String[]               zoneMasterList           = null;
+			SessionFactory 		   sessionFactory	  		= null;
+			Session 			   session  		  		= null;
 			
 			try{ 
+				sessionFactory 				= HibernateUtil.getSessionFactory();
+				session 					= sessionFactory.openSession(); 
 				obj 						= new JSONObject();
 				getSeqList					= this.request.getParameterValues("seq"); 
 				getBookingTypeNameList		= this.request.getParameterValues("bookingTypeName"); 
@@ -395,8 +403,10 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				nameRowInd                  = Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("nameRowInd")));
 				nameRow                     = EnjoyUtils.nullToStr(this.request.getParameter("nameRow")); 
 				getFieldZoneId			    = EnjoyUtils.nullToStr(this.request.getParameter("hidZoneId"));
-				 
-		 
+				fieldNameTicket   			= EnjoyUtils.nullToStr(this.request.getParameter("nameTicket")); 
+				startSeating 				= Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("startNo")));
+				session.getTransaction().begin(); 
+				
 				System.out.println("[saveSeatingDetail][zoneSelect  : ]" + zoneMasterList[0]); 
 				System.out.println("[saveSeatingDetail][getBookingTypeNameList.length  : ]" + getBookingTypeNameList.length); 
 				
@@ -409,7 +419,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				bean.setTotalSeating(totalSeating);
 				bean.setTypeRowName(nameRowInd);
 				bean.setNameRow(nameRow);
-				this.dao.updateSeatingDetail(bean);
+				bean.setFieldZoneNameTicket(fieldNameTicket);
+				bean.setStartSeatingNo(startSeating);
+				this.dao.updateSeatingDetail(session,bean);
 				
 				if(getBookingTypeNameList.length>0){ 
 					for(int i = 0 ; i < getBookingTypeNameList.length ; i++){  
@@ -422,10 +434,10 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 						
 						if(bookingTypeId==0){
 							obj.put("status", 		"ERROR"); 
-							obj.put(ERR_MSG, 		"�кػ������������١��ͧ"); 
-							throw new EnjoyException("saveEventMatch : " +"�кػ������������١��ͧ");
+							obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
+							throw new EnjoyException("saveEventMatch : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
 						}
-						    
+						
 						fieldZoneDetailBean = new FieldZoneDetailBean();
 						fieldZoneDetailBean.setSeq(seq);
 						fieldZoneDetailBean.setBookingTypeName(bookingTypeName);
@@ -436,9 +448,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 						System.out.println("fieldZoneId:"+fieldZoneId);	
 						
 						if(status.equals("N") ){ //detail
-							this.dao.insertFieldZoneDetail(fieldZoneDetailBean);    
+							this.dao.insertFieldZoneDetail(session,fieldZoneDetailBean);    
 						}else if(status.equals("U")){
-							this.dao.updateFieldZoneDetail(fieldZoneDetailBean);  
+							this.dao.updateFieldZoneDetail(session,fieldZoneDetailBean);  
 						}
 						 
 					}
@@ -456,7 +468,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 								if(del != ""){ 
 									fieldZoneSeqDel = Integer.valueOf(del); 
 									System.out.print("delete : seq is ::" +fieldZoneSeqDel + " and fieldZoneId = " + bean.getFieldZoneId()); 
-									this.dao.deleteSeatingDetail(bean.getFieldZoneId(),fieldZoneSeqDel); 
+									this.dao.deleteSeatingDetail(session,bean.getFieldZoneId(),fieldZoneSeqDel); 
 								}
 							}
 							
@@ -464,13 +476,14 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 					}
 				}
 				 
-				this.onLoad();
+				session.getTransaction().commit();  
 				obj.put("status",   "SUCCESS"); 
 
 			}catch(Exception e){
+				session.getTransaction().rollback(); 
 				obj.put("status", 		"ERROR"); 
-				obj.put(ERR_MSG, 		"�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
-				throw new EnjoyException("saveEventMatch : " +"�Դ��ͼԴ��Ҵ㹡�úѹ�֡������");
+				obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
+				throw new EnjoyException("saveEventMatch : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
 				
 			}finally{   
 				this.enjoyUtil.writeMSG(obj.toString());  
@@ -495,6 +508,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				bean 		    		= null; 
 				obj 			    	= null;
 				delList                 = null; 
+				session.flush();
+				session.clear();
+				session.close();
+				sessionFactory			 			= null;
+				session					 			= null; 
 				System.out.println("[lp_onclick_saveSeatingDetail][End]");
 			}
 		}
@@ -526,8 +544,14 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 		int						bookingTypeId           = 0;
 		FieldZoneDetailBean     fieldZoneDetailBean     = null;
 		int                     findFieldZoneMasterId   = 0;
+		String                 fieldNameTicket          = null;
+		int                    startSeating             = 0;
+		SessionFactory 		   	sessionFactory	  		= null;
+		Session 			   	session  		  		= null;
 		
 		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession(); 
 			obj 						= new JSONObject();
 			getSeqList					= this.request.getParameterValues("seq"); 
 			getBookingTypeNameList		= this.request.getParameterValues("bookingTypeName"); 
@@ -538,9 +562,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			totalSeating                = Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("totalSeating")));
 			nameRowInd                  = Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("nameRowInd")));
 			nameRow                     = EnjoyUtils.nullToStr(this.request.getParameter("nameRow")); 
+			fieldNameTicket   			= EnjoyUtils.nullToStr(this.request.getParameter("nameTicket")); 
+			startSeating 				= Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("startNo")));
  
 			System.out.println("[lp_onclick_saveNewSeatingDetail][zoneSelect  : ]" + zoneSelect); 
-			
+			session.getTransaction().begin();
 			bean = new SeatingDetailBean();  
 			bean.setFieldZoneName(fieldZoneName);
 			bean.setRows(rows); 
@@ -548,7 +574,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			bean.setTotalSeating(totalSeating);
 			bean.setTypeRowName(nameRowInd);
 			bean.setNameRow(nameRow);
-		    this.dao.insertSeatingMaster(bean);
+			bean.setFieldZoneNameTicket(fieldNameTicket);
+			bean.setStartSeatingNo(startSeating);
+		    this.dao.insertSeatingMaster(session,bean);
 			 
 			findFieldZoneMasterId = this.dao.findFieldZoneMasterId(fieldZoneName);
 			System.out.println("findFieldZoneMasterId:"+findFieldZoneMasterId);	
@@ -563,9 +591,10 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 					
 					if(bookingTypeId==0){
 						obj.put("status", 		"ERROR"); 
-						obj.put(ERR_MSG, 		"�кػ������������١��ͧ"); 
-						throw new EnjoyException("saveEventMatch : " +"�кػ������������١��ͧ");
+						obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
+						throw new EnjoyException("saveEventMatch : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
 					}
+					    
 					    
 					System.out.println("fieldZoneId:"+fieldZoneId);	
 					
@@ -577,20 +606,20 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 					System.out.println("fieldZoneDetailBean:"+fieldZoneDetailBean.toString());	
 					
 					
-					this.dao.insertNewSeatingDetail(fieldZoneDetailBean);   
+					this.dao.insertNewSeatingDetail(session,fieldZoneDetailBean);   
 					  
 				}
 				 
 			}
 			   
 			obj.put("status",   "SUCCESS"); 
+			session.getTransaction().commit(); 
 			 
-			this.onLoad();
-			
 			}catch(Exception e){
+				session.getTransaction().rollback(); 
 				obj.put("status", 		"ERROR"); 
-				obj.put(ERR_MSG, 		"�Դ��ͼԴ��Ҵ㹡�úѹ�֡������"); 
-				throw new EnjoyException("saveEventMatch : " +"�Դ��ͼԴ��Ҵ㹡�úѹ�֡������");
+				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
+				throw new EnjoyException("saveEventMatch : " +"เกิดข้อผิดพลาดในการบันทึกข้อมูล");
 				
 			}finally{   
 				this.enjoyUtil.writeMSG(obj.toString());  
@@ -615,6 +644,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				bean 		    		= null; 
 				obj 			    	= null;
 				delList                 = null; 
+				session.flush();
+				session.clear();
+				session.close();
+				sessionFactory			 			= null;
+				session					 			= null;
 				System.out.println("[lp_onclick_saveNewSeatingDetail][End]");
 			}
 		}
