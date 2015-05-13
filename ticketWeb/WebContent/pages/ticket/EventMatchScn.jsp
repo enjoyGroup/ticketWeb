@@ -569,7 +569,7 @@
 		                  //alert(status);		
 			            	if(status=="SUCCESS"){
 			            		alert("บันทึกรายการเรียบร้อย  ");  
-			            		//window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
+			            		window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
 		            		}else{
 		            			errMsg = jsonObj.errMsg; 
 		            			alert(errMsg);
@@ -680,7 +680,7 @@
 			});
 			}).end().appendTo("#result_match");
 		    i++;
-		    alert();
+		    //alert();
 		});
   
 	</script>

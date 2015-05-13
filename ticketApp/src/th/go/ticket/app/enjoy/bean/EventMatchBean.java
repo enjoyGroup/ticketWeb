@@ -13,6 +13,7 @@ public class EventMatchBean {
 	private String matchTime;
 	private String active;
 	private String matchDateId;
+	private String status;
 	
 	public EventMatchBean(){ 
 		this.matchId         = "";
@@ -23,6 +24,7 @@ public class EventMatchBean {
 		this.matchTime       = "";
 		this.active          = "A";
 		this.matchDateId     = "matchDateId";
+		this.status          = "";
 		
 	}
 
@@ -89,14 +91,26 @@ public class EventMatchBean {
 	public void setMatchDateId(String matchDateId) {
 		this.matchDateId = matchDateId;
 	}
+	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		return "EventMatchBean [matchId=" + matchId + ", season=" + season
 				+ ", awayTeamNameEN=" + awayTeamNameEN + ", awayTeamNameTH="
 				+ awayTeamNameTH + ", matchDate=" + matchDate + ", matchTime="
-				+ matchTime + "]";
+				+ matchTime + ", active=" + active + ", matchDateId="
+				+ matchDateId + ", status=" + status + "]";
 	}
+
+	 
 	
 	
 

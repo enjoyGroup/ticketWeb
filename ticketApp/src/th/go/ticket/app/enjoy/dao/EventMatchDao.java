@@ -16,10 +16,14 @@ import java.util.List;
 
 
 
+
+
+
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory; 
+import org.hibernate.Transaction;
 import org.hibernate.type.IntegerType; 
   
 
@@ -169,9 +173,7 @@ public class EventMatchDao {
 		
 		return returnList;
 	}
-	
-	
-	
+	 
 	@SuppressWarnings("unchecked")
 	public int countOrderFromMatch(Session session,int matchId) throws EnjoyException{
 			logger.info("[countOrderFromMatch][Begin]"); 
@@ -204,8 +206,7 @@ public class EventMatchDao {
 			
 		return count;
 	}
- 
-	 
+  
 	public void insertEventMatch(Session session,EventMatchBean eventMatchBean) throws EnjoyException{
 		logger.info("[insertEventMatch][Begin]");
 		   
@@ -238,8 +239,7 @@ public class EventMatchDao {
 		}
 		 
 	}
-
-	 
+ 
 	public void deleteEventMatch(Session session,int matchId,int season) throws EnjoyException{
 		logger.info("[deleteMatch][Begin]");
 		  
@@ -306,14 +306,18 @@ public class EventMatchDao {
 		 
 	}
 	
-	public int selectMaxMatchId(Session session,String season) throws EnjoyException{
+	public int selectMaxMatchId(String season) throws EnjoyException{
 		logger.info("[countOrderFromMatch][Begin]"); 
 		String							sql									= null;   
 		SQLQuery 						sqlQuery 							= null;   
 		List<Integer>                   list                                = null;
 		Integer                         matchId 							= null;
-		
+		Session 						session								= null;
+		SessionFactory 		   			sessionFactory		    			= null;
 		try{ 
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			session.beginTransaction();
 			sql             = "SELECT MAX(matchId) as matchId from Eventmatch WHERE season = "+ season;
 			sqlQuery		= session.createSQLQuery(sql); 
 			sqlQuery.addScalar("matchId"	, new IntegerType());
@@ -323,23 +327,104 @@ public class EventMatchDao {
 				matchId = list.get(0);
 				logger.info("selectMaxMatchId order of matchId ::  "+ matchId); 
 			}
-		
+			session.clear();
+			session.close();
 		}catch(Exception e){
+			session.getTransaction().rollback();
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			throw new EnjoyException(e.getMessage());
 		}finally{  
 			sqlQuery 							= null;
 			sql                                 = null;
-			list                                = null;  
+			list                                = null;
+			session                             = null;
+			sessionFactory                      = null;
 			logger.info("[countOrderFromMatch][End]");
 		}
 		
 		return matchId;
 	}
+	 
+	public void saveEventMatch(List<EventMatchBean> eventMatchBeanList,String getDelList )throws EnjoyException{
+		SessionFactory 		   sessionFactory		    = null;
+		Session 			   session				    = null;
+		Transaction            tx                       = null;
+		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			tx                          = session.beginTransaction();
+			
+			if(!"none".equals(getDelList)){   
+				List<String> deleteList = EnjoyUtils.getListFromArr(getDelList);
+				System.out.print("deleteList : size ::"+deleteList.size());
+				int matchDel ;
+				if(deleteList.size()>0){
+					for(String del :deleteList){
+						System.out.print("del"+deleteList.size());
+						if(del != ""){ 
+							matchDel = Integer.valueOf(del); 
+							System.out.print("delete : id is ::" +matchDel); 
+							this.deleteEventMatch(session,matchDel,Integer.valueOf(eventMatchBeanList.get(0).getSeason())); 
+						}
+					}
+					
+				} 
+			}
+			
+			for(EventMatchBean eventMatchBean:eventMatchBeanList){
+				logger.info("eventMatchBean :: "+eventMatchBean.toString());
+				if(eventMatchBean.getStatus().equals("N")){   
+					this.insertEventMatch(session,eventMatchBean);   
+				}else if(eventMatchBean.getStatus().equals("U")){ 
+					this.updateEventMatch(session,eventMatchBean);  
+				}
+			}
+			
+			tx.commit();
+			session.close();
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{    
+			session                             = null;
+			sessionFactory                      = null;
+			tx                                  = null;
+			logger.info("[saveEventMatch][End]");
+		}
+	}
 	
-  
-	
+	public void saveNewEventMatch(List<EventMatchBean> eventMatchBeanList)throws EnjoyException{
+		SessionFactory 		   sessionFactory		    = null;
+		Session 			   session				    = null;
+		Transaction            tx                       = null;
+		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			tx                          = session.beginTransaction();
+			 
+			for(EventMatchBean eventMatchBean:eventMatchBeanList){
+				logger.info("eventMatchBean :: "+eventMatchBean.toString());
+				this.insertEventMatch(session,eventMatchBean);    
+			}
+			
+			tx.commit();
+			session.close();
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{    
+			session                             = null;
+			sessionFactory                      = null;
+			tx                                  = null;
+			logger.info("[saveEventMatch][End]");
+		}
+	}
  
+	  
 	
 }
