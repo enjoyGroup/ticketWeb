@@ -15,7 +15,13 @@ public class SeatReservationForm {
 	public final static String PENDING 				= "P";//สถานะกำลังจะจอง
 	public final static String REJECT 				= "R";//สถานะยกเลิก
 	public final static String FILL_ZERO 			= ConfigFile.getPadingSeatNo();
+	
+	/*Begin สำหรับ gen Barcode*/
+	public final static String FILL_VERRIFY_NUM 	= ConfigFile.getVerifyNum();
+	public final static String FILL_ZONE_ID 		= ConfigFile.getPadingZoneId();
+	public final static String FILL_ZERO_BOOK_PRICE = ConfigFile.getPadingBookPrice();
 	public final static String FILL_ZERO_TICKET_ID 	= ConfigFile.getPadingTicketId();
+	/*End สำหรับ gen Barcode*/
 	
 	private String							fieldZoneId;
 	private String							fieldZoneName;

@@ -18,6 +18,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>เพิ่ม Match การแข่งขัน</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<script>

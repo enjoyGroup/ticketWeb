@@ -362,7 +362,7 @@ public class EnjoyUtils {
         return lv_ret;
 	}
 	
-	public static int paresInt(String av_val) {
+	public static int parseInt(String av_val) {
 		
 		int lv_ret = 0;
 		

@@ -75,8 +75,8 @@ public class SeatZoneDao {
 			hql				= "SELECT b.matchId, b.season, b.awayTeamNameTH "
 								+ "FROM eventmatch b "
 								+ "where "
-									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('25570101', '%Y%m%d')"
-//									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('" + EnjoyUtils.currDateThai() + "', '%Y%m%d')"
+//									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('25570101', '%Y%m%d')"
+									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('" + EnjoyUtils.currDateThai() + "', '%Y%m%d')"
 								+ " order by b.season, b.matchId asc";
 			query			= session.createSQLQuery(hql);
 			

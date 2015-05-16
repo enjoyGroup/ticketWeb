@@ -9,6 +9,9 @@ import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 
 public class ConfigFile {
 	private static final String PADING_SEAT_NO   	= "pading.seatNo";
+	private static final String PADING_VERNUM_ID   	= "pading.verifyNum";
+	private static final String PADING_ZONE_ID   	= "pading.fieldZoneId";
+	private static final String PADING_BOOK_PRICE   = "pading.bookingPrices";
 	private static final String PADING_TICKET_ID   	= "pading.ticketId";
 	private static final String FILE_PATH   		= "file.path";
 	private static final String FILE_NAME   		= "file.name";
@@ -47,6 +50,18 @@ public class ConfigFile {
 	
 	public static String getPadingSeatNo() {
 		return getText(PADING_SEAT_NO);
+	}
+	
+	public static String getVerifyNum() {
+		return getText(PADING_VERNUM_ID);
+	}
+	
+	public static String getPadingZoneId() {
+		return getText(PADING_ZONE_ID);
+	}
+	
+	public static String getPadingBookPrice() {
+		return getText(PADING_BOOK_PRICE);
 	}
 	
 	public static String getPadingTicketId() {

@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายละเอียดตั๋ว</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<style>
@@ -182,7 +183,7 @@
 															height="600">
 													</iframe>
 													<br/>
-													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_save();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
+													<!--  <input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_save();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;-->
 													<input type="button" id="btnBack" name="btnBack" onclick="lp_goBack();" class="btn" style="width: 150px;" value="ทำรายการต่อไป >>" />
 												</div>
 												<!-- End contents -->

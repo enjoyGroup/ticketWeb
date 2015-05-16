@@ -12,6 +12,7 @@ import org.hibernate.type.StringType;
 
 import th.go.ticket.app.enjoy.bean.SeatReservationBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
+import th.go.ticket.app.enjoy.model.Genseqticketid;
 import th.go.ticket.app.enjoy.model.Ticketorder;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
@@ -572,6 +573,150 @@ public class SeatReservationDao {
 		}
 		
 		return returnList;
+	}
+	
+	public Integer getBookingPrices(String fieldZoneId, String bookingTypeId) throws EnjoyException{
+		logger.info("[getBookingPrices][Begin]");
+		
+		String							hql									= null;
+		List<Integer>			 		list								= null;
+		SQLQuery 						query 								= null;
+		Integer 						result								= null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			
+			hql				= "select bookingPrices from fieldzonedetail"
+								+ " where fieldZoneId 		= '" + fieldZoneId + "'"
+									+ " and bookingTypeId 	= '" + bookingTypeId + "'";
+			
+			
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("bookingPrices"			, new IntegerType());
+			
+			list		 	= query.list();
+			
+			if(list!=null && list.size() > 0){
+				result = list.get(0);
+			}
+			
+			logger.info("[getBookingPrices] result 			:: " + result);
+			
+			
+			
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getBookingPrices][End]");
+		}
+		
+		return result;
+	}
+	
+	public Integer getTicketSeq(String season, String matchId) throws EnjoyException{
+		logger.info("[getTicketSeq][Begin]");
+		
+		String							hql									= null;
+		List<Integer>			 		list								= null;
+		SQLQuery 						query 								= null;
+		Integer 						result								= null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			
+			hql				= "select ticketSeq from genseqticketid"
+								+ " where season 		= '" + season + "'"
+									+ " and matchId 	= '" + matchId + "'";
+			
+			
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("ticketSeq"			, new IntegerType());
+			
+			list		 	= query.list();
+			
+			if(list!=null && list.size() > 0){
+				result = list.get(0);
+			}
+			
+			logger.info("[getTicketSeq] result 			:: " + result);
+			
+			
+			
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getBookingPrices][End]");
+		}
+		
+		return result;
+	}
+	
+	public void insertGenseqticketid(Session session, Genseqticketid genseqticketid) throws EnjoyException{
+		logger.info("[insertGenseqticketid][Begin]");
+		
+		try{
+			
+			session.saveOrUpdate(genseqticketid);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+		}finally{
+			logger.info("[insertGenseqticketid][End]");
+		}
+	}
+	
+	public void updateGenseqticketid(Session session, int season, int matchId, int ticketSeq) throws EnjoyException{
+		logger.info("[updateStatusPendingToActive][Begin]");
+		
+		String							hql									= null;
+		Query 							query 								= null;
+		int 							result								= 0;
+		
+		try{
+			hql				= "update Genseqticketid t set t.ticketSeq = :ticketSeq"
+							+ " where"
+								+ " t.id.season 			= :season"
+								+ " and t.id.matchId		= :matchId";
+			
+			query = session.createQuery(hql);
+			
+			query.setParameter("ticketSeq"	, ticketSeq);
+			query.setParameter("season"		, season);
+			query.setParameter("matchId"	, matchId);
+			
+			result = query.executeUpdate();			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
+		}finally{
+			
+			hql									= null;
+			query 								= null;
+			logger.info("[updateStatusPendingToActive][End]");
+		}
 	}
 	
 }

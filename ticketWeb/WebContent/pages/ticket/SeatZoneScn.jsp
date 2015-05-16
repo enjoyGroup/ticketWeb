@@ -8,6 +8,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>	
 	<link href="<%=cssURL%>/menu-styles2.css" rel="stylesheet">
@@ -58,6 +59,12 @@
 			var params		= null;
 			
 			try{
+				
+				if(gp_trim($("#matchId").val())==""){
+					alert("ขออภัยคุณยังไมได้เลือกโปรแกรมการแข่งขัน");
+					return;
+				}
+				
 				gp_progressBarOn();
 				
 				params		= "&fieldZoneId=" 			+ av_fieldZoneId 

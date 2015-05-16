@@ -12,6 +12,7 @@ import th.go.ticket.app.enjoy.pdf.utils.PdfFormService;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
+import com.lowagie.text.Image;
 import com.lowagie.text.pdf.Barcode128;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
@@ -150,10 +151,19 @@ public class TicketPdfForm extends MotorItext implements PdfFormService {
 		PdfContentByte 	cb 				= writer.getDirectContent();
 		Barcode128 		code128 		= new Barcode128();
 		String			ticketId		= (String) detail.get("ticketId");
+		Image			barCode			= null;
+		PdfPCell 		cell 			= null;
 		
 		code128.setCode(ticketId);
 		
-		table.addCell(code128.createImageWithBarcode(cb, null, null));
+		barCode = code128.createImageWithBarcode(cb, null, null);
+		barCode.setBorder(0);
+		
+		cell = new PdfPCell(barCode);
+		cell.setBorder(0);
+		cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		
+		table.addCell(cell);
 		
 		table.setWidthPercentage(100);
 	

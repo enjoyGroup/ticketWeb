@@ -110,6 +110,67 @@ function gp_number_format (av_obj, decimals, dec_point, thousands_sep) {
     //return sign + integer + fractional + exponent;
 }
 
+function gp_format_str(av_val, decimals){
+	return gp_number_format_str(av_val, decimals, '.', ',');
+}
+
+function gp_number_format_str (av_val, decimals, dec_point, thousands_sep) {
+    
+    var exponent    = "";
+    var numberstr   = null;
+    var eindex      = null;
+    var temp        = null;
+    var sign        = null;
+    var integer     = null;
+    var fractional  = null;
+    var number      = av_val.replace(/,/g,"");
+    var msgVal      = "";
+
+    if(gp_trim(number)==""){
+        return true;
+    }
+    
+    numberstr   = number.toString ();
+    eindex      = numberstr.indexOf ("e");
+    
+    if (eindex > -1) {
+        exponent = numberstr.substring (eindex);
+        number = parseFloat (numberstr.substring (0, eindex));
+    }
+       
+    if (decimals != null) {
+        temp    = Math.pow (10, decimals);
+        number  = Math.round (number * temp) / temp;
+    }
+    
+    sign        = number < 0 ? "-" : "";
+    integer     = (number > 0 ? Math.floor (number) : Math.abs (Math.ceil (number))).toString ();
+    
+    fractional  = number.toString ().substring (integer.length + sign.length);
+    dec_point   = dec_point != null ? dec_point : ".";
+    fractional  = decimals != null && decimals > 0 || fractional.length > 1 ? (dec_point + fractional.substring (1)) : "";
+    
+    if (decimals != null && decimals > 0) {
+        for (i = fractional.length - 1, z = decimals; i < z; ++i) {
+            fractional += "0";
+        }
+    }
+    
+    thousands_sep = (thousands_sep != dec_point || fractional.length == 0) ? thousands_sep : null;
+    if (thousands_sep != null && thousands_sep != "") {
+        for (i = integer.length - 3; i > 0; i -= 3){
+            integer = integer.substring (0 , i) + thousands_sep + integer.substring (i);
+        }
+    }
+    
+    msgVal = sign + integer + fractional + exponent;
+    if(msgVal.indexOf("NaN") > -1){
+        return false;
+    }
+    
+    return msgVal;
+}
+
 function gp_trim(str) {
     return str.replace(/^\s+|\s+$/g,"");
 }
