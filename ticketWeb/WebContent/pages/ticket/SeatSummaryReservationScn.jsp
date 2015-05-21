@@ -27,11 +27,12 @@
 		});
 		
 		function lp_print(){
-			var PDF = null;
+			var lo_pdf = null;
+			
 			try{
-				var PDF = document.getElementById("ttestt");
-			      PDF.focus();
-			      PDF.contentWindow.print();
+				lo_pdf = document.getElementById("ttestt");
+				lo_pdf.focus();
+				lo_pdf.contentWindow.print();
 			}catch(e){
 				alert("lp_print :: " + e);
 			}
