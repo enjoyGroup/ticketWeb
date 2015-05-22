@@ -6,6 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>ยกเลิกตั๋วการแข่งขัน</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
@@ -67,11 +68,29 @@
 			
 			
 			$('#btnSave').click(function(){ 
-				var pageAction			= "save";
-				var lv_params			= gv_service;  
-			 
+				var pageAction		= "save";
+				var lv_params		= gv_service;  
+				var lv_ticketIdList	= "";
+				
 			    try{
-			    	lv_params 	+= "&pageAction=" + pageAction + "&ticketIdList=8"; 
+					$('#tbl_result tr').each(function (i, row) {
+					    var $actualrow 	= $(row);
+						var lv_ticketId	= "";
+					    $checkbox 	= $actualrow.find('input:checked');
+					    
+					    //alert($actualrow.index() + " : " + $checkbox.is(':checked'));
+					    //alert($actualrow.find("td").eq(2).html());
+					    if ($checkbox.is(':checked')) {
+					    	if (lv_ticketIdList != "") { lv_ticketIdList = lv_ticketIdList + ","; }
+						    lv_ticketId 	= $actualrow.find("td").eq(2).text();
+
+						    lv_ticketId 	= lv_ticketId.replace("<b>",  "");
+						    lv_ticketId 	= lv_ticketId.replace("</b>", "");
+					    	lv_ticketIdList = lv_ticketIdList + lv_ticketId;
+					    }
+					});		
+
+			    	lv_params 	+= "&pageAction=" + pageAction + "&ticketIdList=" + lv_ticketIdList; 
 					$.ajax({
 						async:false,
 			            type: "POST",
@@ -79,7 +98,8 @@
 			            data: lv_params,
 			            beforeSend: "",
 			            success: function(data){
-	            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");	
+	            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");
+	            			window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
 			            }
 			        });
 			    }catch(e){
@@ -214,29 +234,15 @@
 														%>
 														 <tr>
 															<td align="center">
-																<B><input type="checkbox" id="i_chk_cancel" name="i_chk_cancel"></B>
+																<B><input type="checkbox" id="i_chk_cancel" name="i_chk_cancel" class="i_chk_cancel"></B>
 															</td>
-															<td align="center">
-																<B><%=rowNumber%></B>
-															</td>
-															<td align="center" >
-																<B><%=bean.getTicketId()%></B>
-															</td>
-															<td align="center" >
-																<B><%=bean.getSeatingNo()%></B>
-															</td>
-															<td align="center" >
-																<B><%=bean.getSeason()%></B>
-															</td>
-															<td align="center" >
-																<B><%=bean.getAwayTeamNameTH()%></B>
-															</td>
-															<td align="center">
-																<B><%=bean.getBookingTypeName()%></B>
-															</td>
-															<td align="right">
-																<B><%=bean.getBookingPrices()%></B>
-															</td>
+															<td align="center"><B><%=rowNumber%></B></td>
+															<td align="center"><B><%=bean.getTicketId()%></B></td>
+															<td align="center"><B><%=bean.getSeatingNo()%></B></td>
+															<td align="center"><B><%=bean.getSeason()%></B></td>
+															<td align="center"><B><%=bean.getAwayTeamNameTH()%></B></td>
+															<td align="center"><B><%=bean.getBookingTypeName()%></B></td>
+															<td align="right"><B><%=bean.getBookingPrices()%></B></td>
 														</tr> 
 														<% } %>
 														<tr>

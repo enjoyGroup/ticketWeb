@@ -140,18 +140,21 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		SeatSummaryReservationBean 			bean 						= null;
 		
 		try{
-//			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
-//			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
-//			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
-//			ticketIdList 		= EnjoyUtils.nullToStr(this.request.getParameter("ticketIdList"));
-//			
-//			logger.info("[getSummaryReserv] matchId 		:: " + matchId);
-//			logger.info("[getSummaryReserv] season 			:: " + season);
-//			logger.info("[getSummaryReserv] fieldZoneId 	:: " + fieldZoneId);
-//			logger.info("[getSummaryReserv] ticketIdList 	:: " + ticketIdList);
-			
 			bean 				= new SeatSummaryReservationBean();
-
+			bean.setMatchId(EnjoyUtils.nullToStr(this.request.getParameter("matchId")));
+			bean.setSeason(EnjoyUtils.nullToStr(this.request.getParameter("season")));
+			bean.setFieldZoneId(EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId")));
+			bean.setTicketId(EnjoyUtils.nullToStr(this.request.getParameter("ticketId")));
+			bean.setSeatingNoBegin(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoBegin")));
+			bean.setSeatingNoEnd(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoEnd")));
+			
+			logger.info("[getSummaryReserv] matchId 		:: " + bean.getMatchId());
+			logger.info("[getSummaryReserv] season 			:: " + bean.getSeason());
+			logger.info("[getSummaryReserv] fieldZoneId 	:: " + bean.getFieldZoneId());
+			logger.info("[getSummaryReserv] ticketId	 	:: " + bean.getTicketId());
+			logger.info("[getSummaryReserv] seatingNoBegin 	:: " + bean.getSeatingNoBegin());
+			logger.info("[getSummaryReserv] seatingNoEnd 	:: " + bean.getSeatingNoEnd());
+			
 			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
@@ -172,6 +175,7 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		Session 			   session				= null;
 		JSONObject 			   obj 			    	= null;
 		String				   ticketIdList		    = null; 
+		SeatSummaryReservationBean 	bean 			= null;
 		
 		try{	 		
 			sessionFactory 		= HibernateUtil.getSessionFactory();
@@ -185,6 +189,10 @@ logger.info("ticketIdList ==> " + ticketIdList);
 			this.dao.cancelTicketByTicketId(session, ticketIdList);
 			
 			obj.put(STATUS, 			SUCCESS);
+			
+			// ดึงรายละเอียดขึ้นมาใหม่ New Search After Commit
+			bean 				= new SeatSummaryReservationBean();
+			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
 			
 			session.getTransaction().commit();
 			session.flush();			

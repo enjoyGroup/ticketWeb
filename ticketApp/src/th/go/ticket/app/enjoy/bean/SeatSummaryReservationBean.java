@@ -1,9 +1,6 @@
 package th.go.ticket.app.enjoy.bean;
 
 public class SeatSummaryReservationBean {
-	
-	
-	
 	private String seatingNo;
 	private String bookingPrices;
 	private String bookingTypeName;
@@ -18,6 +15,8 @@ public class SeatSummaryReservationBean {
 	private String fieldZoneName;
 	private String seatRow;
 	private String season;
+	private String seatingNoBegin;
+	private String seatingNoEnd;
 	
 	public SeatSummaryReservationBean(){
 		this.seatingNo 				= "";
@@ -34,6 +33,8 @@ public class SeatSummaryReservationBean {
 		this.fieldZoneName			= "";
 		this.seatRow				= "";
 		this.season					= "";
+		this.seatingNoBegin			= "";
+		this.seatingNoEnd			= "";
 	}
 
 	public String getSeatingNo() {
@@ -146,6 +147,22 @@ public class SeatSummaryReservationBean {
 
 	public void setSeason(String season) {
 		this.season = season;
+	}
+
+	public String getSeatingNoBegin() {
+		return seatingNoBegin;
+	}
+
+	public void setSeatingNoBegin(String seatingNoBegin) {
+		this.seatingNoBegin = seatingNoBegin;
+	}
+
+	public String getSeatingNoEnd() {
+		return seatingNoEnd;
+	}
+
+	public void setSeatingNoEnd(String seatingNoEnd) {
+		this.seatingNoEnd = seatingNoEnd;
 	}
 	
 }
