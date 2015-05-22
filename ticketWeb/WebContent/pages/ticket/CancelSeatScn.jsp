@@ -1,6 +1,6 @@
 <%@ include file="/pages/include/checkLogin.jsp"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.SeatZoneBean,th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean"%>
+<%@ page import="th.go.ticket.app.enjoy.bean.CancelSeatBean"%>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="cancelSeatForm" class="th.go.ticket.app.enjoy.form.CancelSeatForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -128,6 +128,28 @@
 			    	alert("lp_cancel_page :: " + e);
 			    }				
 			}); 
+			
+			$('#season').change(function(){ 
+				var pageAction			= "searchTeam";
+				var lv_params			= gv_service;  
+				try{
+//			    	lv_params 	+= "&pageAction=" + pageAction + "&sesson=" + $("#season").val(); 
+			    	lv_params 	+= "&pageAction=" + pageAction + "&sesson=" + this.value; 
+					$.ajax({
+						async:false,
+			            type: "POST",
+			            url: gv_url,
+			            data: lv_params,
+			            beforeSend: "",
+			            success: function(data){
+			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
+			            }
+			        });
+				}catch(err){
+					alert("btnSearch :: " + err);
+				}
+				
+			});
 		});
 	</script>
 </head>
@@ -151,6 +173,46 @@
 										<section class="panel panel-default">
 											<div class="panel-body" align="center">
 									        	<table width="800px" border="0" cellpadding="5" cellspacing="5">
+									        		<tr>
+									        			<td align="right">
+									        				ฤดูกาลแข่งขัน :&nbsp;
+									        			</td>
+									        			<td align="left">
+									        				<select id="season" name="season">
+									        					<option value="">ไม่ระบุ</option>
+									        					<%  List<String> 	seasonList = cancelSeatForm.getSeasonList();
+									        						for(String season:seasonList){ %>
+									        						<option value="<%=season%>"><%=season%></option>
+									        					<%} %>
+									        				</select>
+									        			</td>
+									        			<td align="right">
+									        				ทีมคู่แข่ง :&nbsp;
+									        			</td>
+									        			<td align="left">
+									        				<select id="matchId" name="matchId">
+									        					<option value="">ไม่ระบุ</option>
+									        					<%  List<CancelSeatBean> 	fieldZoneList2 = cancelSeatForm.getTeamList();
+									        						for(CancelSeatBean beanZone:fieldZoneList2){ %>
+									        						<option value="<%=beanZone.getMatchId()%>"><%=beanZone.getAwayTeamNameTH()%></option>
+									        					<%} %>
+									        				</select>
+									        			</td>
+									        		</tr>
+									        		<tr>
+									        			<td align="right">
+									        				Zone :&nbsp;
+									        			</td>
+									        			<td align="left" colspan="3">
+									        				<select id="fieldZoneId" name="fieldZoneId">
+									        					<option value="">ไม่ระบุ</option>
+									        					<%  List<CancelSeatBean> 	fieldZoneList = cancelSeatForm.getFieldZoneList();
+									        						for(CancelSeatBean beanZone:fieldZoneList){ %>
+									        						<option value="<%=beanZone.getFieldZoneId()%>"><%=beanZone.getFieldZoneName()%></option>
+									        					<%} %>
+									        				</select>
+									        			</td>
+									        		</tr>
 									        		<tr>
 									        			<td align="right" width="150px;">
 									        				เลขที่นั่ง  : &nbsp;
@@ -177,24 +239,6 @@
 									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มค้นใหม่' />
 									        			</td>
 									        		</tr>
-													<!-- 
-									        		<tr>
-									        			<td align="right">
-									        				Zone :&nbsp;
-									        			</td>
-									        			<td align="left" colspan="3">
-									        				<select id="fieldZoneId" name="fieldZoneId">
-									        					<option value="">ไม่ระบุ</option>
-									        					<%  List<SeatZoneBean> 	fieldZoneList = cancelSeatForm.getFieldZoneList();
-									        						for(SeatZoneBean beanZone:fieldZoneList){ %>
-									        						<option value="<%=beanZone.getFieldZoneId()%>"><%=beanZone.getFieldZoneName()%></option>
-									        					<%} %>
-									        				</select>
-									        				<input type="button" id="btnSearch" class='btn btn-danger' value='ค้นหา'/>&nbsp;&nbsp;&nbsp;
-									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มใหม่' />
-									        			</td>
-									        		</tr>
-									        		 -->
 									        	</table>
 								        	</div>
 										</section>
@@ -222,9 +266,9 @@
 														<th width="25%" style="text-align: center;"><B>ราคา</B></th>
 													</tr>
 													<%
-													List<SeatSummaryReservationBean>  	list			=   cancelSeatForm.getResultList();
-													SeatSummaryReservationBean 			bean			=   null;
-													int 								rowNumber		=   0;
+													List<CancelSeatBean>  	list			=   cancelSeatForm.getResultList();
+													CancelSeatBean 			bean			=   null;
+													int 					rowNumber		=   0;
 													 
 													if(list.size()>0){
 														for(int i=0;i<list.size();i++){

@@ -3,7 +3,7 @@ package th.go.ticket.app.enjoy.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
+import th.go.ticket.app.enjoy.bean.CancelSeatBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 
 
@@ -12,115 +12,36 @@ public class CancelSeatForm {
 	public static final String NEW 	= "NEW";
 	public static final String EDIT = "EDIT";
 	
-	private String								sumBookingPrices;
-	private String 								awayTeamNameTH;
-	private String 								awayTeamNameEN;
-	private String 								matchDate;
-	private String 								matchTime;
-	private String								matchId;
-//	private String								fieldZoneId;
-
-	private List<SeatZoneBean> 					fieldZoneList;
-	private List<SeatSummaryReservationBean> 	resultList;
+	private List<CancelSeatBean> 				fieldZoneList;
+	private List<CancelSeatBean> 				resultList;
+	private List<String> 						seasonList;
+	private List<CancelSeatBean> 				teamList;
 	private String								errMsg;
 	private String								pageMode;
 	private String								seatingNoBegin;
 	private String 								seatingNoEnd;
 	private String 								ticketId;
 	private String 								fieldZoneId;
+	private String								matchId;
+	private String								sesson;
 	
 
 	public CancelSeatForm() {
-		this.sumBookingPrices 	= "";
-		this.awayTeamNameTH 	= "";
-		this.awayTeamNameEN 	= "";
-		this.matchDate 			= "";
-		this.matchTime 			= "";
-		this.matchId 			= "";
 
 		this.errMsg				= "";
 		this.pageMode			= NEW;
-		this.fieldZoneList 		= new ArrayList<SeatZoneBean>();
-		this.resultList 		= new ArrayList<SeatSummaryReservationBean>();
+		this.fieldZoneList 		= new ArrayList<CancelSeatBean>();
+		this.resultList 		= new ArrayList<CancelSeatBean>();
+		this.seasonList 		= new ArrayList<String>();
+		this.teamList	 		= new ArrayList<CancelSeatBean>();
 
 		this.seatingNoBegin		= "";
 		this.seatingNoEnd		= "";
 		this.ticketId			= "";
 		this.fieldZoneId 		= "";
+		this.sesson 			= "";
+		this.matchId 			= "";
 	}
-
-
-
-	public String getSumBookingPrices() {
-		return sumBookingPrices;
-	}
-
-
-	public void setSumBookingPrices(String sumBookingPrices) {
-		this.sumBookingPrices = sumBookingPrices;
-	}
-
-
-	public String getAwayTeamNameTH() {
-		return awayTeamNameTH;
-	}
-
-
-	public void setAwayTeamNameTH(String awayTeamNameTH) {
-		this.awayTeamNameTH = awayTeamNameTH;
-	}
-
-
-	public String getAwayTeamNameEN() {
-		return awayTeamNameEN;
-	}
-
-
-	public void setAwayTeamNameEN(String awayTeamNameEN) {
-		this.awayTeamNameEN = awayTeamNameEN;
-	}
-
-
-	public String getMatchDate() {
-		return matchDate;
-	}
-
-
-	public void setMatchDate(String matchDate) {
-		this.matchDate = matchDate;
-	}
-
-
-	public String getMatchTime() {
-		return matchTime;
-	}
-
-
-	public void setMatchTime(String matchTime) {
-		this.matchTime = matchTime;
-	}
-
-
-	public String getMatchId() {
-		return matchId;
-	}
-
-
-	public void setMatchId(String matchId) {
-		this.matchId = matchId;
-	}
-
-
-	public String getFieldZoneId() {
-		return fieldZoneId;
-	}
-
-
-	public void setFieldZoneId(String fieldZoneId) {
-		this.fieldZoneId = fieldZoneId;
-	}
-	
-	
 
 	//*****************************************************//
 	public String getErrMsg() {
@@ -137,17 +58,17 @@ public class CancelSeatForm {
 		this.pageMode = pageMode;
 	}
 
-	public List<SeatZoneBean> getFieldZoneList() {
+	public List<CancelSeatBean> getFieldZoneList() {
 		return fieldZoneList;
 	}
-	public void setFieldZoneList(List<SeatZoneBean> fieldZoneList) {
+	public void setFieldZoneList(List<CancelSeatBean> fieldZoneList) {
 		this.fieldZoneList = fieldZoneList;
 	}
 
-	public List<SeatSummaryReservationBean> getResultList() {
+	public List<CancelSeatBean> getResultList() {
 		return resultList;
 	}
-	public void setResultList(List<SeatSummaryReservationBean> resultList) {
+	public void setResultList(List<CancelSeatBean> resultList) {
 		this.resultList = resultList;
 	}
 
@@ -172,5 +93,44 @@ public class CancelSeatForm {
 		this.ticketId = ticketId;
 	}
 
+	public String getFieldZoneId() {
+		return fieldZoneId;
+	}
+
+	public void setFieldZoneId(String fieldZoneId) {
+		this.fieldZoneId = fieldZoneId;
+	}
+
+	public String getMatchId() {
+		return matchId;
+	}
+
+	public void setMatchId(String matchId) {
+		this.matchId = matchId;
+	}
+
+	public String getSesson() {
+		return sesson;
+	}
+
+	public void setSesson(String sesson) {
+		this.sesson = sesson;
+	}
+
+	public List<String> getSeasonList() {
+		return seasonList;
+	}
+
+	public void setSeasonList(List<String> seasonList) {
+		this.seasonList = seasonList;
+	}
+
+	public List<CancelSeatBean> getTeamList() {
+		return teamList;
+	}
+
+	public void setTeamList(List<CancelSeatBean> teamList) {
+		this.teamList = teamList;
+	}
 	
 }

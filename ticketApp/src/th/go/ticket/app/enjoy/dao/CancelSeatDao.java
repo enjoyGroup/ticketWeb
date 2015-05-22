@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
 
+import th.go.ticket.app.enjoy.bean.CancelSeatBean;
 import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
@@ -53,11 +54,11 @@ public class CancelSeatDao {
 //		}
 //	}
 	
-	public List<SeatZoneBean> getFieldZoneMaster() throws EnjoyException{
+	public List<CancelSeatBean> getFieldZoneMaster() throws EnjoyException{
 		logger.info("[getFieldZoneMaster][Begin]");
 		
-		List<SeatZoneBean> 				returnList 							= null;
-		SeatZoneBean					returnObj							= null;
+		List<CancelSeatBean> 			returnList 							= null;
+		CancelSeatBean					returnObj							= null;
 		SessionFactory 					sessionFactory						= null;
 		Session 						session								= null;
 		String							hql									= null;
@@ -68,7 +69,7 @@ public class CancelSeatDao {
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<SeatZoneBean>();
+			returnList		= new ArrayList<CancelSeatBean>();
 			
 			hql				= "SELECT fieldZoneId, fieldZoneName, fieldZoneNameTicket"
 								+ " FROM fieldzonemaster"
@@ -77,21 +78,21 @@ public class CancelSeatDao {
 			
 			query.addScalar("fieldZoneId"			, new StringType());
 			query.addScalar("fieldZoneName"			, new StringType());
-			query.addScalar("fieldZoneNameTicket"	, new StringType());
+//			query.addScalar("fieldZoneNameTicket"	, new StringType());
 			
 			list		 	= query.list();
 			
 			logger.info("[getFieldZoneMaster] list :: " + list.size());
 			for(Object[] row : list){
-				returnObj = new SeatZoneBean();
+				returnObj = new CancelSeatBean();
 				
 				logger.info("[getFieldZoneMaster] fieldZoneId 			:: " + row[0].toString());
 				logger.info("[getFieldZoneMaster] fieldZoneName		 	:: " + row[1].toString());
-				logger.info("[getFieldZoneMaster] fieldZoneNameTicket	:: " + row[2].toString());
+//				logger.info("[getFieldZoneMaster] fieldZoneNameTicket	:: " + row[2].toString());
 				
 				returnObj.setFieldZoneId			(row[0].toString());
 				returnObj.setFieldZoneName			(row[1].toString());
-				returnObj.setFieldZoneNameTicket	(row[2].toString()==null || row[2].toString().equals("")?row[1].toString():row[2].toString());
+//				returnObj.setFieldZoneNameTicket	(row[2].toString()==null || row[2].toString().equals("")?row[1].toString():row[2].toString());
 				
 				returnList.add(returnObj);
 			}
@@ -113,12 +114,122 @@ public class CancelSeatDao {
 		
 		return returnList;
 	}
+	
+	public List<String> seasonList() throws EnjoyException{
+		logger.info("[seasonList][Begin]");
 		
-	public List<SeatSummaryReservationBean> getSumDetailReservationList(SeatSummaryReservationBean seatSummaryReservationBean) throws EnjoyException{
+		List<String> 					returnList 							= null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		String							hql									= null;
+		List<String>			 		list								= null;
+		SQLQuery 						query 								= null;
+		String							season								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			returnList		= new ArrayList<String>();
+			
+			hql				= "SELECT b.season FROM eventmatch b GROUP BY b.season order by  b.season desc";
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("season"			, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[seasonList] list :: " + list.size());
+			for(int i=0;i<list.size();i++){
+				season 	= list.get(i);
+				logger.info("[seasonList] season :: " + season);
+				
+				returnList.add(season);
+			}			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			session.close();
+			
+			sessionFactory						= null;
+			session								= null;
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[seasonList][End]");
+		}
+		
+		return returnList;
+	}
+	
+	public List<CancelSeatBean> getTeamList(String season) throws EnjoyException{
+		logger.info("[getTeamList][Begin]");
+		
+		List<CancelSeatBean> 			returnList 							= null;
+		CancelSeatBean					returnObj							= null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		String							hql									= null;
+		List<Object[]>			 		list								= null;
+		SQLQuery 						query 								= null;
+		
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			returnList		= new ArrayList<CancelSeatBean>();
+			
+			hql				= "SELECT b.matchId, b.awayTeamNameTH, b.awayTeamNameEN FROM eventmatch b "
+									+ " where b.season  = " + season
+							  		+ " order by  b.matchId desc";
+			query			= session.createSQLQuery(hql);
+			
+			query.addScalar("fieldZoneId"			, new StringType());
+			query.addScalar("fieldZoneName"			, new StringType());
+			query.addScalar("fieldZoneNameTicket"	, new StringType());
+			
+			list		 	= query.list();
+			
+			logger.info("[getTeamList] list :: " + list.size());
+			for(Object[] row : list){
+				returnObj = new CancelSeatBean();
+				
+				logger.info("[getTeamList] matchId 			:: " + row[0].toString());
+				logger.info("[getTeamList] awayTeamNameTH	:: " + row[1].toString());
+				logger.info("[getTeamList] awayTeamNameEN	:: " + row[2].toString());
+				
+				returnObj.setMatchId			(row[0].toString());
+				returnObj.setAwayTeamNameTH		(row[1].toString());
+				returnObj.setAwayTeamNameEN		(row[2].toString());
+				
+				returnList.add(returnObj);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			session.close();
+			
+			sessionFactory						= null;
+			session								= null;
+			hql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getTeamList][End]");
+		}
+		
+		return returnList;
+	}
+		
+	public List<CancelSeatBean> getSumDetailReservationList(CancelSeatBean cancelSeatBean) throws EnjoyException{
 		logger.info("[getSumDetailReservationList][Begin]");
 		
-		List<SeatSummaryReservationBean> 	returnList 							= null;
-		SeatSummaryReservationBean			returnObj							= null;
+		List<CancelSeatBean> 				returnList 							= null;
+		CancelSeatBean						returnObj							= null;
 		SessionFactory 						sessionFactory						= null;
 		Session 							session								= null;
 		String								hql									= null;
@@ -129,7 +240,7 @@ public class CancelSeatDao {
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<SeatSummaryReservationBean>();
+			returnList		= new ArrayList<CancelSeatBean>();
 			
 			hql				= "select a.ticketId, a.seatingNo, b.bookingPrices, c.bookingTypeName, d.fieldZoneName, a.season, e.awayTeamNameTH "
 								+ " from ticketorder a,  fieldzonedetail b, bookingtype c, fieldzonemaster d,eventmatch e"
@@ -140,23 +251,23 @@ public class CancelSeatDao {
 								+ " and e.matchId  			= a.matchId"
 								+ " and e.season	  		= a.season"
 								+ " and a.ticketStatus      = 'A'";
-			if(!seatSummaryReservationBean.getSeason().equals("")){
-				hql += " and a.season = '" + seatSummaryReservationBean.getSeason() + "'";
+			if(!cancelSeatBean.getSeason().equals("")){
+				hql += " and a.season = '" + cancelSeatBean.getSeason() + "'";
 			}
-			if(!seatSummaryReservationBean.getMatchId().equals("")){
-				hql += " and a.matchId = '" + seatSummaryReservationBean.getMatchId() + "'";
+			if(!cancelSeatBean.getMatchId().equals("")){
+				hql += " and a.matchId = '" + cancelSeatBean.getMatchId() + "'";
 			}
-			if(!seatSummaryReservationBean.getFieldZoneId().equals("")){
-				hql += " and a.fieldZoneId = '" + seatSummaryReservationBean.getFieldZoneId() + "'";
+			if(!cancelSeatBean.getFieldZoneId().equals("")){
+				hql += " and a.fieldZoneId = '" + cancelSeatBean.getFieldZoneId() + "'";
 			}
-			if(!seatSummaryReservationBean.getTicketId().equals("")){
-				hql += " and a.ticketId = '" + seatSummaryReservationBean.getTicketId() + "'";
+			if(!cancelSeatBean.getTicketId().equals("")){
+				hql += " and a.ticketId = '" + cancelSeatBean.getTicketId() + "'";
 			}
-			if(!seatSummaryReservationBean.getSeatingNoBegin().equals("")){
-				hql += " and a.seatingNo >= '" + seatSummaryReservationBean.getSeatingNoBegin() + "'";
+			if(!cancelSeatBean.getSeatingNoBegin().equals("")){
+				hql += " and a.seatingNo >= '" + cancelSeatBean.getSeatingNoBegin() + "'";
 			}
-			if(!seatSummaryReservationBean.getSeatingNoEnd().equals("")){
-				hql += " and a.seatingNo <= '" + seatSummaryReservationBean.getSeatingNoEnd() + "'";
+			if(!cancelSeatBean.getSeatingNoEnd().equals("")){
+				hql += " and a.seatingNo <= '" + cancelSeatBean.getSeatingNoEnd() + "'";
 			}
 			hql += " order by a.season, e.awayTeamNameTH, a.seatingNo, a.ticketId asc";
 			
@@ -175,7 +286,7 @@ public class CancelSeatDao {
 			logger.info("[hql :: " + hql);
 			logger.info("[getSumDetailReservationList] list :: " + list.size());
 			for(Object[] row : list){
-				returnObj 		= new SeatSummaryReservationBean();
+				returnObj 		= new CancelSeatBean();
 				
 				logger.info("[getSumDetailReservationList] ticketId 			:: " + row[0].toString());
 				logger.info("[getSumDetailReservationList] seatingNo 			:: " + row[1].toString());
