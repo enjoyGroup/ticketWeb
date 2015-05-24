@@ -265,8 +265,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			String[]			   getDateList 	            = null;
 			String[]			   getTimeList 	            = null;
 			String[]			   statusList 	            = null;
-			String[]               getMatchIdList           = null;
-			String  			   season	                = null; 
+			String[]               getMatchIdList           = null; 
 			String  			   seasonSelect             = null; 
 			String                 nameTh                   = null;
 			String                 nameEn                   = null;
@@ -275,8 +274,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			String                 status                   = null;
 			String  			   matchId	                = null; 
 			EventMatchBean 	       bean 		    		= null; 
-			JSONObject 			   obj 			    		= new JSONObject(); 
-			List<EventMatchBean>   delList                  = null; 
+			JSONObject 			   obj 			    		= new JSONObject();  
 			int                    matchIdLast              = 0;
 			int                    newMatchid               = 0; 
 			List<EventMatchBean>   eventMatchBeanList       = null;
@@ -347,16 +345,14 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				getAwayTeamNameENList    = null;
 			   	getAwayTeamNameTHList    = null;
 				getDateList 	        = null;
-				getTimeList 	        = null; 
-				season	                = null; 
+				getTimeList 	        = null;  
 				seasonSelect            = null; 
 				nameTh                  = null;
 				nameEn                  = null;
 				matchDate               = null;
 				matchTime               = null;
 				bean 		    		= null; 
-				obj 			    	= null;
-				delList                 = null; 
+				obj 			    	= null;  
 				System.out.println("[lp_onclick_saveEventMatch][End]");
 			}
 		}

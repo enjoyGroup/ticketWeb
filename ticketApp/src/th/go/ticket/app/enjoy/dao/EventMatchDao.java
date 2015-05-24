@@ -291,7 +291,8 @@ public class EventMatchDao {
 			evMatchDB.setMatchDate(eventMatchBean.getMatchDate());
 			evMatchDB.setMatchTime(eventMatchBean.getMatchTime()); 
 			session.merge(evMatchDB);  
-		 
+			session.flush(); 
+			session.clear(); 
 		}catch(Exception e){ 
 			e.printStackTrace();
 			logger.info(e.getMessage()); 

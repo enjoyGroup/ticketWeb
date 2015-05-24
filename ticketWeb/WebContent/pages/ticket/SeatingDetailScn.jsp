@@ -17,7 +17,7 @@
  %>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=EDGE">
 	<title>กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<style>
@@ -176,14 +176,12 @@
 			document.getElementById("hidZoneName").value = "";
 			document.getElementById("hidZoneId").value = "";
 			document.getElementById("fieldZoneName").value = "";
+			document.getElementById("nameTicket").value = "";
   		    document.getElementById("rows").value = 0;
   		    document.getElementById("seating").value = 0;
   		    document.getElementById("totalSeating").value = 0;
 			document.getElementById("nameRow").value ="";
-			$("#nameRowInd1").attr("checked",true); 
-			$("#nameRowInd2").removeAttr("checked");
-			$('#nameRowInd1').removeProp("disabled"); 
-			$('#nameRowInd2').removeProp("disabled");  
+			document.getElementById("nameRowInd1").checked = true; 
     		lp_deleteTab("result_zone_detail");
     		lp_clear_zone(); 
    
@@ -225,9 +223,9 @@
 		            		if(status=="SUCCESS"){
 		            			zoneName			= jsonObj.ZONE_NAME;
 		            		    size                = jsonObj.detailSize;
-		           		//alert("zoneName ::"+zoneName); 
+		                //alert("av_zoneId ::"+av_zoneId); 
 		          		//alert("size ::"+size);
-		          			 	
+		          				document.getElementById("hidZoneId").value =av_zoneId;		 	
 					           lo_hidZone.value   = zoneName;  
 					           lo_zoneTitle.value = zoneName;
 					         
@@ -242,14 +240,14 @@
 					            //alert(JSON.stringify(jsonObj.detail));
 		            			
 		            			$.each(jsonObj.zoneList, function(idx, obj) { 
-		            		       // alert(obj.ZONE_ID);
-		            		        document.getElementById("hidZoneId").value =obj.ZONE_ID;
+		            		  //alert(obj.ZONE_ID);
+		            		        document.getElementById("hidZoneId").value =av_zoneId;
 		            				lp_addTableZone(obj.ZONE_ID,obj.ZONE);
 		            			});  
 		            			
 		            			$.each(jsonObj.detail, function(idx, obj) {
-		            				//alert("detail:"+ obj.fieldZoneId);
-		            				lp_addTableResultMaster(index++, obj.fieldZoneId,obj.fieldZoneName, obj.rows, obj.seating , obj.totalSeating,obj.typeRowName,obj.rowName,obj.bookingList,size);
+		            		//alert("startSeatingNo:"+ obj.startSeatingNo+ "   fieldZoneNameTicket :"+obj.fieldZoneNameTicket);
+		            				lp_addTableResultMaster(index++, obj.fieldZoneId,obj.fieldZoneName, obj.rows, obj.seating , obj.totalSeating,obj.typeRowName,obj.rowName,size,obj.fieldZoneNameTicket,obj.startSeatingNo);
 		            				 
 		            				$.each(obj.bookingList, function(idx, object){
 		            					//alert("bookingList:"+ obj.fieldZoneId);
@@ -272,14 +270,17 @@
 			}
 		}
 		
-		function lp_addTableResultMaster(av_index,av_fieldZoneId,av_fieldZoneName, av_rows, av_seating , av_totalSeating,av_ind,av_rowName,av_size){
- 
+		function lp_addTableResultMaster(av_index,av_fieldZoneId,av_fieldZoneName, av_rows, av_seating , av_totalSeating,av_ind,av_rowName,av_size,av_fieldZoneNameTicket,av_startNo){ 
+			
+			//alert("startSeatingNo:"+ av_startNo+ "   fieldZoneNameTicket :"+ av_fieldZoneNameTicket);
 			 try{ 
 			   document.getElementById("fieldZoneName").value = av_fieldZoneName;
        		   document.getElementById("rows").value = av_rows;
        		   document.getElementById("seating").value =av_seating;
        		   document.getElementById("totalSeating").value =av_totalSeating;
        		   document.getElementById("nameRow").value =av_rowName;
+       		   document.getElementById("nameTicket").value =av_fieldZoneNameTicket;
+       		   document.getElementById("startNo").value =av_startNo;
        		   var ind = document.getElementsByName("nameRowInd");
  
                //alert(av_ind);	
@@ -329,7 +330,8 @@
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='"+av_fieldZoneId+"'/>" +
-								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />";
+								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />"+
+								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='" + av_seq + "' />";
 				 		  
 				row2 		= lo_table.insertRow(lv_length+1); 
 				cell1 		= row2.insertCell(0);
@@ -338,21 +340,21 @@
 				cell4 		= row2.insertCell(3); 
 				cell4.align	= "center";    
 				cell4.innerHTML = "<input type='button' class='btn action-add-btn btn-success' style='text-align: center;' ondblclick='return false;' onclick='lp_add_row_zoneDetail();' value='+' />"+
-								  "<input type='hidden' name='hidStartus' id='hidStartus'  value=''/>"+
+								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>";
-								  
+					  
 			}else{
 				cell1.innerHTML = av_index ;
 				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass' value='"+av_bookingTypeName+ "'/>" +
 				 				  "<input type='hidden' name='bookingTypeId' id='bookingTypeId'  value='"+av_bookingTypeId+ "'/>";
 				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice' onblur='lp_onBlurFormatNumber(this);' class='moneyOnly'  value='"+av_bookingPrices+ "'/>" ; 
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
-								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
-								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='"+av_fieldZoneId+"'/>" +
-								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />";
+								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+ 
+								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />"+
+								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='" + av_seq + "' />";
+				 
 			}  
- 
-			
+  		
 		}catch(e){
 			alert("lp_addTableResultTab :: " + e);
 		} 
@@ -360,6 +362,7 @@
 	}
 	 
 		function lp_add_row_zoneDetail(){
+	
 			var lo_table 	 = null;
 			var lv_length 	 = null;
 			var row 		 = null;
@@ -388,7 +391,8 @@
 				cell4.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value=''/>" + 
-				  				  "<input type='hidden' name ='seq' id ='seq'  value='" + lv_seq + "' />"; 
+				  				  "<input type='hidden' name ='seq' id ='seq'  value='" + (lv_seq+1) + "' />"+
+				 				  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='" + (lv_seq+1) + "' />"; 
 				  
 				
 			}catch(e){
@@ -450,7 +454,8 @@
 				cell4.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+ 
-								  "<input type='hidden' name ='seq' id ='seq'  value='1' />";
+								  "<input type='hidden' name ='seq' id ='seq'  value='1' />"+
+								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='1' />";
 			 
 				row 		= lo_table.insertRow(2); 
 				cell1 		= row.insertCell(0);
@@ -460,7 +465,9 @@
 				cell4.align	= "center";    
 				cell4.innerHTML = "<input type='button' class='btn action-add-btn btn-success' style='text-align: center;' ondblclick='return false;' onclick='lp_add_row_zoneDetail();' value='+' />"+
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value=''/>"+
-								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"; 
+								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+
+								  "<input type='hidden' name ='seq' id ='seq'  value='2' />"+
+								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='2' />";
 			  
 				
 			}catch(e){
@@ -498,7 +505,8 @@
 				cell4.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value=''/>"+
-								  "<input type='hidden' name ='seq' id ='seq'  value='1'  />";  
+								  "<input type='hidden' name ='seq' id ='seq'  value='1'  />"+
+								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='1' />";
 								  
 				row 		= lo_table.insertRow(2); 
 				cell1 		= row.insertCell(0);
@@ -508,7 +516,9 @@
 				cell4.align	= "center";    
 				cell4.innerHTML = "<input type='button' class='btn action-add-btn btn-success' style='text-align: center;' ondblclick='return false;' onclick='lp_add_row_zoneDetail();' value='+' />"+
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value=''/>"+
-								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>";  
+								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+
+				  				  "<input type='hidden' name ='seq' id ='seq'  value='2' />"+
+				  				  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='2' />";
 			  
 				
 			}catch(e){
@@ -525,16 +535,16 @@
 			var lv_fieldZoneSeq     = null; 
 			var i                   = 0;
 			var count				= 0;
-		   //alert("lo_tabResultDtl.rows.length :"+lo_tabResultDtl.rows.length);	
-		 
+		   // alert("lo_tabResultDtl.rows.length :"+lo_tabResultDtl.rows.length);	 
 		 
 				if(confirm("ต้องการลบรายการนี็?")){   
 					lv_index	      = gp_rowTableIndex(ao_obj); 
-					lo_fieldZoneId    = document.getElementsByName("fieldZoneId");
-					lo_fieldZoneSeq   = document.getElementsByName("hidSeq");
-					lv_fieldZoneId    = lo_fieldZoneId[lv_index-2].value;
-					lv_fieldZoneSeq   = lo_fieldZoneSeq[lv_index-2].value;
-		        alert("lv_fieldZoneId :: "+ lv_fieldZoneId + "lv_fieldZoneSeq :: "+ lv_fieldZoneSeq);	
+			        //alert("lv_index : "+lv_index);
+					lo_fieldZoneId    = document.getElementById("hidZoneId");
+					lo_fieldZoneSeq   = document.getElementsByName("seq");
+					lv_fieldZoneId    = lo_fieldZoneId.value;
+					lv_fieldZoneSeq   = lo_fieldZoneSeq[lv_index-1].value;
+		           // alert("lv_fieldZoneId :: "+ lv_fieldZoneId + "lv_fieldZoneSeq :: "+ lv_fieldZoneSeq);	
 		   
 					if(lv_fieldZoneId!=""){ 
 						if(lv_fieldZoneId == 0){
@@ -582,7 +592,7 @@
 		    					"&totalSeating=" + lo_totalSeating.value + "&nameRow=" +lv_rowName.value;
 		     	
 		    	if(gv_delList.length>0){
-		   alert(gv_delList.toString());
+		   //alert(gv_delList.toString());
 		    		lv_params 	+= "&deleteList="+ gv_delList;
 		    	}else{
 		    		lv_params 	+= "&deleteList=none";
@@ -593,7 +603,7 @@
 		    	}else{
 		    		"&nameRowInd=2";
 		    	}
-			 alert(lv_params);  
+			 //alert(lv_params);  
  				gp_progressBarOn();
 				$.ajax({
 					async:false,
@@ -726,16 +736,21 @@
 				//$("control_id").attr("checked",true);
 			 	
 				lv_rows 			    = lo_rows.value;
-		   //alert(lv_rows);		
+		   	
 				if(lv_rows==0){ 
-					$("#nameRowInd2").attr("checked",true); 
-					$("#nameRowInd1").removeAttr("checked");
+					document.getElementById("nameRowInd1").checked = true;
+					document.getElementById("nameRowInd2").checked = false;
+					document.getElementById("nameRow").value = "";
+					//$("#nameRowInd2").attr("checked",true); 
+					//$("#nameRowInd1").removeAttr("checked");
 					//$('#nameRowInd1').prop("disabled",true); 
 					//$('#nameRowInd2').prop("disabled",true); 
 					$('#nameRow').removeProp("disabled"); 
 				}else if(lv_rows>0){ 
-					$("#nameRowInd1").attr("checked",true); 
-					$("#nameRowInd2").removeAttr("checked");
+					document.getElementById("nameRowInd2").checked = true;
+					document.getElementById("nameRowInd1").checked = false;
+					//$("#nameRowInd1").attr("checked",true); 
+					//$("#nameRowInd2").removeAttr("checked");
 					//$('#nameRowInd1').removeProp("disabled"); 
 					//$('#nameRowInd2').removeProp("disabled"); 
 					generateNameOfRows();
@@ -756,13 +771,11 @@
 		function lp_onclick_nameInd(){
 			var lo_nameInd1  = document.getElementById("nameRowInd1");
 			var lo_nameInd2  = document.getElementById("nameRowInd2");
-			//$('#nameRowInd1').removeProp("disabled"); 
-			//$('#nameRowInd2').removeProp("disabled"); 
+	 
 			 if(lo_nameInd2.checked == true){  
 				document.getElementById("nameRow").value = ""; 
 			}else if(lo_nameInd1.checked == true){  
-				generateNameOfRows();
-			//	$('#nameRow').prop("disabled",true); 
+				generateNameOfRows(); 
 			} 
 		}
 		
@@ -778,7 +791,7 @@
 		           lo_nameRow   = document.getElementById("nameRow");
 		           
 		           if(lv_rows > 0 && lv_rows <=26){
-		      // alert(lv_rows);
+		            // alert(lv_rows);
 		        	  for(var i = 0 ; i < lv_rows ; i ++){
 		                  //alert(name[i]);
 		        		  if(i==(lv_rows-1)){
@@ -807,7 +820,7 @@
 				try{  
 				 	if(lv_value != "" || lv_rows != 0){ 
 						lv_array = lv_value.split(","); 
-					    alert(lv_array.length);
+					    //alert(lv_array.length);
 						if(lv_array.length != lv_rows){
 							alert("จำนวนชื่อของแถวจะต้องมีจำนวนเท่ากับ จำนวนแถว");
 							return;
@@ -822,8 +835,7 @@
 		function lp_onBlurFormatNumber(ao_obj){
 	        var lo_size 		    = null;
 	        var lv_size             = null;
-	        var lv_index			= 0;    
-	 		
+	         
 			try{  
 				lo_size 	= ao_obj;
 				lv_size     = lo_size.value;
@@ -974,8 +986,7 @@
 												        			 <input type='radio' 
 												        					id="nameRowInd1" 
 												        					name='nameRowInd' 
-												        		            <%if(detail !=null && detail.getTypeRowName()==1 ){%> checked="checked" <%} %> 
-												        		            
+												        		            <%if(detail !=null && detail.getTypeRowName()==1 ){%> checked="checked" <%} %>  
 												        					value="1" 
 												        					onclick="lp_onclick_nameInd();"/>ตามตัวอักษร A-Z 
 												        			</td>
@@ -1026,6 +1037,10 @@
 																						name="seq" 
 																						id="seq"  
 																						value="<%=fieldZoneDetailBean.getSeq()%>"/>
+																				<input type="hidden" 
+									                           	 				 		name="hidSeq" 
+									                           	 				 		id="hidSeq"  
+									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/> 
 																			</td>
 																			<td align="center">
 																				<input  type="text" 
@@ -1054,11 +1069,7 @@
 									                           	 				 <input type="hidden" 
 									                           	 				 		name="hidStartus" 
 									                           	 				 		id="hidStartus"  
-									                           	 				 		value="U"/>  
-									                           	 				 <input type="hidden" 
-									                           	 				 		name="hidSeq" 
-									                           	 				 		id="hidSeq"  
-									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/>  
+									                           	 				 		value="U"/>   
 									                           	 				 <input type="hidden" 
 									                           	 				 		name="fieldZoneId" 
 									                           	 				 		id="fieldZoneId"  

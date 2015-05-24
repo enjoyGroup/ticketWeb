@@ -9,7 +9,9 @@ public class FieldzonemasterBean {
 	private int rows; 
 	private int seating; 
 	private int totalSeating;
-
+	private String fieldZoneNameTicket; 
+	private int startSeatingNo;
+	
 	public FieldzonemasterBean() {  
 	}
 
@@ -51,6 +53,22 @@ public class FieldzonemasterBean {
 
 	public void setTotalSeating(int totalSeating) {
 		this.totalSeating = totalSeating;
+	}
+
+	public String getFieldZoneNameTicket() {
+		return fieldZoneNameTicket;
+	}
+
+	public void setFieldZoneNameTicket(String fieldZoneNameTicket) {
+		this.fieldZoneNameTicket = fieldZoneNameTicket;
+	}
+
+	public int getStartSeatingNo() {
+		return startSeatingNo;
+	}
+
+	public void setStartSeatingNo(int startSeatingNo) {
+		this.startSeatingNo = startSeatingNo;
 	}
 	
 	
