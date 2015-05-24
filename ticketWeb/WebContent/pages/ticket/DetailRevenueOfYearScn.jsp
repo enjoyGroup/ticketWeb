@@ -1,12 +1,13 @@
 <%@ include file="/pages/include/checkLogin.jsp"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean"%>
+<%@ page import="th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean,th.go.ticket.app.enjoy.utils.EnjoyUtils"%>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="detailRevenueOfYearForm" class="th.go.ticket.app.enjoy.form.DetailRevenueOfYearForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายงานแสดงรายละเอียดรายได้ประจำปี</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -262,12 +263,12 @@
 				cell1.align		= "center"; 
 				cell2.align		= "center"; 
 				cell3.align		= "center"; 
-				cell4.align		= "center"; 
+				cell4.align		= "right"; 
 				
 				cell1.innerHTML = av_index;
 				cell2.innerHTML = av_awayTeamName;
 				cell3.innerHTML = av_totalSeating;
-				cell4.innerHTML = av_bookingPrices;
+				cell4.innerHTML = gp_format_str(av_bookingPrices, 2);
 				
 				
 				
@@ -375,7 +376,7 @@
 																				<%=detail.getTotalSeating()%>
 																			</td>
 																			<td align="right">
-																				<%=detail.getBookingPrices()%>
+																				<%=EnjoyUtils.convertFloatToDisplay(detail.getBookingPrices(), 2) %>
 																			</td>
 																		</tr> 
 																		<% } 

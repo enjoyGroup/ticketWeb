@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"	pageEncoding="utf-8"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.UserDetailsBean,
-				 th.go.ticket.app.enjoy.bean.UserPrivilegeBean,
-				 th.go.ticket.app.enjoy.bean.PagesDetailBean,
-				 th.go.ticket.app.enjoy.main.Constants"%>
+<%@ page import="th.go.ticket.app.enjoy.bean.UserDetailsBean,th.go.ticket.app.enjoy.bean.UserPrivilegeBean,th.go.ticket.app.enjoy.bean.PagesDetailBean,th.go.ticket.app.enjoy.main.Constants"%>
 <%
 	final String servURL1		= Constants.SERV_URL;
 	UserDetailsBean userDeatil 	= (UserDetailsBean) request.getSession().getAttribute("userBean");
@@ -52,7 +49,7 @@
 					for(int j=0;j<userPrivilegeBean.getPagesDetail().size();j++){
 						pagesDetailBean = userPrivilegeBean.getPagesDetail().get(j);
 					%>	
-						<li><a href="<%=pagesDetailBean.getPathPages()%>"><%=pagesDetailBean.getPageNames()%></a></li>
+						<li style="width: 220px;"><a href="<%=pagesDetailBean.getPathPages()%>"><%=pagesDetailBean.getPageNames()%></a></li>
 					<%
 					}
 					%>

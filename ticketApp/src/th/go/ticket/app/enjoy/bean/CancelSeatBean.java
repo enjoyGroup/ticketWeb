@@ -1,24 +1,24 @@
 package th.go.ticket.app.enjoy.bean;
 
-public class SeatSummaryReservationBean {
+public class CancelSeatBean {
 	private String seatingNo;
 	private String bookingPrices;
 	private String bookingTypeName;
 	private String userUniqueId;
 	private String matchId;
-	private String fieldZoneId;
 	private String awayTeamNameTH;
 	private String awayTeamNameEN;
 	private String matchDate;
 	private String matchTime;
 	private String ticketId;
+	private String fieldZoneId;
 	private String fieldZoneName;
 	private String seatRow;
 	private String season;
 	private String seatingNoBegin;
 	private String seatingNoEnd;
 	
-	public SeatSummaryReservationBean(){
+	public CancelSeatBean(){
 		this.seatingNo 				= "";
 		this.bookingPrices 			= "";
 		this.bookingTypeName 		= "";

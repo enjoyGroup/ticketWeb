@@ -6,6 +6,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>Upload รูปเพื่อแสดง Zone สนาม</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<script src="<%=jsURL%>/jquery.AjaxFileUpload.js"></script>

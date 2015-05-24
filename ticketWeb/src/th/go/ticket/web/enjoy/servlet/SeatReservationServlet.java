@@ -2,7 +2,6 @@ package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +21,8 @@ import th.go.ticket.app.enjoy.dao.SeatReservationDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.SeatReservationForm;
 import th.go.ticket.app.enjoy.main.Constants;
+import th.go.ticket.app.enjoy.model.Genseqticketid;
+import th.go.ticket.app.enjoy.model.GenseqticketidPK;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
@@ -372,7 +373,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			
 			//ticketStatus เป็นว่างแสดงว่าบันทึก record ใหม่
 			if(ticketStatus.equals("")){
-				bean.setTicketId(EnjoyUtil.genPassword(17));//ใช้รอสูตรการ gen TicketId จากพี่เอ
+				bean.setTicketId(genTicketId(season, matchId, fieldZoneId, bookingTypeId));//ใช้รอสูตรการ gen TicketId จากพี่เอ
 				bean.setSeatingNo(seatingNo);
 				bean.setMatchId(matchId);
 				bean.setSeason(season);
@@ -480,7 +481,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			obj 				= new JSONObject();
 			mapBookingType		= this.form.getMapBookingType();
 			seatBookingTypeId 	= EnjoyUtils.nullToStr(this.request.getParameter("seatBookingTypeId"));
-			numTicketType 		= EnjoyUtils.paresInt(this.request.getParameter("numTicketType"));
+			numTicketType 		= EnjoyUtils.parseInt(this.request.getParameter("numTicketType"));
 			
 			logger.info("[forStandZone] seatBookingTypeId 	:: " + seatBookingTypeId);
 			logger.info("[forStandZone] numTicketType 		:: " + numTicketType);
@@ -548,7 +549,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 						
 						bean 		= new SeatReservationBean();
 						objDetail 	= new JSONObject();
-						ticketId	= EnjoyUtil.genPassword(17);
+						ticketId	= genTicketId(season, matchId, fieldZoneId, key.toString());//EnjoyUtil.genPassword(17);
 						
 						bean.setTicketId(ticketId);//ใช้รอสูตรการ gen TicketId จากพี่เอ
 						bean.setSeatingNo("");
@@ -607,6 +608,96 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			logger.info("[goNext][End]");
 		}
 		
+	}
+	
+	private String genTicketId(String season, String matchId, String fieldZoneId, String bookingTypeId) throws Exception{
+		logger.info("[genTicketId][Begin]");
+		
+		String 						currDate 			= null;
+		double 						a					= 0;
+		double 						b					= 0;
+		double 						c					= 0;
+		double 						d					= 0;
+		Integer 					ticketSeq			= null;
+		SessionFactory 				sessionFactory		= null;
+		Session 					session				= null;
+		Genseqticketid				genseqticketid		= null;
+		GenseqticketidPK			genseqticketidPK	= null;
+		double 						ab					= 0;
+		double 						cd					= 0;
+		int 						verifyNum			= 0;
+		String						ticketId			= null;
+		Integer						bookingPrices		= 0;
+		
+		try{
+			sessionFactory 		= HibernateUtil.getSessionFactory();
+			session 			= sessionFactory.openSession();
+			currDate 			= EnjoyUtils.currDateThai().substring(2, 4);
+			bookingPrices		= this.dao.getBookingPrices(fieldZoneId, bookingTypeId);
+			a					= Math.pow(EnjoyUtils.parseDouble(currDate) - EnjoyUtils.parseDouble(fieldZoneId) ,2) % 1000;
+			b					= bookingPrices % 1000;
+			c					= (EnjoyUtils.parseDouble(matchId) * 5) % 1000;
+			ticketSeq			= this.dao.getTicketSeq(season, matchId);
+			genseqticketidPK	= new GenseqticketidPK();
+			genseqticketid		= new Genseqticketid();
+			
+			session.beginTransaction();
+			
+			if(ticketSeq==null){
+				ticketSeq = 0;
+				
+				genseqticketidPK.setSeason(EnjoyUtils.parseInt(season));
+				genseqticketidPK.setMatchId(EnjoyUtils.parseInt(matchId));
+				
+				genseqticketid.setId(genseqticketidPK);
+				genseqticketid.setTicketSeq(ticketSeq);
+				
+				this.dao.insertGenseqticketid(session, genseqticketid);
+			}else{
+				ticketSeq = ticketSeq + 1;
+				
+				this.dao.updateGenseqticketid(session, EnjoyUtils.parseInt(season), EnjoyUtils.parseInt(matchId), ticketSeq);
+			}
+			
+			d 			= (ticketSeq*5)%1000;
+			ab 			= (a + b)%100;
+			cd 			= (c + d)%100;
+			verifyNum 	= ab > cd?(int) ab:(int) cd;
+			
+//			logger.info("[genTicketId] a 		:: " + a);
+//			logger.info("[genTicketId] b 		:: " + b);
+//			logger.info("[genTicketId] c 		:: " + c);
+//			logger.info("[genTicketId] d 		:: " + d);
+//			logger.info("[genTicketId] ab 		:: " + ab);
+//			logger.info("[genTicketId] cd 		:: " + cd);
+//			
+//			logger.info("[genTicketId] verifyNum 		:: " + verifyNum);
+//			logger.info("[genTicketId] fieldZoneId 		:: " + fieldZoneId);
+//			logger.info("[genTicketId] bookingPrices 	:: " + bookingPrices);
+//			logger.info("[genTicketId] ticketSeq 		:: " + ticketSeq);
+			
+			ticketId	= currDate 
+						+ String.format(SeatReservationForm.FILL_VERRIFY_NUM		, verifyNum) 
+						+ String.format(SeatReservationForm.FILL_ZONE_ID			, EnjoyUtils.parseInt(fieldZoneId)) 
+						+ String.format(SeatReservationForm.FILL_ZERO_BOOK_PRICE	, bookingPrices)
+						+ String.format(SeatReservationForm.FILL_ZERO_TICKET_ID		, ticketSeq);
+			
+			logger.info("[genTicketId] ticketId :: " + ticketId);
+			
+			session.getTransaction().commit();
+			
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			e.printStackTrace();
+			throw e;
+		}finally{
+			session.flush();
+			session.clear();
+			session.close();
+			logger.info("[genTicketId][End]");
+		}
+		
+		return ticketId;
 	}
 	
 	

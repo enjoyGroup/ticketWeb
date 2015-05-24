@@ -220,7 +220,7 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			session 					= sessionFactory.openSession();
 			userId 						= EnjoyUtil.nullToStr(request.getParameter("userId"));
 			pageMode 					= EnjoyUtil.nullToStr(request.getParameter("pageMode"));
-			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
+			userUniqueId 				= EnjoyUtil.parseInt(request.getParameter("userUniqueId"));
 			
 			logger.info("[checkDupUserId] userId 		:: " + userId);
 			logger.info("[checkDupUserId] pageMode 		:: " + pageMode);
@@ -286,7 +286,7 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			userStatus 					= EnjoyUtil.nullToStr(request.getParameter("userStatus"));
 			flagChangePassword 			= EnjoyUtil.chkBoxtoDb(request.getParameter("flagChangePassword"));
 			userPrivilege 				= EnjoyUtil.nullToStr(request.getParameter("hidUserPrivilege"));
-			userUniqueId 				= EnjoyUtil.paresInt(request.getParameter("userUniqueId"));
+			userUniqueId 				= EnjoyUtil.parseInt(request.getParameter("userUniqueId"));
 			userLevel					= userPrivilege.indexOf("R01") > -1?"9":"1";
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();

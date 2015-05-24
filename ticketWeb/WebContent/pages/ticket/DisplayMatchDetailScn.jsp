@@ -1,12 +1,13 @@
 <%@ include file="/pages/include/checkLogin.jsp"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%@ page import="th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean"%>
+<%@ page import="th.go.ticket.app.enjoy.bean.DisplayMatchDetailBean,th.go.ticket.app.enjoy.utils.EnjoyUtils"%>
 <%@ page import="java.util.*"%>
 <jsp:useBean id="displayMatchDetailForm" class="th.go.ticket.app.enjoy.form.DisplayMatchDetailForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายงานแสดงรายละเอียดต่างๆ ภายใน Match</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -174,7 +175,7 @@
 																		detailData = (DisplayMatchDetailBean) detailTicketMap.get(bean.getBookingTypeId());
 															%>
 																		<td style="text-align: center;"><%=detailData.getTotalSeating() %></td>
-																		<td style="text-align: center;"><%=detailData.getTatalMoney() %></td>
+																		<td style="text-align: right: ;" align="right"><%=EnjoyUtils.convertFloatToDisplay(detailData.getTatalMoney(), 2) %></td>
 															<%
 																	}else{
 															%>
@@ -185,7 +186,7 @@
 																}
 															
 															%>
-															<td style="text-align: center;"><%=sumTatalMoney %></td>
+															<td style="text-align: right: ;" align="right"><%=EnjoyUtils.convertFloatToDisplay(String.valueOf(sumTatalMoney), 2) %></td>
 														</tr>
 														<%}%>
 													</table>

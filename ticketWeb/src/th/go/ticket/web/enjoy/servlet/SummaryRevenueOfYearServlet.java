@@ -18,6 +18,7 @@ import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.SummaryRevenueOfYearForm;
 import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
+import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
 import th.go.ticket.web.enjoy.utils.EnjoyUtil;
 
@@ -110,6 +111,8 @@ public class SummaryRevenueOfYearServlet extends EnjoyStandardSvc {
 				
 				objDataFlow.put("season", 			bean.getSeason());
 				objDataFlow.put("bookingPrice", 	bean.getBookingPrice());
+				
+				bean.setBookingPrice(EnjoyUtils.convertFloatToDisplay(bean.getBookingPrice(), 2));
 				
 				dataFlowJSONArray.add(objDataFlow);
 			}

@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายงานสรุปรายได้ประจำปี</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<style>
@@ -139,7 +140,7 @@
 																		<td align="center" >
 																			<B><%=bean.getSeason()%></B>
 																		</td>
-																		<td align="center">
+																		<td align="right">
 																			<B><%=bean.getBookingPrice()%></B>
 																		</td>
 																	</tr> 

@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายละเอียดตั๋ว</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<style>
@@ -26,38 +27,12 @@
 		});
 		
 		function lp_print(){
+			var lo_pdf = null;
 			
 			try{
-				$.ajax({
-					async:false,
-		            type: "POST",
-		            url: gv_url,
-		            data: gv_service + "&pageAction=print&" + $('#frm').serialize(),
-		            beforeSend: gp_progressBarOn(),
-		            success: function(data){
-		            	var jsonObj 			= null;
-		            	var status				= null;
-		            	var errMsg				= null;
-		            	
-		            	try{
-		            		gp_progressBarOff();
-		            		
-		            		jsonObj = JSON.parse(data);
-		            		status	= jsonObj.status;
-		            		//alert(status);
-		            		if(status=="SUCCESS"){
-		            			alert("Printing...");
-		            			//alert(JSON.stringify(jsonObj.detail));
-		            			//window.location = gv_url + "?service=servlet.SeatZoneServlet&pageAction=new";
-		            		}else{
-		            			errMsg = jsonObj.errMsg;
-		            			alert(errMsg);
-		            		}
-		            	}catch(e){
-		            		alert("in lp_print :: " + e);
-		            	}
-		            }
-		        });
+				lo_pdf = document.getElementById("ttestt");
+				lo_pdf.focus();
+				lo_pdf.contentWindow.print();
 			}catch(e){
 				alert("lp_print :: " + e);
 			}
@@ -175,6 +150,7 @@
 													</table>
 													<br/>
 													<iframe name="ttestt" 
+															id="ttestt"
 															src="<%=servURL%>/EnjoyGenericSrv?service=servlet.SeatSummaryReservationServlet&pageAction=print" 
 															scrolling="yes"  
 															frameborder="0" 
@@ -182,7 +158,7 @@
 															height="600">
 													</iframe>
 													<br/>
-													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_save();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
+													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_print();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
 													<input type="button" id="btnBack" name="btnBack" onclick="lp_goBack();" class="btn" style="width: 150px;" value="ทำรายการต่อไป >>" />
 												</div>
 												<!-- End contents -->

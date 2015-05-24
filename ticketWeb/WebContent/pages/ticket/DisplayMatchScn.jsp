@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>รายงานแสดงรายละเอียดต่างๆ ภายใน Match</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<link href="<%=cssURL%>/menu-styles2.css" rel="stylesheet">

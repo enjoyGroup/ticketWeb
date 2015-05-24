@@ -7,6 +7,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 	<title>จำหน่ายตั๋วการแข่งขัน</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>
 	<!-- TODO : move all css to files later -->

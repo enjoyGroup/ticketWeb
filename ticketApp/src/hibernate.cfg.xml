@@ -37,6 +37,7 @@
 		<mapping class="th.go.ticket.app.enjoy.model.Ticketorder" />
 		<mapping class="th.go.ticket.app.enjoy.model.Userdetail" />
 		<mapping class="th.go.ticket.app.enjoy.model.Userprivilege" />
+		<mapping class="th.go.ticket.app.enjoy.model.Genseqticketid" />
 		<!-- End Entity zone -->
 	</session-factory>
 </hibernate-configuration>

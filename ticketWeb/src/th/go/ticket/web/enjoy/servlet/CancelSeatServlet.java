@@ -1,9 +1,6 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,19 +9,15 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
+import th.go.ticket.app.enjoy.bean.CancelSeatBean;
 import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.dao.CancelSeatDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.form.CancelSeatForm;
-import th.go.ticket.app.enjoy.form.UserDetailsMaintananceForm;
 import th.go.ticket.app.enjoy.main.Constants;
-import th.go.ticket.app.enjoy.model.Userprivilege;
-import th.go.ticket.app.enjoy.utils.EnjoyEncryptDecrypt;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
@@ -77,6 +70,8 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 				request.setAttribute("target", Constants.PAGE_URL +"/CancelSeatScn.jsp");
  			}else if(pageAction.equals("searchTicketDetail")){
  				this.onSearchTicketDetail();
+ 			}else if(pageAction.equals("searchTeam")){
+ 				onSearchTeamDetail();
  			}else if(pageAction.equals("save")){
  				this.saveCancelTicket();
  			}
@@ -109,49 +104,59 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 	}
 	
 	private void setRefference() throws EnjoyException{
-		
 		logger.info("[setRefference][Begin]");
-		
-		SessionFactory 		sessionFactory	= null;
-		Session 			session			= null;
-		
 		try{
-			sessionFactory 	= HibernateUtil.getSessionFactory();
-			session 		= sessionFactory.openSession();
-			
 			this.form.setFieldZoneList(this.dao.getFieldZoneMaster());
+			this.form.setSeasonList(this.dao.seasonList());			
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
 		}catch(Exception e){
 			logger.info(e.getMessage());
 			throw new EnjoyException("setRefference is error");
 		}finally{
-			session.close();
-			sessionFactory	= null;
-			session			= null;
 			logger.info("[setRefference][End]");
 		}
 	}
-	
+		
+	private void onSearchTeamDetail() throws EnjoyException{
+		logger.info("[onSearchTeamDetail][Begin]");
+		try{
+			logger.info("[onSearchTeamDetail] matchId 		:: " + EnjoyUtils.nullToStr(this.request.getParameter("season")));
+			
+			this.form.setTeamList(this.dao.getTeamList(EnjoyUtils.nullToStr(this.request.getParameter("season"))));
+		}catch(EnjoyException e){
+			throw new EnjoyException(e.getMessage());
+		}catch(Exception e){
+			logger.info(e.getMessage());
+			throw new EnjoyException("onSearchTeamDetail is error");
+		}finally{
+			this.setRefference();
+			logger.info("[onSearchTeamDetail][End]");
+		}
+		
+	}
 	
 	private void onSearchTicketDetail() throws EnjoyException{
 		logger.info("[onSearchTicketDetail][Begin]");
 		
-		SeatSummaryReservationBean 			bean 						= null;
+		CancelSeatBean 			bean 						= null;
 		
 		try{
-//			matchId 			= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
-//			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
-//			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
-//			ticketIdList 		= EnjoyUtils.nullToStr(this.request.getParameter("ticketIdList"));
-//			
-//			logger.info("[getSummaryReserv] matchId 		:: " + matchId);
-//			logger.info("[getSummaryReserv] season 			:: " + season);
-//			logger.info("[getSummaryReserv] fieldZoneId 	:: " + fieldZoneId);
-//			logger.info("[getSummaryReserv] ticketIdList 	:: " + ticketIdList);
+			bean 				= new CancelSeatBean();
+			bean.setMatchId(EnjoyUtils.nullToStr(this.request.getParameter("matchId")));
+			bean.setSeason(EnjoyUtils.nullToStr(this.request.getParameter("season")));
+			bean.setFieldZoneId(EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId")));
+			bean.setTicketId(EnjoyUtils.nullToStr(this.request.getParameter("ticketId")));
+			bean.setSeatingNoBegin(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoBegin")));
+			bean.setSeatingNoEnd(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoEnd")));
 			
-			bean 				= new SeatSummaryReservationBean();
-
+			logger.info("[getSummaryReserv] matchId 		:: " + bean.getMatchId());
+			logger.info("[getSummaryReserv] season 			:: " + bean.getSeason());
+			logger.info("[getSummaryReserv] fieldZoneId 	:: " + bean.getFieldZoneId());
+			logger.info("[getSummaryReserv] ticketId	 	:: " + bean.getTicketId());
+			logger.info("[getSummaryReserv] seatingNoBegin 	:: " + bean.getSeatingNoBegin());
+			logger.info("[getSummaryReserv] seatingNoEnd 	:: " + bean.getSeatingNoEnd());
+			
 			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
@@ -172,6 +177,7 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		Session 			   session				= null;
 		JSONObject 			   obj 			    	= null;
 		String				   ticketIdList		    = null; 
+		SeatSummaryReservationBean 	bean 			= null;
 		
 		try{	 		
 			sessionFactory 		= HibernateUtil.getSessionFactory();
@@ -185,6 +191,10 @@ logger.info("ticketIdList ==> " + ticketIdList);
 			this.dao.cancelTicketByTicketId(session, ticketIdList);
 			
 			obj.put(STATUS, 			SUCCESS);
+			
+			// ดึงรายละเอียดขึ้นมาใหม่ New Search After Commit
+			bean 				= new SeatSummaryReservationBean();
+			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
 			
 			session.getTransaction().commit();
 			session.flush();			
