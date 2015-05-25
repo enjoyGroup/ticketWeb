@@ -16,6 +16,8 @@ public class ConfigFile {
 	private static final String FILE_PATH   		= "file.path";
 	private static final String FILE_NAME   		= "file.name";
 	private static final String FILE_EXT   			= "file.extends";
+	private static final String PATH_LOG   			= "path.log";
+	private static final String OPEN_LOG   			= "open.log";
 	private static ConfigFile configFile;
 	private static Properties properties ;
 	
@@ -78,5 +80,13 @@ public class ConfigFile {
 	
 	public static String getFileExt() {
 		return getText(FILE_EXT);
+	}
+	
+	public static String getPathLog() {
+		return getText(PATH_LOG);
+	}
+	
+	public static String getOpenLog() {
+		return getText(OPEN_LOG);
 	}
 }

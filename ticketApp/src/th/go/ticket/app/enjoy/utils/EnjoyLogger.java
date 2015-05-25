@@ -6,6 +6,8 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import th.go.ticket.app.enjoy.main.ConfigFile;
+
 
 public class EnjoyLogger {
 
@@ -21,7 +23,7 @@ public class EnjoyLogger {
     prop.put("log4j.rootLogger", "INFO, xDefault");
     if (logFileFlag) {	
       prop.put("log4j.appender.xDefault"			, "org.apache.log4j.DailyRollingFileAppender");
-      prop.put("log4j.appender.xDefault.file"		, "C:/enjoy/log/System.log.txt");
+      prop.put("log4j.appender.xDefault.file"		, ConfigFile.getPathLog() + "/System.log.txt");
       prop.put("log4j.appender.xDefault.datePattern", "'.'yyyy-MM-dd");
     }
     else {	
