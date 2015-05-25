@@ -21,6 +21,10 @@ public class SeatingDetailBean {
 	
 	private int typeRowName; 
 	
+	private String fieldZoneNameTicket;
+	
+	private int startSeatingNo;
+	
 	private List<FieldZoneDetailBean> fieldZoneDetailBeans;
 
  
@@ -93,6 +97,24 @@ public class SeatingDetailBean {
 			List<FieldZoneDetailBean> fieldZoneDetailBeans) {
 		this.fieldZoneDetailBeans = fieldZoneDetailBeans;
 	}
+	
+	
+
+	public String getFieldZoneNameTicket() {
+		return fieldZoneNameTicket;
+	}
+
+	public void setFieldZoneNameTicket(String fieldZoneNameTicket) {
+		this.fieldZoneNameTicket = fieldZoneNameTicket;
+	}
+
+	public int getStartSeatingNo() {
+		return startSeatingNo;
+	}
+
+	public void setStartSeatingNo(int startSeatingNo) {
+		this.startSeatingNo = startSeatingNo;
+	}
 
 	@Override
 	public String toString() {
@@ -100,8 +122,11 @@ public class SeatingDetailBean {
 				+ ", fieldZoneName=" + fieldZoneName + ", rows=" + rows
 				+ ", seating=" + seating + ", totalSeating=" + totalSeating
 				+ ", nameRow=" + nameRow + ", typeRowName=" + typeRowName
+				+ ", fieldZoneNameTicket=" + fieldZoneNameTicket
+				+ ", startSeatingNo=" + startSeatingNo
 				+ ", fieldZoneDetailBeans=" + fieldZoneDetailBeans + "]";
 	}
+
 	 
  
   

@@ -4,10 +4,10 @@
 <%@ page import="java.util.*"%>
 <jsp:useBean id="eventMatchForm" class="th.go.ticket.app.enjoy.form.EventMatchForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
- 
+
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<head> 
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=EDGE">
 	<title>รายการ Match การแข่งขันประจำปี</title>
 	<%@ include file="/pages/include/enjoyInclude.jsp"%>	
 	
@@ -569,7 +569,7 @@
 		                  //alert(status);		
 			            	if(status=="SUCCESS"){
 			            		alert("บันทึกรายการเรียบร้อย  ");  
-			            		//window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
+			            		window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
 		            		}else{
 		            			errMsg = jsonObj.errMsg; 
 		            			alert(errMsg);
@@ -680,7 +680,7 @@
 			});
 			}).end().appendTo("#result_match");
 		    i++;
-		    alert();
+		    //alert();
 		});
   
 	</script>

@@ -12,6 +12,7 @@ public class FieldZoneDetailBean {
 	private int bookingTypeId;
 	private String bookingTypeName;
 	private boolean status;
+	private String statusPage;
 
 	public FieldZoneDetailBean() {  
 	}
@@ -64,16 +65,23 @@ public class FieldZoneDetailBean {
 		this.bookingTypeName = bookingTypeName;
 	}
 
+	
+	public String getStatusPage() {
+		return statusPage;
+	}
+
+	public void setStatusPage(String statusPage) {
+		this.statusPage = statusPage;
+	}
+
 	@Override
 	public String toString() {
 		return "FieldZoneDetailBean [fieldZoneId=" + fieldZoneId + ", seq="
 				+ seq + ", bookingPrices=" + bookingPrices + ", bookingTypeId="
 				+ bookingTypeId + ", bookingTypeName=" + bookingTypeName
-				+ ", status=" + status + "]";
+				+ ", status=" + status + ", statusPage=" + statusPage + "]";
 	}
- 
-	 
-	
-	
+
+  
 
 }
