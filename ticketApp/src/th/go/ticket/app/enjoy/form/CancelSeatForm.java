@@ -24,6 +24,7 @@ public class CancelSeatForm {
 	private String 								fieldZoneId;
 	private String								matchId;
 	private String								sesson;
+	private CancelSeatBean		 				cancelSeatBean;
 	
 
 	public CancelSeatForm() {
@@ -34,7 +35,8 @@ public class CancelSeatForm {
 		this.resultList 		= new ArrayList<CancelSeatBean>();
 		this.seasonList 		= new ArrayList<String>();
 		this.teamList	 		= new ArrayList<CancelSeatBean>();
-
+		this.cancelSeatBean		= new CancelSeatBean();
+		
 		this.seatingNoBegin		= "";
 		this.seatingNoEnd		= "";
 		this.ticketId			= "";
@@ -131,6 +133,14 @@ public class CancelSeatForm {
 
 	public void setTeamList(List<CancelSeatBean> teamList) {
 		this.teamList = teamList;
+	}
+
+	public CancelSeatBean getCancelSeatBean() {
+		return cancelSeatBean;
+	}
+
+	public void setCancelSeatBean(CancelSeatBean cancelSeatBean) {
+		this.cancelSeatBean = cancelSeatBean;
 	}
 	
 }

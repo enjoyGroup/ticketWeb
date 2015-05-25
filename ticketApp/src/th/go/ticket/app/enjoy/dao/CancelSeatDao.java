@@ -132,7 +132,7 @@ public class CancelSeatDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<String>();
 			
-			hql				= "SELECT b.season FROM eventmatch b GROUP BY b.season order by  b.season desc";
+			hql				= "SELECT b.season FROM eventmatch b GROUP BY b.season order by b.season desc";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("season"			, new StringType());
@@ -183,12 +183,12 @@ public class CancelSeatDao {
 			
 			hql				= "SELECT b.matchId, b.awayTeamNameTH, b.awayTeamNameEN FROM eventmatch b "
 									+ " where b.season  = " + season
-							  		+ " order by  b.matchId desc";
+							  		+ " order by b.awayTeamNameTH, b.matchId desc";
 			query			= session.createSQLQuery(hql);
 			
-			query.addScalar("fieldZoneId"			, new StringType());
-			query.addScalar("fieldZoneName"			, new StringType());
-			query.addScalar("fieldZoneNameTicket"	, new StringType());
+			query.addScalar("matchId"			, new StringType());
+			query.addScalar("awayTeamNameTH"	, new StringType());
+			query.addScalar("awayTeamNameEN"	, new StringType());
 			
 			list		 	= query.list();
 			

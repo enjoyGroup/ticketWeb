@@ -34,8 +34,9 @@
 			            type: "POST",
 			            url: gv_url,
 			            data: lv_params,
-			            beforeSend: "",
+			            beforeSend: gp_progressBarOn(),
 			            success: function(data){
+		            		gp_progressBarOff();
 			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
 			            }
 			        });
@@ -56,8 +57,9 @@
 			            type: "POST",
 			            url: gv_url,
 			            data: lv_params,
-			            beforeSend: "",
+			            beforeSend: gp_progressBarOn(),
 			            success: function(data){  
+		            		gp_progressBarOff();
 			            }
 			        });
 			    	  
@@ -77,9 +79,6 @@
 					    var $actualrow 	= $(row);
 						var lv_ticketId	= "";
 					    $checkbox 	= $actualrow.find('input:checked');
-					    
-					    //alert($actualrow.index() + " : " + $checkbox.is(':checked'));
-					    //alert($actualrow.find("td").eq(2).html());
 					    if ($checkbox.is(':checked')) {
 					    	if (lv_ticketIdList != "") { lv_ticketIdList = lv_ticketIdList + ","; }
 						    lv_ticketId 	= $actualrow.find("td").eq(2).text();
@@ -96,8 +95,9 @@
 			            type: "POST",
 			            url: gv_url,
 			            data: lv_params,
-			            beforeSend: "",
+			            beforeSend: gp_progressBarOn(),
 			            success: function(data){
+		            		gp_progressBarOff();
 	            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");
 	            			window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
 			            }
@@ -109,23 +109,16 @@
 
 			
 			$('#btnCancel').click(function(){ 
-				var pageAction			= "new";
-				var lv_params			= gv_service;  
-			 
 			    try{
-			    	lv_params 	+= "&pageAction=" + pageAction ; 
-					$.ajax({
-						async:false,
-			            type: "POST",
-			            url: gv_url,
-			            data: lv_params,
-			            beforeSend: "",
-			            success: function(data){  
-			            }
-			        });
-			    	  
+					$('#tbl_result tr').each(function (i, row) {
+					    var $actualrow 	= $(row);
+					    $checkbox 	= $actualrow.find('input:checked');
+					    if ($checkbox.is(':checked')) {
+					    	$checkbox.attr('checked', false);
+					    }
+					});		
 			    }catch(e){
-			    	alert("lp_cancel_page :: " + e);
+			    	alert("lp_cancel_checkbox :: " + e);
 			    }				
 			}); 
 			
@@ -133,16 +126,38 @@
 				var pageAction			= "searchTeam";
 				var lv_params			= gv_service;  
 				try{
-//			    	lv_params 	+= "&pageAction=" + pageAction + "&sesson=" + $("#season").val(); 
-			    	lv_params 	+= "&pageAction=" + pageAction + "&sesson=" + this.value; 
+					lv_params 	+= "&pageAction=" + pageAction + "&season=" + this.value; 
 					$.ajax({
 						async:false,
 			            type: "POST",
 			            url: gv_url,
 			            data: lv_params,
-			            beforeSend: "",
+			            beforeSend: gp_progressBarOn(),
 			            success: function(data){
-			            	window.location.replace('/ticketWeb/pages/ticket/CancelSeatScn.jsp');
+			            	var jsonObj 			= null;
+			            	var status				= null;
+			            	var errMsg				= null;
+			            	try{
+			            		gp_progressBarOff();
+			            		jsonObj = JSON.parse(data);
+			            		status	= jsonObj.status;
+			            		if(status=="SUCCESS"){
+			            			var select = $('#matchId');
+			            			$('option', select).remove();
+			            			
+		            				var option = new Option("ไม่ระบุ", "");
+		            			    select.append($(option));
+		            			    $.each(jsonObj.teamList, function(idx, obj) {
+			            				var option = new Option(obj.awayTeamNameTH, obj.matchId);
+			            			    select.append($(option));
+			            			});
+			            		}else{
+			            			errMsg = jsonObj.errMsg;
+			            			alert(errMsg);
+			            		}
+			            	}catch(e){
+			            		alert("in lp_changeSeason :: " + e);
+			            	}
 			            }
 			        });
 				}catch(err){
@@ -174,10 +189,10 @@
 											<div class="panel-body" align="center">
 									        	<table width="800px" border="0" cellpadding="5" cellspacing="5">
 									        		<tr>
-									        			<td align="right">
+									        			<td align="right" width="150px;">
 									        				ฤดูกาลแข่งขัน :&nbsp;
 									        			</td>
-									        			<td align="left">
+									        			<td align="left" width="350px;">
 									        				<select id="season" name="season">
 									        					<option value="">ไม่ระบุ</option>
 									        					<%  List<String> 	seasonList = cancelSeatForm.getSeasonList();
@@ -186,24 +201,20 @@
 									        					<%} %>
 									        				</select>
 									        			</td>
-									        			<td align="right">
+									        			<td align="right" width="150px;">
 									        				ทีมคู่แข่ง :&nbsp;
 									        			</td>
-									        			<td align="left">
+									        			<td align="left" width="350px;">
 									        				<select id="matchId" name="matchId">
 									        					<option value="">ไม่ระบุ</option>
-									        					<%  List<CancelSeatBean> 	fieldZoneList2 = cancelSeatForm.getTeamList();
-									        						for(CancelSeatBean beanZone:fieldZoneList2){ %>
-									        						<option value="<%=beanZone.getMatchId()%>"><%=beanZone.getAwayTeamNameTH()%></option>
-									        					<%} %>
 									        				</select>
 									        			</td>
 									        		</tr>
 									        		<tr>
-									        			<td align="right">
+									        			<td align="right" width="150px;">
 									        				Zone :&nbsp;
 									        			</td>
-									        			<td align="left" colspan="3">
+									        			<td align="left" width="350px;">
 									        				<select id="fieldZoneId" name="fieldZoneId">
 									        					<option value="">ไม่ระบุ</option>
 									        					<%  List<CancelSeatBean> 	fieldZoneList = cancelSeatForm.getFieldZoneList();
@@ -212,29 +223,23 @@
 									        					<%} %>
 									        				</select>
 									        			</td>
+									        			<td align="right" width="150px;">
+									        				Ticket Id  : &nbsp;
+									        			</td>
+									        			<td align="left" width="350px;">
+									        				<input type='text' id="ticketId" name='ticketId' maxlength="17" />
+									        			</td>
 									        		</tr>
 									        		<tr>
 									        			<td align="right" width="150px;">
 									        				เลขที่นั่ง  : &nbsp;
 									        			</td>
-									        			<td align="left" width="350px;">
+									        			<td align="left" colspan="3">
 									        				<input type='text' id="seatingNoBegin" name='seatingNoBegin' maxlength="10" />
-									        			</td>
-									        			<td align="right">
-									        				- &nbsp;
-									        			</td>
-									        			<td align="left">
+									        				&nbsp; - &nbsp;
 									        				<input type='text' id="seatingNoEnd" name='seatingNoEnd' maxlength="10" />
 									        				&nbsp;
 									        				<span id="inValidSpan"></span>
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right" width="150px;">
-									        				Ticket Id  : &nbsp;
-									        			</td>
-									        			<td align="left" colspan="3">
-									        				<input type='text' id="ticketId" name='ticketId' maxlength="17" />
 									        				<input type="button" id="btnSearch" class='btn btn-danger' value='ค้นหา'/>&nbsp;&nbsp;&nbsp;
 									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มค้นใหม่' />
 									        			</td>
