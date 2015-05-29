@@ -107,13 +107,13 @@
 				<tr>
 					<td>User :</td>
 					<td>
-						<input id="username"  name="username" type="text"  maxlength="10" onkeydown="lp_changeEnterToTab_forPWD();" />
+						<input id="username"  name="username" type="text"  maxlength="20" onkeydown="lp_changeEnterToTab_forPWD();" />
 					</td>
 				</tr>
 				<tr>
 					<td>Password :</td>
 					<td>
-						<input id="user_pwd"  name="user_pwd"  type="password"  maxlength="10" onkeydown="lp_changeEnterToTab_forPWD();" />
+						<input id="user_pwd"  name="user_pwd"  type="password"  maxlength="50" onkeydown="lp_changeEnterToTab_forPWD();" />
 					</td>
 				</tr>
 				<tr>
