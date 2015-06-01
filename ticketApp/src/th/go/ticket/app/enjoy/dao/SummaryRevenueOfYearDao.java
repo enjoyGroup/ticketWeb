@@ -48,6 +48,9 @@ private static final EnjoyLogger logger = EnjoyLogger.getLogger(SummaryRevenueOf
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
 		SummaryRevenueOfYearBean		returnObj							= null;
+		int								padSeason							= 0;
+		String							season								= null;
+		int								seasonTemp							= 0;
 		
 		
 		try{
@@ -60,8 +63,13 @@ private static final EnjoyLogger logger = EnjoyLogger.getLogger(SummaryRevenueOf
 									+ " WHERE a.fieldZoneId		= b.fieldZoneId"
 										+ " and a.bookingTypeId	= b.bookingTypeId"
 								 		+ " and a.matchId		= c.matchId"
+								 		+ " and a.season 		= c.season"
 								 		+ " and a.ticketStatus <> 'R'"
-									+ " group by c.season";
+									+ " group by c.season"
+									+ " order by a.season desc";
+			
+			logger.info("[summaryRevenueOfYear] hql :: " + hql);
+			
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("season"			, new StringType());
@@ -70,16 +78,36 @@ private static final EnjoyLogger logger = EnjoyLogger.getLogger(SummaryRevenueOf
 			list		 	= query.list();
 			
 			for(Object[] row : list){
-				returnObj = new SummaryRevenueOfYearBean();
+				returnObj 	= new SummaryRevenueOfYearBean();
+				season		= row[0].toString();
 				
-				logger.info("[summaryRevenueOfYear] season :: " + row[0].toString());
-				logger.info("[summaryRevenueOfYear] sumBookingPrices :: " + row[1].toString());
+				logger.info("[summaryRevenueOfYear] season 				:: " + season);
+				logger.info("[summaryRevenueOfYear] sumBookingPrices 	:: " + row[1].toString());
 				
-				returnObj.setSeason(row[0].toString());
+				returnObj.setSeason(season);
 				returnObj.setBookingPrice(row[1].toString());
 				
 				returnList.add(returnObj);
 				
+			}
+			
+			logger.info("[summaryRevenueOfYear] list.size() :: " + list.size());
+			
+			if(list.size() < 5){
+				padSeason 	= 5-list.size();
+				seasonTemp	= Integer.parseInt(season);
+				
+				for(int i=0;i < padSeason;i++){
+					returnObj = new SummaryRevenueOfYearBean();
+					
+					seasonTemp = seasonTemp - 1;
+					
+					returnObj.setSeason(String.valueOf(seasonTemp));
+					returnObj.setBookingPrice("0");
+					
+					returnList.add(returnObj);
+					
+				}
 			}
 			
 			

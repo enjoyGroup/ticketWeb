@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
 
 import th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean;
+import th.go.ticket.app.enjoy.bean.SummaryRevenueOfYearBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.HibernateUtil;
@@ -63,6 +64,8 @@ public class DetailRevenueOfYearDao {
 		List<String>			 		list								= null;
 		SQLQuery 						query 								= null;
 		String							season								= null;
+		int								padSeason							= 0;
+		int								seasonTemp							= 0;
 		
 		
 		try{
@@ -83,6 +86,21 @@ public class DetailRevenueOfYearDao {
 				logger.info("[seasonList] season :: " + season);
 				
 				returnList.add(season);
+			}
+			
+			logger.info("[seasonList] list.size() :: " + list.size());
+			
+			if(list.size() < 5){
+				padSeason 	= 5-list.size();
+				seasonTemp	= Integer.parseInt(season);
+				
+				for(int i=0;i < padSeason;i++){
+					
+					seasonTemp = seasonTemp - 1;
+					
+					returnList.add(String.valueOf(seasonTemp));
+					
+				}
 			}
 			
 		}catch(Exception e){
@@ -129,10 +147,14 @@ public class DetailRevenueOfYearDao {
 									+ " WHERE a.fieldZoneId 	= b.fieldZoneId"
 									+ " 	and a.bookingTypeId = b.bookingTypeId"
 									+ " 	and a.matchId 		= c.matchId"
+									+ " 	and a.season  		= c.season"
 									+ " 	and c.season  		= '" + season + "'"
 									+ "		and a.ticketStatus 	<> 'R'"
 									+ " GROUP BY a.matchId, c.awayTeamNameTH, c.awayTeamNameEN"
 									+ " ORDER BY a.matchId";
+			
+			logger.info("[detailRevenueByYear] hql :: " + hql);
+			
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("matchId"			, new StringType());

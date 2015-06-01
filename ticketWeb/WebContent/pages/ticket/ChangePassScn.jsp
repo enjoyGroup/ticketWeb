@@ -138,19 +138,19 @@
 										<col align="left" />
 									</colgroup>
 									<tr>
-										<td><label class="control-label" style="text-align:right">รหัสผ่านเดิม : </label></td>
+										<td><label class="control-label" style="text-align:right">รหัสผ่านเดิม <span style="color: red;"><b>*</b></span> : </label></td>
 										<td class="no-padd-left">
 											<input type="password" id="oldUserPassword" name="oldUserPassword" />
 										</td>
 									</tr>
 									<tr>
-										<td><label class="control-label" style="text-align:right">รหัสผ่านใหม่ : </label></td>
+										<td><label class="control-label" style="text-align:right">รหัสผ่านใหม่ <span style="color: red;"><b>*</b></span> : </label></td>
 										<td class="no-padd-left">
 											<input type="password" id="newUserPassword" name="newUserPassword" />
 										</td>
 									</tr>
 									<tr>
-										<td><label class="control-label" style="text-align:right">ยื่นยันรหัสผ่าน : </label></td>
+										<td><label class="control-label" style="text-align:right">ยื่นยันรหัสผ่าน <span style="color: red;"><b>*</b></span> : </label></td>
 										<td class="no-padd-left">
 											<input type="password" id="confirmUserPassword" name="confirmUserPassword" />
 										</td>
@@ -158,7 +158,7 @@
 									<tr>
 										<td colspan="2" align="center">
 											<input type="button" class="btn btn-primary" id="btnSave" name="btnSave" value="บันทึก" />
-											<input type="button" class="btn btn-primary" id="btnReset" name="btnReset" value="เริ่มใหม่" />
+											<input type="reset" class="btn btn-primary" id="btnReset" name="btnReset" value="เริ่มใหม่" />
 										</td>
 									</tr>
 								</table>

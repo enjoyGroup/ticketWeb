@@ -273,12 +273,15 @@
 					return;
 				}
 				
-				if(!confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
-					$('#userEmail').focus();
-					return;
+				if($("#pageMode").val()=="NEW"){
+					if(!confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
+						$('#userEmail').focus();
+						return;
+					}
 				}
+				
 			}catch(e){
-				alert("btnSave :: " + e);
+				alert("lp_save :: " + e);
 			}
 			
 			params 	= "pageAction=save&" + $('#frm').serialize();
@@ -304,16 +307,76 @@
 	            			userUniqueId = jsonObj.userUniqueId;
 	            			
 	            			alert("บันทึกเรียบร้อย");
-	            			window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
+	            			//window.location = gv_url + "?service=servlet.UserDetailsMaintananceServlet&pageAction=getUserDetail&userUniqueId=" + userUniqueId;
+	            			lp_reset();
 	            		}else{
 	            			alert(jsonObj.errMsg);
 	            			
 	            		}
 	            	}catch(e){
-	            		alert("in btnSave :: " + e);
+	            		alert("in lp_save :: " + e);
 	            	}
 	            }
 	        });
+		}
+		
+		function lp_reset(){
+			try{
+				if($("#pageMode").val()=="NEW"){
+					window.location = gv_url + "?service=" + $("#service").val() + "&pageAction=new";
+				}else{
+					window.location = gv_url + "?service=" + $("#service").val() + "&pageAction=getUserDetail&userUniqueId=" + $('#userUniqueId').val();
+				}
+			}catch(e){
+				alert("lp_reset :: " + e);
+			}
+			
+		}
+		
+		function lp_resetPass(){
+			
+			var params				= "";
+			
+			try{
+				if(!confirm("Password จะถูกส่งไปที่ E-mail ที่คุณกรอก คุณกรอก E-mail ถูกต้องแล้วใช่หรือไม่ ?")){
+					$('#userEmail').focus();
+					return;
+				}
+				
+				params 	= "pageAction=resetPass&" + $('#frm').serialize();
+				
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: params,
+		            beforeSend: gp_progressBarOn(),
+		            success: function(data){
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	
+		            	try{
+		            		gp_progressBarOff();
+		            		
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		            		
+		            		if(status=="SUCCESS"){
+		            			
+		            			alert("Password ถูกส่งไปที่ E-mail แล้ว");
+		            		}else{
+		            			alert(jsonObj.errMsg);
+		            			
+		            		}
+		            	}catch(e){
+		            		alert("in lp_resetPass :: " + e);
+		            	}
+		            }
+		        });
+				
+			}catch(e){
+				alert("lp_resetPass :: " + e);
+			}
 		}
 		
 	</script>
@@ -328,128 +391,140 @@
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
 		<section class="vbox">
-			<section>
-				<section class="hbox stretch">
-					<section id="content">
-						<section class="vbox">
-							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
-					            	<h4 class="alert-heading"><%=userDetailsMaintananceForm.getTitlePage() %></h4>
-					          	</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="center">
-									        	<table width="600px" border="0" cellpadding="5" cellspacing="5">
-									        		<tr>
-									        			<td align="right" width="150px;">
-									        				ชื่อ <span style="color: red;"><b>*</b></span> : &nbsp;
-									        			</td>
-									        			<td align="left" width="350px;">
-									        				<input type='text' id="userName" name='userName' value="<%=userDetailsBean.getUserName() %>" maxlength="50" />
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right">
-									        				นามสกุล <span style="color: red;"><b>*</b></span> : &nbsp;
-									        			</td>
-									        			<td align="left">
-									        				<input type='text' id="userSurname" name='userSurname' value="<%=userDetailsBean.getUserSurname() %>" maxlength="100" />
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right">
-									        				User ID <span style="color: red;"><b>*</b></span> : &nbsp;
-									        			</td>
-									        			<td align="left">
-									        				<input type='text' id="userId" name='userId' value="<%=userDetailsBean.getUserId() %>" onchange="lp_checkDupUserId();" maxlength="20" />
-									        				&nbsp;
-									        				<span id="inValidSpan"></span>
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right">
-									        				E-mail <span style="color: red;"><b>*</b></span> : &nbsp;
-									        			</td>
-									        			<td align="left">
-									        				<input type="text" id="userEmail" name="userEmail" value="<%=userDetailsBean.getUserEmail()%>" maxlength="100" />
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right">
-									        				สถานะ :&nbsp;
-									        			</td>
-									        			<td align="left">
-									        				<select id="userStatus" name="userStatus">
-									        					<% for(RefuserstatusBean beanStatus:refuserstatusCombo){ %>
-									        					<option value="<%=beanStatus.getUserStatusCode()%>" <%if(userDetailsBean.getUserStatus().equals(beanStatus.getUserStatusCode())){ %> selected <%} %> ><%=beanStatus.getUserStatusName()%></option>
-									        					<%} %>
-									        				</select>
-									        			</td>
-									        		</tr>
-									        		<tr>
-									        			<td align="right">
-									        				<input type="checkbox" id="flagChangePassword" name="flagChangePassword" value="Y" <%if(userDetailsBean.getFlagChangePassword().equals("Y")){ %> checked="checked" <%} %> /> :&nbsp;
-									        			</td>
-									        			<td align="left">
-									        				ต้องการเปลี่ยนรหัสผ่านเมื่อ Login ครั้งแรก
-									        			</td>
-									        		</tr>
-									        	</table>
-									        	<br/>
-									        	<table width="500px" border="0" cellpadding="5" cellspacing="5">
-									        		<tr>
-									        			<td align="left" colspan="4">
-									        				สิทธิ์การใช้ระบบ
-									        			</td>
-									        		</tr>
-									        		
-									        		<%
-									        			for(Userprivilege beanUserprivilege:userprivilegeList){
-									        		%>
-									        		<%if(couChkRow==0){ %><tr><%} %>
-									        			<td align="right">
-									        				<input type="checkbox" id="chkUserPrivilege<%=beanUserprivilege.getPrivilegeCode() %>" name="chkUserPrivilege" value="<%=beanUserprivilege.getPrivilegeCode() %>" /> :&nbsp;
-									        			</td>
-									        			<td align="left">
-									        				<%=beanUserprivilege.getPrivilegeName() %>
-									        			</td>
-									        		<%if(couChkRow==1){ %>
-									        		</tr>
-									        		<%}
-									        			if(couChkRow==1){
-									        				couChkRow=0;
-									        			}else{
-									        				couChkRow++;
-									        			}
-									        			
-									        		} %>
-									        		<tr>
-									        			<td align="center" colspan="4">
-									        				<br/><br/>
-									        				<input type="button" id="btnSave" class='btn btn-danger' value='บันทึก' onclick="lp_save();" />&nbsp;&nbsp;&nbsp;
-									        				<input type="reset" id="btnReset" class='btn btn-danger' value='เริ่มใหม่' />
-									        			</td>
-									        		</tr>
-									        	</table>
-								        	</div>
-										</section>
+		<section>
+		<section class="hbox stretch">
+		<section id="content">
+		<section class="vbox">
+		<section class="scrollable padder">
+		<div class="alert alert-block alert-error fade in">
+			<h4 class="alert-heading">ผู้ดูแลระบบ/จัดการผู้ใช้งาน</h4>
+		</div>					          	
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h4 class="panel-title">เพิ่มผู้ใช้งานระบบ</h4>
+						</div>
+           				<div class="panel-body">
+               					<div class="col-md-2 col-lg-2 " align="center">
+									<img src="/ticketWeb/images/add_user.png" class="img-circle">
+								</div>
+               						<div class=" col-md-8 col-lg-8 "> 
+										<table class="table" style="border-bottom-color: white;">
+											<tr>
+								        		<td align="right" width="150px;">
+													ชื่อ <span style="color: red;"><b>*</b></span> : &nbsp;
+												</td>
+							        			<td align="left" width="350px;">
+							        				<input type='text' id="userName" name='userName' value="<%=userDetailsBean.getUserName() %>" maxlength="50" style="width: 300px;" />
+							        			</td>
+								        	</tr>
+								        	<tr>
+							        			<td align="right">
+							        				นามสกุล <span style="color: red;"><b>*</b></span> : &nbsp;
+							        			</td>
+							        			<td align="left">
+							        				<input type='text' id="userSurname" name='userSurname' value="<%=userDetailsBean.getUserSurname() %>" maxlength="100" style="width: 300px;" />
+							        			</td>
+							        		</tr>
+							        		<tr>
+							        			<td align="right">
+							        				User ID <span style="color: red;"><b>*</b></span> : &nbsp;
+							        			</td>
+							        			<td align="left">
+							        				<input type='text' id="userId" name='userId' value="<%=userDetailsBean.getUserId() %>" onchange="lp_checkDupUserId();" maxlength="20" style="width: 300px;" />
+							        				&nbsp;
+							        				<span id="inValidSpan"></span>
+							        			</td>
+							        		</tr>
+							        		<tr>
+							        			<td align="right">
+							        				E-mail <span style="color: red;"><b>*</b></span> : &nbsp;
+							        			</td>
+							        			<td align="left">
+							        				<input type="text" id="userEmail" name="userEmail" value="<%=userDetailsBean.getUserEmail()%>" maxlength="100" style="width: 300px;" />
+							        			</td>
+							        		</tr>
+							        		<tr>
+							        			<td align="right">
+							        				สถานะ :&nbsp;
+							        			</td>
+							        			<td align="left">
+							        				<select id="userStatus" name="userStatus" style="width: 300px;">
+							        					<% for(RefuserstatusBean beanStatus:refuserstatusCombo){ %>
+							        					<option value="<%=beanStatus.getUserStatusCode()%>" <%if(userDetailsBean.getUserStatus().equals(beanStatus.getUserStatusCode())){ %> selected <%} %> ><%=beanStatus.getUserStatusName()%></option>
+							        					<%} %>
+							        				</select>
+							        			</td>
+							        		</tr>
+							        		<tr>
+							        			<td align="right">
+							        				<input type="checkbox" id="flagChangePassword" name="flagChangePassword" value="Y" <%if(userDetailsBean.getFlagChangePassword().equals("Y")){ %> checked="checked" <%} %> /> :&nbsp;
+							        			</td>
+							        			<td align="left">
+							        				ต้องการเปลี่ยนรหัสผ่านเมื่อ Login ครั้งแรก
+							        			</td>
+								        	</tr>
+								        </table>
+								        <table width="500px" border="0" cellpadding="5" cellspacing="5">
+							        		<tr>
+							        			<td align="left" colspan="4">
+							        				สิทธิ์การใช้ระบบ
+							        			</td>
+							        		</tr>
+								        		
+								        		<%
+								        			for(Userprivilege beanUserprivilege:userprivilegeList){
+								        		%>
+								        		<%if(couChkRow==0){ %><tr><%} %>
+								        			<td align="right">
+								        				<input type="checkbox" id="chkUserPrivilege<%=beanUserprivilege.getPrivilegeCode() %>" name="chkUserPrivilege" value="<%=beanUserprivilege.getPrivilegeCode() %>" /> :&nbsp;
+								        			</td>
+								        			<td align="left">
+								        				<%=beanUserprivilege.getPrivilegeName() %>
+								        			</td>
+								        		<%if(couChkRow==1){ %>
+								        		</tr>
+								        		<%}
+								        			if(couChkRow==1){
+								        				couChkRow=0;
+								        			}else{
+								        				couChkRow++;
+								        			}
+								        			
+								        		} %>
+										</table>	                  
+									</div>
+									<div>
+										<span class="pull-right">
+					        				<input type="button" id="btnSave" class="btn btn-sm btn-warning" value='บันทึก' onclick="lp_save();" />&nbsp;&nbsp;&nbsp;
+					        				
+					        				<%if(pageMode.equals(userDetailsMaintananceForm.EDIT)){%>
+					        				<input type="button" id="btnResetPass" class="btn btn-sm btn-warning" value='Reset Password' onclick="lp_resetPass();" />&nbsp;&nbsp;&nbsp;
+					        				<%}%>
+					        				
+	     									<input type="reset" id="btnReset" class="btn btn-sm btn-danger" value='เริ่มใหม่' />
+	     								</span>
 									</div>
 								</div>
-							</section>
-						</section>
-					</section>
-					<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
-				</section>
-			</section>
+				            </div>          
+						</div>
+					</div>
+				</div>							    
+		</section>
+		</section>
+		</section>
+			<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+		</section>
+		</section>
 		</section>
 		<div align="center" class="FreezeScreen" style="display:none;">
-	        <center>
-	        	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
-	        	<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
-	        </center>
-	    </div>
-	</form>
-	
+        	<center>
+        		<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
+        		<span style="font-weight: bold;font-size: large;color: black;">Loading...</span>
+        	</center>
+    	</div>
+	</form>	
 </body>
 </html>

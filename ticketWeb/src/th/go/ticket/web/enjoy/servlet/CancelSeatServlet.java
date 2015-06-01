@@ -1,6 +1,7 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,8 +15,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import th.go.ticket.app.enjoy.bean.CancelSeatBean;
-import th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean;
-import th.go.ticket.app.enjoy.bean.SeatSummaryReservationBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
 import th.go.ticket.app.enjoy.dao.CancelSeatDao;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
@@ -73,10 +72,12 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 				request.setAttribute("target", Constants.PAGE_URL +"/CancelSeatScn.jsp");
  			}else if(pageAction.equals("searchTicketDetail")){
  				this.onSearchTicketDetail();
- 			}else if(pageAction.equals("searchTeam")){
- 				onSearchTeamDetail();
+ 			}else if(pageAction.equals("getAwayTeamNameTH")){
+ 				this.getAwayTeamNameTH();
  			}else if(pageAction.equals("save")){
  				this.saveCancelTicket();
+ 			}else if(pageAction.equals("getSeason")){
+ 				this.getSeason();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -110,7 +111,7 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		logger.info("[setRefference][Begin]");
 		try{
 			this.form.setFieldZoneList(this.dao.getFieldZoneMaster());
-			this.form.setSeasonList(this.dao.seasonList());			
+//			this.form.setSeasonList(this.dao.seasonList());			
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
 		}catch(Exception e){
@@ -121,7 +122,7 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 		}
 	}
 		
-	private void onSearchTeamDetail() throws EnjoyException{
+	/*private void onSearchTeamDetail() throws EnjoyException{
 		logger.info("[onSearchTeamDetail][Begin]");
 		JSONObject 						obj 				= null;
 		JSONObject 						objDetail 			= null;
@@ -164,31 +165,59 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 			logger.info("[onSearchTeamDetail][End]");
 		}
 		
-	}
+	}*/
 	
 	private void onSearchTicketDetail() throws EnjoyException{
 		logger.info("[onSearchTicketDetail][Begin]");
 		
 		CancelSeatBean 			bean 						= null;
+		List<CancelSeatBean>	list						= null;
+		String					season						= null;
+		String					awayTeamNameTH				= null;
+		String					fieldZoneId					= null;
+		String					ticketId					= null;
+		String					seatingNoBegin				= null;
+		String					seatingNoEnd				= null;
 		
 		try{
+			season 				= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+			awayTeamNameTH 		= EnjoyUtils.nullToStr(this.request.getParameter("awayTeamNameTH"));
+			fieldZoneId 		= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
+			ticketId 			= EnjoyUtils.nullToStr(this.request.getParameter("ticketId"));
+			seatingNoBegin 		= EnjoyUtils.nullToStr(this.request.getParameter("seatingNoBegin"));
+			seatingNoEnd 		= EnjoyUtils.nullToStr(this.request.getParameter("seatingNoEnd"));
+			
+			
+			logger.info("[onSearchTicketDetail] season 				:: " + season);
+			logger.info("[onSearchTicketDetail] awayTeamNameTH 		:: " + awayTeamNameTH);
+			logger.info("[onSearchTicketDetail] fieldZoneId 		:: " + fieldZoneId);
+			logger.info("[onSearchTicketDetail] ticketId 			:: " + ticketId);
+			logger.info("[onSearchTicketDetail] seatingNoBegin 		:: " + seatingNoBegin);
+			logger.info("[onSearchTicketDetail] seatingNoEnd 		:: " + seatingNoEnd);
+			
+			this.form.setSeason				(season);
+			this.form.setAwayTeamNameTH		(awayTeamNameTH);
+			this.form.setFieldZoneId		(fieldZoneId);
+			this.form.setTicketId			(ticketId);
+			this.form.setSeatingNoBegin		(seatingNoBegin);
+			this.form.setSeatingNoEnd		(seatingNoEnd);
+			
+			
 			bean 				= new CancelSeatBean();
-			bean.setMatchId(EnjoyUtils.nullToStr(this.request.getParameter("matchId")));
-			bean.setSeason(EnjoyUtils.nullToStr(this.request.getParameter("season")));
-			bean.setFieldZoneId(EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId")));
-			bean.setTicketId(EnjoyUtils.nullToStr(this.request.getParameter("ticketId")));
-			bean.setSeatingNoBegin(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoBegin")));
-			bean.setSeatingNoEnd(EnjoyUtils.nullToStr(this.request.getParameter("seatingNoEnd")));
+			bean.setSeason			(season);
+			bean.setAwayTeamNameTH	(awayTeamNameTH);
+			bean.setFieldZoneId		(fieldZoneId);
+			bean.setTicketId		(ticketId);
+			bean.setSeatingNoBegin	(seatingNoBegin);
+			bean.setSeatingNoEnd	(seatingNoEnd);
 			
-			logger.info("[getSummaryReserv] matchId 		:: " + bean.getMatchId());
-			logger.info("[getSummaryReserv] season 			:: " + bean.getSeason());
-			logger.info("[getSummaryReserv] fieldZoneId 	:: " + bean.getFieldZoneId());
-			logger.info("[getSummaryReserv] ticketId	 	:: " + bean.getTicketId());
-			logger.info("[getSummaryReserv] seatingNoBegin 	:: " + bean.getSeatingNoBegin());
-			logger.info("[getSummaryReserv] seatingNoEnd 	:: " + bean.getSeatingNoEnd());
+			list = this.dao.getSumDetailReservationList(bean);
 			
-			this.form.setResultList(this.dao.getSumDetailReservationList(bean));
-			this.form.setCancelSeatBean(bean);
+			this.form.setResultList(list);
+//			this.form.setCancelSeatBean(bean);
+			
+			this.form.setResultSize(String.valueOf(list.size()));
+			
 		}catch(EnjoyException e){
 			throw new EnjoyException(e.getMessage());
 		}catch(Exception e){
@@ -246,4 +275,69 @@ public class CancelSeatServlet extends EnjoyStandardSvc {
 			logger.info("[cancelTicket][End]");
 		}
 	}
+	
+	private void getSeason(){
+	   logger.info("[getSeason][Begin]");
+	   
+	   String							season					= null;
+       List<String> 					list 					= new ArrayList<String>();
+       String[]							strArray				= null;
+       
+	   try{
+		   season					= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+		   
+		   logger.info("[getSeason] season 			:: " + season);
+		   
+		   this.form.setSeason(season);
+		   
+		   list 		= this.dao.seasonList(season);
+		   strArray 	= new String[list.size()];
+		   strArray 	= list.toArray(strArray); 
+		   
+		   this.enjoyUtil.writeJsonMSG((String[]) strArray);
+		   
+		   this.form.setSeasonList(list);		
+		   
+	   }catch(Exception e){
+		   e.printStackTrace();
+		   logger.info("[getSeason] " + e.getMessage());
+	   }finally{
+		   logger.info("[getSeason][End]");
+	   }
+   }
+	
+	private void getAwayTeamNameTH(){
+	   logger.info("[getAwayTeamNameTH][Begin]");
+	   
+	   String							season					= null;
+	   String							awayTeamNameTH			= null;
+       List<String> 					list 					= new ArrayList<String>();
+       String[]							strArray				= null;
+       
+	   try{
+		   season					= EnjoyUtils.nullToStr(this.request.getParameter("season"));
+		   awayTeamNameTH			= EnjoyUtils.nullToStr(this.request.getParameter("awayTeamNameTH"));
+		   
+		   logger.info("[getAwayTeamNameTH] season 			:: " + season);
+		   logger.info("[getAwayTeamNameTH] awayTeamNameTH 	:: " + awayTeamNameTH);
+		   
+		   this.form.setSeason(season);
+		   this.form.setAwayTeamNameTH(awayTeamNameTH);
+		   
+		   list 		= this.dao.getTeamList(season, awayTeamNameTH);
+		   strArray 	= new String[list.size()];
+		   strArray 	= list.toArray(strArray); 
+		   
+		   this.enjoyUtil.writeJsonMSG((String[]) strArray);
+		   
+		   this.form.setSeasonList(list);		
+		   
+	   }catch(Exception e){
+		   e.printStackTrace();
+		   logger.info("[getAwayTeamNameTH] " + e.getMessage());
+	   }finally{
+		   logger.info("[getAwayTeamNameTH][End]");
+	   }
+   }
+	
 }

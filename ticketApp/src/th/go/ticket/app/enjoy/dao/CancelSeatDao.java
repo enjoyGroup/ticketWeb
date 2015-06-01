@@ -115,7 +115,7 @@ public class CancelSeatDao {
 		return returnList;
 	}
 	
-	public List<String> seasonList() throws EnjoyException{
+	public List<String> seasonList(String season) throws EnjoyException{
 		logger.info("[seasonList][Begin]");
 		
 		List<String> 					returnList 							= null;
@@ -124,7 +124,7 @@ public class CancelSeatDao {
 		String							hql									= null;
 		List<String>			 		list								= null;
 		SQLQuery 						query 								= null;
-		String							season								= null;
+		String							seasonDb							= null;
 		
 		
 		try{
@@ -132,7 +132,7 @@ public class CancelSeatDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<String>();
 			
-			hql				= "SELECT b.season FROM eventmatch b GROUP BY b.season order by b.season desc";
+			hql				= "SELECT b.season FROM eventmatch b where b.season like('" + season + "%') GROUP BY b.season order by b.season desc limit 10";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("season"			, new StringType());
@@ -141,10 +141,10 @@ public class CancelSeatDao {
 			
 			logger.info("[seasonList] list :: " + list.size());
 			for(int i=0;i<list.size();i++){
-				season 	= list.get(i);
-				logger.info("[seasonList] season :: " + season);
+				seasonDb 	= list.get(i);
+				logger.info("[seasonList] seasonDb :: " + seasonDb);
 				
-				returnList.add(season);
+				returnList.add(seasonDb);
 			}			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -164,48 +164,40 @@ public class CancelSeatDao {
 		return returnList;
 	}
 	
-	public List<CancelSeatBean> getTeamList(String season) throws EnjoyException{
+	public List<String> getTeamList(String season, String awayTeamNameTH) throws EnjoyException{
 		logger.info("[getTeamList][Begin]");
 		
-		List<CancelSeatBean> 			returnList 							= null;
-		CancelSeatBean					returnObj							= null;
-		SessionFactory 					sessionFactory						= null;
-		Session 						session								= null;
-		String							hql									= null;
-		List<Object[]>			 		list								= null;
-		SQLQuery 						query 								= null;
+		List<String> 			returnList 							= null;
+		SessionFactory 			sessionFactory						= null;
+		Session 				session								= null;
+		String					hql									= null;
+		List<String>			list								= null;
+		SQLQuery 				query 								= null;
+		String					awayTeamNameTHDb					= null;
 		
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			returnList		= new ArrayList<CancelSeatBean>();
+			returnList		= new ArrayList<String>();
 			
-			hql				= "SELECT b.matchId, b.awayTeamNameTH, b.awayTeamNameEN FROM eventmatch b "
-									+ " where b.season  = " + season
-							  		+ " order by b.awayTeamNameTH, b.matchId desc";
+			hql				= "SELECT b.awayTeamNameTH FROM eventmatch b "
+									+ " where b.season like('" + season + "%')"
+										+ " and b.awayTeamNameTH like('" + awayTeamNameTH + "%')"
+							  		+ " order by b.season desc, b.awayTeamNameTH desc limit 10";
 			query			= session.createSQLQuery(hql);
 			
-			query.addScalar("matchId"			, new StringType());
 			query.addScalar("awayTeamNameTH"	, new StringType());
-			query.addScalar("awayTeamNameEN"	, new StringType());
 			
 			list		 	= query.list();
 			
 			logger.info("[getTeamList] list :: " + list.size());
-			for(Object[] row : list){
-				returnObj = new CancelSeatBean();
+			for(int i=0;i<list.size();i++){
+				awayTeamNameTHDb 	= list.get(i);
+				logger.info("[seasonList] awayTeamNameTHDb :: " + awayTeamNameTHDb);
 				
-				logger.info("[getTeamList] matchId 			:: " + row[0].toString());
-				logger.info("[getTeamList] awayTeamNameTH	:: " + row[1].toString());
-				logger.info("[getTeamList] awayTeamNameEN	:: " + row[2].toString());
-				
-				returnObj.setMatchId			(row[0].toString());
-				returnObj.setAwayTeamNameTH		(row[1].toString());
-				returnObj.setAwayTeamNameEN		(row[2].toString());
-				
-				returnList.add(returnObj);
-			}
+				returnList.add(awayTeamNameTHDb);
+			}			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -252,10 +244,10 @@ public class CancelSeatDao {
 								+ " and e.season	  		= a.season"
 								+ " and a.ticketStatus      = 'A'";
 			if(!cancelSeatBean.getSeason().equals("")){
-				hql += " and a.season = '" + cancelSeatBean.getSeason() + "'";
+				hql += " and a.season like('" + cancelSeatBean.getSeason() + "%')";
 			}
-			if(!cancelSeatBean.getMatchId().equals("")){
-				hql += " and a.matchId = '" + cancelSeatBean.getMatchId() + "'";
+			if(!cancelSeatBean.getAwayTeamNameTH().equals("")){
+				hql += " and e.awayTeamNameTH like('" + cancelSeatBean.getAwayTeamNameTH() + "%')";
 			}
 			if(!cancelSeatBean.getFieldZoneId().equals("")){
 				hql += " and a.fieldZoneId = '" + cancelSeatBean.getFieldZoneId() + "'";
@@ -330,17 +322,20 @@ public class CancelSeatDao {
 		
 		String		hql				= null;
 		Query 		query 			= null;
-		String[]	arrTicketIdList	= null;
 		int 		result			= 0;
 		
 		
 		try{
-			arrTicketIdList = ticketIdList.split(",");
+			
+			logger.info("[cancelTicketByTicketId] ticketIdList :: " + ticketIdList);
 
 			hql				= "update Ticketorder a set a.ticketStatus = 'R'"
-								+ " where a.ticketId in (:ticketId) ";
+								+ " where a.ticketId in (" + ticketIdList + ") ";
+			
+			logger.info("[cancelTicketByTicketId] hql :: " + hql);
+			
 			query = session.createQuery(hql);
-			query.setParameterList("ticketId" , arrTicketIdList);
+//			query.setParameter("ticketId" , ticketIdList);
 						
 			result = query.executeUpdate();			
 		}catch(Exception e){

@@ -186,12 +186,12 @@
 						                  	 							
 						                  	 							<div>
 						                  	 								<input  type="button" 
-						                  	 										id="<%=fieldZoneBean.getFieldZoneNameTicket() %>" 
-						                  	 										name="<%=fieldZoneBean.getFieldZoneNameTicket() %>" 
+						                  	 										id="<%=fieldZoneBean.getFieldZoneName() %>" 
+						                  	 										name="<%=fieldZoneBean.getFieldZoneName() %>" 
 						                  	 										class="btn btn-info" 
 						                  	 										style="width:250px;"
 						                  	 										onclick="lp_openBookingPage('<%=fieldZoneBean.getFieldZoneId()%>', '<%=fieldZoneBean.getFieldZoneName()%>', '<%=fieldZoneBean.getFieldZoneNameTicket()%>')"
-						                  	 										value="<%=fieldZoneBean.getFieldZoneNameTicket()%>" />
+						                  	 										value="<%=fieldZoneBean.getFieldZoneName()%>" />
 									          							</div>
 									          							<%} %>
 									          						</td>

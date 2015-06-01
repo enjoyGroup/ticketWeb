@@ -14,6 +14,14 @@
 		.headerRow:hover{
 		    cursor: pointer;
 		}
+		
+		.height250 {
+	        height: 250px;
+	        overflow-x: auto;
+	        overflow-y: auto;
+		}
+				
+		
 	</style>
 	<script type="text/javascript">
 		
@@ -23,7 +31,14 @@
 		$(document).ready(function(){
 			gp_progressBarOn();
 			
+			if($("#resultSize").val() > 9){
+				$('#tbl_result').fixedHeaderTable({
+					footer: true
+				});
+			}
+			
 			gp_progressBarOff();
+			
 		});
 		
 		function lp_print(){
@@ -57,6 +72,7 @@
 		<input type="hidden" id="service" 		name="service" 		value="servlet.SeatSummaryReservationServlet" />
 		<input type="hidden" id="fieldZoneId" 	name="fieldZoneId" 	value="<%=seatSummaryReservationForm.getFieldZoneId()%>" />
 		<input type="hidden" id="matchId" 		name="matchId" 		value="<%=seatSummaryReservationForm.getMatchId()%>" />
+		<input type="hidden" id="resultSize" 	name="resultSize" 	value="<%=seatSummaryReservationForm.getResultSize()%>" />
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
@@ -75,7 +91,7 @@
 											<div class="panel-body" align="center">
 												<!-- Begin contents -->
 												<div style="margin-top: 30px;" align="center">
-													<table border="0" style="width:60%">
+													<table border="0" style="width:100%">
 														<tr align="left">
 															<td width="5%" style="font-weight: bold;" class='topic-head'>
 																Match
@@ -93,61 +109,64 @@
 															</td>
 														</tr>
 													</table>
-													<table class="table sim-panel-result-table" id="tbl_result" border="1" style="border: 2; width:60%">
-														<thead> 
-															<tr class="headerRow">
-																<th width="10%" style="text-align: center;"><B>ลำดับ</B></th>
-																<th width="20%" style="text-align: center;"><B>Ticket Id</B></th>
-																<th width="20%" style="text-align: center;"><B>เลขที่นั่ง</B></th>
-																<th width="25%" style="text-align: center;"><B>ประเภทตั๋ว</B></th>
-																<th width="25%" style="text-align: center;"><B>ราคา</B></th>
-															</tr>
-														</thead>
-														<tbody>
-															<%
-															List<SeatSummaryReservationBean>  	list			=   seatSummaryReservationForm.getResultList();
-															SeatSummaryReservationBean 			bean			=   null;
-															int 								rowNumber		=   0;
-															 
-															if(list.size()>0){
-																for(int i=0;i<list.size();i++){
-																	bean = list.get(i);
-																	rowNumber = i+1; 
-																
-																%>
-																 <tr>
-																	<td align="center">
-																		<B><%=rowNumber%></B>
-																	</td>
-																	<td align="center" >
-																		<B><%=bean.getTicketId()%></B>
-																	</td>
-																	<td align="center" >
-																		<B><%=bean.getSeatingNo()%></B>
-																	</td>
-																	<td align="center">
-																		<B><%=bean.getBookingTypeName()%></B>
-																	</td>
-																	<td align="right">
-																		<B><%=bean.getBookingPrices()%></B>
-																	</td>
-																</tr> 
-																<% } %>
+													<div class="height250">
+														<table class="sim-panel-result-table" id="tbl_result" border="1" width="100%">
+															<thead> 
 																<tr>
-																	<td align="center" colspan="4"></td>
-																	<td align="right">
-																		<B><%=seatSummaryReservationForm.getSumBookingPrices()%></B>
+																	<th width="10%" style="text-align: center;"><B>ลำดับ</B></th>
+																	<th width="20%" style="text-align: center;"><B>Ticket Id</B></th>
+																	<th width="20%" style="text-align: center;"><B>เลขที่นั่ง</B></th>
+																	<th width="25%" style="text-align: center;"><B>ประเภทตั๋ว</B></th>
+																	<th width="25%" style="text-align: center;"><B>ราคา</B></th>
+																</tr>
+															</thead>
+															<tfoot>
+																<tr>
+																	<td align="right" colspan="5">
+																		<B>รวมเงิน</B>&nbsp;<%=seatSummaryReservationForm.getSumBookingPrices()%>
 																	</td>
 																</tr> 
-															<%}else{ %>
-															<tr align="center">
-																<td align="center" colspan="5">
-																	<B>ไม่พบข้อมูล</B>
-																</td>
-															</tr> 
-															<%} %>
-														</tbody>
-													</table>
+															</tfoot>
+															<tbody>
+																<%
+																List<SeatSummaryReservationBean>  	list			=   seatSummaryReservationForm.getResultList();
+																SeatSummaryReservationBean 			bean			=   null;
+																int 								rowNumber		=   0;
+																 
+																if(list.size()>0){
+																	for(int i=0;i<list.size();i++){
+																		bean = list.get(i);
+																		rowNumber = i+1; 
+																	
+																	%>
+																	 <tr>
+																		<td align="center">
+																			<%=rowNumber%>
+																		</td>
+																		<td align="center" >
+																			<%=bean.getTicketId()%>
+																		</td>
+																		<td align="center" >
+																			<%=bean.getSeatingNo()%>
+																		</td>
+																		<td align="center">
+																			<%=bean.getBookingTypeName()%>
+																		</td>
+																		<td align="right">
+																			<%=bean.getBookingPrices()%>
+																		</td>
+																	</tr> 
+																	<% } %>
+																<%}else{ %>
+																<tr align="center">
+																	<td align="center" colspan="5">
+																		<B>ไม่พบข้อมูล</B>
+																	</td>
+																</tr> 
+																<%} %>
+															</tbody>
+														</table>
+													</div>
 													<br/>
 													<iframe name="ttestt" 
 															id="ttestt"
@@ -155,7 +174,7 @@
 															scrolling="yes"  
 															frameborder="0" 
 															width="800" 
-															height="600">
+															height="300">
 													</iframe>
 													<br/>
 													<input type="button" id="btnSubmit" name="btnSubmit" onclick="lp_print();" class="btn" style="width: 150px;" value="พิมพ์" />&nbsp;&nbsp;
