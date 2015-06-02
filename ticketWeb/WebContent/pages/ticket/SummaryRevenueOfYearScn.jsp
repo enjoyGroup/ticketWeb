@@ -112,14 +112,14 @@
 										<section class="panel panel-default">
 											<div class="panel-body" align="center">
 												<!-- Begin contents -->
-												<div style="margin-top: 30px;" align="center">
-														<table class="table sim-panel-result-table" id="tbl_result" border="1" style="border: 2; width:60%">
-															<thead> 
-																<tr class="headerRow">
-																	<th width="30%" style="text-align: center;"><B>ลำดับ</B></th>
-																	<th width="30%" style="text-align: center;"><B>ปีการแข่งขัน</B></th>
-																	<th width="40%" style="text-align: center;"><B>จำนวนเงิน</B></th>
-																</tr>
+												<div  class="row col-md-6 col-md-offset-2 custyle">
+														<table class="table" id="tbl_result" style="width:50%;border:1px solid #ccc" border="1" bordercolor="#A2F9D4">
+															<thead>
+																<tr style="background-color:#A2F9D4;">
+															    	<th style="width: 10%; text-align: center;">ลำดับ</th>
+															   		<th style="width: 50%; text-align: center;">ปีการแข่งขัน</th>
+															   		<th style="width: 40%; text-align: center;">จำนวนเงิน</th>
+															    </tr>
 															</thead>
 															<tbody>
 																<%
@@ -155,7 +155,7 @@
 															</tbody>
 														</table>
 													</div>
-													<div id="columnchart_values"></div>
+													<div id="columnchart_values" class="row col-md-6 col-md-offset-2 custyle"></div>
 												<!-- End contents -->
 											</div>
 										</section>
