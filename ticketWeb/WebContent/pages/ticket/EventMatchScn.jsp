@@ -95,16 +95,7 @@
 			}
 		}
 		
-		function lp_checkFormattime(av_object){ 
-			var lv_time = av_object.value;
-			try{ 
-				if(lv_time){
-					
-				}  
-			}catch(e){
-				alert("lp_checkFormattime :: " + e);
-			}
-		}
+	
 		
 		function lp_dateClick(ao_obj){
 			   
@@ -675,6 +666,20 @@
 		    i++;
 		    //alert();
 		});
+		
+
+	 	function lp_checkFormattime(av_object){ 
+			var lv_time = av_object.value;
+			try{ 
+				if(lv_time){
+					
+				}  
+			}catch(e){
+				alert("lp_checkFormattime :: " + e);
+			}
+		}  
+		
+ 
 		
 	 
 	</script>

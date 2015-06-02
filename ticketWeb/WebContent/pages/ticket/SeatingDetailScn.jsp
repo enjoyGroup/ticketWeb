@@ -57,11 +57,10 @@
 		
 		$(document).ready(function(){ 
 			$('#menu1').ptMenu();
-			gv_service 	= "service=" + $('#service').val();   
-			
+			gv_service 	= "service=" + $('#service').val();    
 			 
 			if($("#hidUserLevel").val()  == "9"){
-				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="")){
+				if(($("#fieldZoneName").val()=="") || ($("#nameTicket").val()=="")||  ($("#nameRow").val()=="")){
 					$("#btnSave").attr('disabled','disabled');
 					$("#btnCancel").attr('disabled','disabled');
 					$("#btnAdd").attr('disabled','disabled');
@@ -406,7 +405,7 @@
 				cell1.innerHTML = av_index ;
 				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)'  value='"+av_bookingTypeName+ "'/>"+
 				  				  "<input type='hidden' name='bookingTypeId' id='bookingTypeId'  value='"+av_bookingTypeId+ "'/>";
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'    onblur='lp_onBlurFormatNumber(this);' value='"+av_bookingPrices+ "'/>" ;
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  onblur='lp_onBlurFormatNumber(this);' value='"+av_bookingPrices+ "'/>" ;
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='"+av_fieldZoneId+"'/>" +
@@ -427,7 +426,7 @@
 				cell1.innerHTML = av_index ;
 				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass' onblur='lp_onblur_bookingTypeName(this)' value='"+av_bookingTypeName+ "'/>" +
 				 				  "<input type='hidden' name='bookingTypeId' id='bookingTypeId'  value='"+av_bookingTypeId+ "'/>";
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice' onblur='lp_onBlurFormatNumber(this);'  value='"+av_bookingPrices+ "'/>" ; 
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass' onblur='lp_onBlurFormatNumber(this);'  value='"+av_bookingPrices+ "'/>" ; 
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+ 
 								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />"+
@@ -467,7 +466,7 @@
 				lv_seq          = lv_length ;
  				cell1.innerHTML =  lv_seq ;
 				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)'  value=''/>" ;
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='moneyOnly' onblur='lp_onBlurFormatNumber(this);'  value='0.00'/>" ; 
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  class='moneyOnly' onblur='lp_onBlurFormatNumber(this);'  value='0.00'/>" ; 
 				cell4.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value=''/>" + 
@@ -530,7 +529,7 @@
             
 				cell1.innerHTML = "1";
 				cell2.innerHTML = "<input  type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)' value=''/>"; 
-				cell3.innerHTML = "<input type='text' id='bookingTypePrice'  name='bookingTypePrice'   onblur='lp_onBlurFormatNumber(this);'  value=''/>"; 
+				cell3.innerHTML = "<input type='text' id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  onblur='lp_onBlurFormatNumber(this);'  value=''/>"; 
 				cell4.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+ 
@@ -665,7 +664,7 @@
 		    	}else{
 		    		"&nameRowInd=2";
 		    	}
-			alert(lv_params);  
+			//alert(lv_params);  
  				gp_progressBarOn();
 				$.ajax({
 					async:false,
@@ -753,26 +752,40 @@
 				}
 			}
 		
-			try{  
+			try{   
 				var lv_length = lo_table.rows.length;
+ 
 			//alert(lv_length);
 				if(lv_length <= 2){
 					alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
 					return false;
-				}else{
-					for(var i = 1 ; i < lv_length ; i++){
-	//alert(lo_table.rows[i].cells[0]);
-						
-					}
+				}else{ 
+			  
+					$.each($('.bookingTypeNameClass').serializeArray(), function(i, field) {
+					    //alert(field.value);
+					    if(field.value == ""){
+							alert("กรุณาระบุประเภทตั๋ว  ");
+							return false;
+					    } 
+					});
+				  
+				   var  lv_userLevel = document.getElementById("hidUserLevel").value;
+				   if(lv_userLevel != "9"){
+						$.each($('.bookingTypePriceClass').serializeArray(), function(j, price) {
+						    //alert(price.value);
+						    if(price.value <= "0.00"){ 
+								alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
+								return false;
+						    } 
+						});
+				   }
+			   
 				}
 				
 			}catch(e){
 				alert("lp_validate_data :: " + e);
 			}
-			
 			 
-			 
-			return true;
 		}
 		
 		function lp_onblur_validate(ao_price){
@@ -780,8 +793,8 @@
 			lo_price     = document.getElementsByName("bookingTypePrice");
 			lv_price     = lo_price[lv_index-1].value;
 			lv_userLevel = document.getElementById("hidUserLevel").value;
-        //alert(lv_userLevel);	
-        //alert(lv_price);
+         //alert(lv_userLevel);	
+         //alert(lv_price);
 			if(lv_price<= "0.00" && lv_userLevel != "9"){ 
 				alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
 				return;
@@ -995,9 +1008,10 @@
 				$("#nameRowInd").attr('disabled','disabled'); 
 	   			document.getElementById("nameRowInd2").checked = true;
 				document.getElementById("nameRowInd1").checked = falsse;
-			}e 
+			} 
 					
 		}
+		
 		
 	</script>
 </head>
@@ -1184,19 +1198,12 @@
 																	if(fieldZoneDetail.size()>0){
 																		for(int i=0;i<fieldZoneDetail.size();i++){ 
 																			fieldZoneDetailBean = fieldZoneDetail.get(i); 
+																			System.out.print("seq is  : "+fieldZoneDetail.get(i).getSeq());
 																			seq++;
 																	  %>
 																		 <tr>
 																			<td align="center">
-																				<%=seq%>
-																				<input  type="hidden" 
-																						name="seq" 
-																						id="seq"  
-																						value="<%=fieldZoneDetailBean.getSeq()%>"/>
-																				<input type="hidden" 
-									                           	 				 		name="hidSeq" 
-									                           	 				 		id="hidSeq"  
-									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/> 
+																				<%=seq%>  
 																			</td>
 																			<td align="center">
 																				<input  type="text" 
@@ -1204,13 +1211,14 @@
 																						name="bookingTypeName" 
 																						class="bookingTypeNameClass" 
 																					    onblur="lp_onblur_bookingTypeName(this)"  
-																						value="<%=fieldZoneDetailBean.getBookingTypeName()%>"/>
+																						value="<%=fieldZoneDetailBean.getBookingTypeName()%>"/> 
 																			</td>
 																			<td align="center">
 																				<input type="text" 
 																					   id="bookingTypePrice" 
-																					   name="bookingTypePrice"   
-																					   onclick="lp_onblur_validate(this)"  
+																					   name="bookingTypePrice"  
+																					   class="bookingTypePriceClass" 
+																					   onclick="lp_onblur_validate(this),lp_onBlurFormatNumber(this);"  
 																					   value="<%=fieldZoneDetailBean.getBookingPrices()%>"/>
 																			</td> 
 																			<td style="text-align: center;">  
@@ -1228,6 +1236,14 @@
 									                           	 				 		name="fieldZoneId" 
 									                           	 				 		id="fieldZoneId"  
 									                           	 				 		value="<%=fieldZoneDetailBean.getFieldZoneId()%>"/>  
+									                           	 				 <input  type="hidden" 
+																						name="seq" 
+																						id="seq"  
+																						value="<%=fieldZoneDetailBean.getSeq()%>"/>
+																				 <input type="hidden" 
+									                           	 				 		name="hidSeq" 
+									                           	 				 		id="hidSeq"  
+									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/> 
 												                            </td>
 																		</tr> 
 																		<% } 

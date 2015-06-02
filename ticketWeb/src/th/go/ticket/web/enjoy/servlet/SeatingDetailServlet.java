@@ -33,6 +33,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import th.go.ticket.app.enjoy.bean.BookingTypeBean;
+import th.go.ticket.app.enjoy.bean.EventMatchBean;
 import th.go.ticket.app.enjoy.bean.FieldZoneDetailBean;
 import th.go.ticket.app.enjoy.bean.FieldzonemasterBean;
 import th.go.ticket.app.enjoy.bean.SeatingDetailBean;
@@ -119,18 +120,99 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 	}
 	
  
+//	private void onLoad() throws EnjoyException{
+//		logger.info("[onLoad][Begin]");
+//		
+//		List<FieldzonemasterBean> 		zoneList			= null; 
+//		
+//		try{
+//			zoneList 				= this.dao.getZoneList(); 
+//			System.out.println("onLoad zoneList :: "+zoneList.size());	
+//			if(zoneList!=null && zoneList.size() > 0){ 
+//				this.lp_onSet_zoneDetail(zoneList.get(0).getFieldZoneId(),zoneList.get(0).getFieldZoneName()); 
+//				this.form.setZoneMasterList(zoneList); 
+//			} 
+//			
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			throw new EnjoyException("onLoad :: " + e.getMessage());
+//		}finally{
+//			zoneList			= null;  
+//			logger.info("[onLoad][End]");
+//		}
+//		
+//	}
+	
 	private void onLoad() throws EnjoyException{
 		logger.info("[onLoad][Begin]");
-		
-		List<FieldzonemasterBean> 		zoneList			= null; 
+		int							    zoneId			    = 0;
+		String                          zoneName            = null;
+		JSONObject 						obj 				= null; 
+		JSONObject 						objDetail 			= null;
+		JSONObject                      objBook             = null;
+		JSONObject 						objSeason 			= null;
+		List<FieldZoneDetailBean> 	    detailList			= null;
+		FieldzonemasterBean			    master				= null;
+		FieldZoneDetailBean			    zoneDetail			= null;
+		JSONArray 						detailJSONArray 	= null; 
+		JSONArray 						bookJSONArray 	    = null;
+		JSONArray 						zoneJSONArray 	    = null;
+		List<FieldzonemasterBean>		zoneList			= null;
 		
 		try{
 			zoneList 				= this.dao.getZoneList(); 
 			System.out.println("onLoad zoneList :: "+zoneList.size());	
-			if(zoneList!=null && zoneList.size() > 0){ 
-				this.lp_onSet_zoneDetail(zoneList.get(0).getFieldZoneId(),zoneList.get(0).getFieldZoneName()); 
-				this.form.setZoneMasterList(zoneList); 
-			} 
+			if(zoneList!=null && zoneList.size() > 0){  
+				this.form.setZoneMasterList(zoneList);
+				zoneId   = zoneList.get(0).getFieldZoneId();
+				zoneName = zoneList.get(0).getFieldZoneName();
+				this.lp_onSet_zoneDetail(zoneId,zoneName);
+				this.form.setFieldZoneId(zoneId);
+				detailList 	= this.form.getFieldZoneDetailBeans();
+				zoneList	= this.form.getZoneMasterList();
+				master      = this.form.getFieldzonemasterBean();
+				obj 					= new JSONObject();
+				detailJSONArray 		= new JSONArray();
+				zoneJSONArray 		    = new JSONArray();
+				bookJSONArray           = new JSONArray();
+				obj.put("ZONE_NAME", 		zoneName); 
+				obj.put(STATUS, 			SUCCESS);  
+				 
+				objDetail 		= new JSONObject(); 
+				objDetail.put("fieldZoneId", 	master.getFieldZoneId());
+				objDetail.put("fieldZoneName", 	master.getFieldZoneName());
+				objDetail.put("rows", 			master.getRows());
+				objDetail.put("seating", 		master.getSeating());
+				objDetail.put("totalSeating", 	master.getTotalSeating());
+				objDetail.put("typeRowName", 	master.getTypeRowName());
+				objDetail.put("rowName", 		master.getNameRow());
+				objDetail.put("fieldZoneNameTicket", master.getFieldZoneNameTicket());
+				objDetail.put("startSeatingNo", 	master.getStartSeatingNo());
+				
+				for(int i=0;i<detailList.size();i++){		 
+					zoneDetail = detailList.get(i);
+					objBook    = new JSONObject(); 
+					objBook.put("bookingTypeId", 	zoneDetail.getBookingTypeId());
+					objBook.put("bookingTypeName",zoneDetail.getBookingTypeName());
+					objBook.put("bookingPrices", 	zoneDetail.getBookingPrices());
+					objBook.put("seq", 	zoneDetail.getSeq());
+					bookJSONArray.add(objBook);
+					 
+					objDetail.put("bookingList",bookJSONArray);
+				}
+				
+				obj.put("detailSize", 	detailList.size()); 
+ 
+				detailJSONArray.add(objDetail); 
+
+				obj.put("detail", 			detailJSONArray);
+		
+				
+			}else{
+				obj.put(STATUS, 			ERROR);
+				obj.put(ERR_MSG, 			"Zone ต้องไม่เท่ากับค่าว่าง");
+			}
+			  
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -344,7 +426,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 	private void lp_onclick_saveSeatingDetail() throws EnjoyException{
 		logger.info("[lp_onclick_saveSeatingDetail][Begin]");  
 			String 			       getDelList 	            = null; 
-			String[]               getSeqList               = null;
+			String[]               getSeqList               = null; 
 			String[]               getBookingTypeNameList   = null; 
 			String[]               getBookingTypePriceList  = null;
 			String[]			   statusList 	            = null;
@@ -358,8 +440,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			String  			   nameRow	                = null;
 			int                    hidZoneMasterId          = 0;
 			int  	  			   seq	                	= 0;
-			String  			   bookingTypeName	        = null;
-//			Double  			   bookingTypePrice	        = 0.00; 
+			String  			   bookingTypeName	        = null; 
 			String  			   bookingTypePrice	        = null; 
 			int                    fieldZoneId              = 0;
 			FieldzonemasterBean    bean 		    		= null; 
@@ -370,10 +451,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			String                 status                   = null;
 			List<FieldZoneDetailBean>   fieldZoneDetailBeans  = null;
 			int                    seqLast              	  = 0;
-			int                    newSeq               	  = 0;  
+			int                    newSeq               	  = 0;   
+			
 			try{  
 				obj 						= new JSONObject();
-				getSeqList					= this.request.getParameterValues("hidSeq"); 
+				getSeqList					= this.request.getParameterValues("hidSeq");  
 				getBookingTypeNameList		= this.request.getParameterValues("bookingTypeName"); 
 				getBookingTypePriceList		= this.request.getParameterValues("bookingTypePrice");   
 				zoneMasterList              = this.request.getParameterValues("fieldZoneMasterId"); 
@@ -409,15 +491,15 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				seqLast = this.dao.selectMaxSeq(hidZoneMasterId);
 				System.out.println("seqLast :: "+seqLast);
 				newSeq  = seqLast;
-				
-				if(getBookingTypeNameList.length>0){
-					fieldZoneDetailBeans = new ArrayList<>();
-					for(int i = 0 ; i < getBookingTypeNameList.length ; i++){   
+			
+				if(getBookingTypeNameList.length>0){ 
+					
+					fieldZoneDetailBeans = new ArrayList<FieldZoneDetailBean>();
+					for(int i = 0 ; i < getBookingTypeNameList.length ; i++){    
 						seq           		= Integer.valueOf(EnjoyUtils.nullToStr(getSeqList[i]));   
-						System.out.println("seq:"+seq);	
-						bookingTypeName     = EnjoyUtils.nullToStr(getBookingTypeNameList[i]);     
-						System.out.println("bookingTypeName:"+bookingTypeName);	
-						//bookingTypePrice    = Double.valueOf(EnjoyUtils.nullToStr(getBookingTypePriceList[i])); 
+						System.out.println("seq:"+seq);	 
+ 						bookingTypeName     = EnjoyUtils.nullToStr(getBookingTypeNameList[i]);     
+ 						System.out.println("bookingTypeName:"+bookingTypeName);	 
 						bookingTypePrice    = EnjoyUtils.nullToStr(getBookingTypePriceList[i]);  
 						System.out.println("bookingTypePrice:"+bookingTypePrice);	
 						status        		= EnjoyUtils.nullToStr(statusList[i]); 
@@ -425,11 +507,13 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 						bookingTypeId 		= this.dao.findBookTypeId(bookingTypeName);
 						System.out.println("bookingTypeId:"+bookingTypeId);	 	
 						
+				 
 						if(bookingTypeId==0){
 							obj.put("status", 		"ERROR"); 
 							obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
 							throw new EnjoyException("saveSeatingDetail : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
 						}
+					 
 						
 					
 						System.out.println("status detail :"+status);	
