@@ -163,8 +163,11 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 						
 						this.form.setBookingTypeId	(bookingTypeId);
 						this.form.setBookingTypeName(bookingTypeName);
+						
+						ticketTypeBean.setClassTxt("txt-select");
 					}else{
 						ticketTypeBean.setClassBtn("btn-unSelect");
+						ticketTypeBean.setClassTxt("txt-unSelect");
 					}
 					
 					mapBookingType.put(bookingTypeId, 0);

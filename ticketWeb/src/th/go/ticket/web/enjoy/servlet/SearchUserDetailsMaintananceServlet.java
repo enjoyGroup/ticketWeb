@@ -2,6 +2,7 @@ package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -71,7 +72,9 @@ public class SearchUserDetailsMaintananceServlet extends EnjoyStandardSvc {
 				request.setAttribute("target", Constants.PAGE_URL +"/UserDetailsSearchScn.jsp");
  			}else if(pageAction.equals("searchUserDetail")){
  				this.onSearchUserDetail();
- 			}
+ 			}else if(pageAction.equals("getPage")){
+				this.lp_getPage();
+			}
  			
  			session.setAttribute(FORM_NAME, this.form);
  		}catch(EnjoyException e){
@@ -137,6 +140,13 @@ public class SearchUserDetailsMaintananceServlet extends EnjoyStandardSvc {
 		List<UserDetailsBean> 		listUserDetailsBean = null;
 		List<Userprivilege> 		listUserprivilege   = null;
 		Hashtable<String, String> 	fUserprivilege		= null;
+		int							cou					= 0;
+		int							pageNum				= 1;
+        int							totalPage			= 0;
+        int							totalRs				= 0;
+        List<UserDetailsBean> 		list 				= new ArrayList<UserDetailsBean>();
+        List<UserDetailsBean> 		listTemp 			= new ArrayList<UserDetailsBean>();
+        HashMap						hashTable			= new HashMap();
 
 		try{
 			listUserDetailsBean 		= new ArrayList<UserDetailsBean>();
@@ -153,6 +163,8 @@ public class SearchUserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			userdetailForm.setUserId	(EnjoyUtils.nullToStr(this.request.getParameter("userId")));
 			userdetailForm.setUserStatus(EnjoyUtils.nullToStr(this.request.getParameter("userStatus")));
 			
+			this.form.setUserDetailsBean(userdetailForm);
+			
 			logger.info("[onSearchUserDetail] userdetailForm.getUserName() 	 :: " + userdetailForm.getUserName());
 			logger.info("[onSearchUserDetail] userdetailForm.getUserId() 	 :: " + userdetailForm.getUserId());
 			logger.info("[onSearchUserDetail] userdetailForm.getUserStatus() :: " + userdetailForm.getUserStatus());
@@ -165,11 +177,47 @@ public class SearchUserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			listUserDetailsBean	 		= this.dao.getListUserdetail(session, userdetailForm, fUserprivilege);
 
 			//logger.info("[onSearchUserDetail] listUserDetailsBean.size :: " + listUserDetailsBean.size());
-			
+			logger.info("[onSearchUserDetail] listUserDetailsBean :: " + listUserDetailsBean.size());
 			if(listUserDetailsBean.size() > 0){				
-				this.form.setUserDetailsBeanList(listUserDetailsBean);		
-				//logger.info("มีข้อมูลจะแสดงคือ :: " + this.form.getUserDetailsBeanList().size());
+				//this.form.setUserDetailsBeanList(listUserDetailsBean);		
+				
+				hashTable.put(pageNum, list);
+				for(UserDetailsBean bean:listUserDetailsBean){
+					if(cou==10){
+			    		cou 		= 0;
+			    		list 		= new ArrayList<UserDetailsBean>();
+			    		pageNum++;
+			    	}
+					
+					list.add(bean);
+					hashTable.put(pageNum, list);
+			    	cou++;
+			    	totalRs++;	
+					
+				}
+				
+				totalPage = hashTable.size();
+				
+				logger.info("[onSearchUserDetail] totalPage :: " + totalPage);
+				
+			    this.form.setTotalPage(totalPage);
+			    this.form.setTotalRecord(EnjoyUtils.convertFloatToDisplay(String.valueOf(totalRs) , 0));
+			    this.form.setHashTable(hashTable);
+			    this.form.setPageNum(1);
+				
+			    listTemp = (List<UserDetailsBean>) this.form.getHashTable().get(this.form.getPageNum());
+			    
+			    logger.info("[onSearchUserDetail] listTemp :: " + listTemp.size());
+			    
+			    this.form.setUserDetailsBeanList(listTemp);
+				
+				
 			}else{
+				this.form.setTotalPage(1);
+			    this.form.setTotalRecord(EnjoyUtils.convertFloatToDisplay("0" , 0));
+			    this.form.setHashTable(hashTable);
+			    this.form.setPageNum(1);
+				this.form.setUserDetailsBeanList(listUserDetailsBean);
 				throw new EnjoyException("ไม่พบรายการตามเงื่อนไขที่ระบุ");
 			}			
 		}catch(EnjoyException e){
@@ -189,7 +237,27 @@ public class SearchUserDetailsMaintananceServlet extends EnjoyStandardSvc {
 	}
 	
 	
-	
+	private void lp_getPage(){
+		   logger.info("[lp_getPage][Begin]");
+		   
+		   int								pageNum				= 1;
+		   List<UserDetailsBean> 			list 				= new ArrayList<UserDetailsBean>();
+		   
+		   try{
+			   pageNum					= Integer.parseInt(this.request.getParameter("pageNum"));
+			   
+			   this.form.setPageNum(pageNum);
+			   
+			   list = (List<UserDetailsBean>) this.form.getHashTable().get(pageNum);
+			   this.form.setUserDetailsBeanList(list);
+			   
+		   }catch(Exception e){
+			   e.printStackTrace();
+		   }finally{
+			   logger.info("[lp_getPage][End]");
+		   }
+		   
+	   }
 	
 	
 	

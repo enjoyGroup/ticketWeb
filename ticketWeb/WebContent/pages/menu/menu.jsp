@@ -19,12 +19,12 @@
 		});
 	</script>
 <div class="headwrap">
-	<div class="row">
-    	<div class="brand span4">
+	<div class="row" style="position: relative;">
+    	<div class="brand span4" style="padding-left: 15px;">
         	<img src="/ticketWeb/images/logo2.png" >
         </div>
         
-        <div class="span8 user"  style="margin-right:4%;">
+        <div class="span8 user"  style="position: absolute;margin-right: 0px;width: 95%;">
         	<div class="font14"><img src="<%=servURL1%>/images/icon-user.jpg" alt="">ชื่อผู้ใช้งาน <span class="text_white"><%=userDeatil.getUserName() %>&nbsp;&nbsp;<%=userDeatil.getUserSurname() %></span></div>
             <div class="font12"></div>
             
@@ -43,7 +43,7 @@
 		for(int i=0;i<userDeatil.getUserPrivilegeList().size();i++){		
 			userPrivilegeBean = userDeatil.getUserPrivilegeList().get(i);
 	%>
-			<li><a href="#"><%=userPrivilegeBean.getPrivilegeName()%></a>
+			<li style="width: 165px;"><a href="#"><%=userPrivilegeBean.getPrivilegeName()%></a>
 				<ul>
 					<%
 					for(int j=0;j<userPrivilegeBean.getPagesDetail().size();j++){

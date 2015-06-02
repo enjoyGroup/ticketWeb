@@ -48,11 +48,11 @@
         	var status				= null;
         	var errMsg				= null;
 	        
-	        try{
+	        try{//alert(ao_val);
 	        	jsonObj = ao_val;
         		status	= jsonObj.status;
         		
-        		//alert(status);
+        		//alert(status);alert(jsonObj.errMsg);
         		if(status=="SUCCESS"){
         			location.reload();
         		}else{

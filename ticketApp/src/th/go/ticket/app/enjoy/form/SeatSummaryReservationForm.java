@@ -16,6 +16,7 @@ public class SeatSummaryReservationForm {
 	private String 								matchTime;
 	private String								matchId;
 	private String								fieldZoneId;
+	private String								resultSize;
 	
 
 	public SeatSummaryReservationForm() {
@@ -27,6 +28,7 @@ public class SeatSummaryReservationForm {
 		this.matchTime 			= "";
 		this.matchId 			= "";
 		this.fieldZoneId 		= "";
+		this.resultSize			= "0";
 	}
 
 
@@ -107,6 +109,16 @@ public class SeatSummaryReservationForm {
 
 	public void setFieldZoneId(String fieldZoneId) {
 		this.fieldZoneId = fieldZoneId;
+	}
+
+
+	public String getResultSize() {
+		return resultSize;
+	}
+
+
+	public void setResultSize(String resultSize) {
+		this.resultSize = resultSize;
 	}
 	
 	

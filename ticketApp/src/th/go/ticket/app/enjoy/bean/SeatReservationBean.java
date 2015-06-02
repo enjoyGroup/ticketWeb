@@ -21,6 +21,7 @@ public class SeatReservationBean {
 	private String seatIndex;
 	private String classSeat;
 	private String classBtn;
+	private String classTxt;
 	private String matchId;
 	private String userUniqueId;
 	private String startSeatingNo;
@@ -51,6 +52,7 @@ public class SeatReservationBean {
 		this.seatIndex				= "0";
 		this.classSeat				= "";
 		this.classBtn				= "";
+		this.classTxt				= "";
 		this.matchId				= "";
 		this.userUniqueId			= "";
 		this.startSeatingNo			= "";
@@ -285,5 +287,15 @@ public class SeatReservationBean {
 	public void setAwayTeamNameEN(String awayTeamNameEN) {
 		this.awayTeamNameEN = awayTeamNameEN;
 	}
+
+	public String getClassTxt() {
+		return classTxt;
+	}
+
+	public void setClassTxt(String classTxt) {
+		this.classTxt = classTxt;
+	}
+	
+	
 	
 }

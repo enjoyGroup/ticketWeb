@@ -1,11 +1,11 @@
 package th.go.ticket.app.enjoy.form;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import th.go.ticket.app.enjoy.bean.RefuserstatusBean;
 import th.go.ticket.app.enjoy.bean.UserDetailsBean;
-import th.go.ticket.app.enjoy.model.Refuserstatus;
 import th.go.ticket.app.enjoy.model.Userprivilege;
 
 public class UserDetailsMaintananceForm {
@@ -21,6 +21,10 @@ public class UserDetailsMaintananceForm {
 	private String					errMsg;
 	private String					pageMode;
 	private String					titlePage;
+	private int						pageNum;
+	private int						totalPage;
+	private String					totalRecord;
+	private HashMap					hashTable;
 	
 	public UserDetailsMaintananceForm(){
 		this.userDetailsBean 		= new UserDetailsBean();
@@ -30,6 +34,10 @@ public class UserDetailsMaintananceForm {
 		this.errMsg					= "";
 		this.pageMode				= NEW;
 		this.titlePage				= "";
+		this.pageNum				= 1;
+		this.totalPage				= 1;
+		this.totalRecord			= "";
+		this.hashTable				= new HashMap();
 	}
 
 	public UserDetailsBean getUserDetailsBean() {
@@ -88,6 +96,38 @@ public class UserDetailsMaintananceForm {
 		this.titlePage = titlePage;
 	}
 
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public int getTotalPage() {
+		return totalPage;
+	}
+
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+
+	public String getTotalRecord() {
+		return totalRecord;
+	}
+
+	public void setTotalRecord(String totalRecord) {
+		this.totalRecord = totalRecord;
+	}
+
+	public HashMap getHashTable() {
+		return hashTable;
+	}
+
+	public void setHashTable(HashMap hashTable) {
+		this.hashTable = hashTable;
+	}
+	
 	
 	
 }

@@ -23,7 +23,10 @@ public class CancelSeatForm {
 	private String 								ticketId;
 	private String 								fieldZoneId;
 	private String								matchId;
-	private String								sesson;
+	private String								season;
+	private CancelSeatBean		 				cancelSeatBean;
+	private String								resultSize;
+	private String								awayTeamNameTH;
 	
 
 	public CancelSeatForm() {
@@ -34,13 +37,16 @@ public class CancelSeatForm {
 		this.resultList 		= new ArrayList<CancelSeatBean>();
 		this.seasonList 		= new ArrayList<String>();
 		this.teamList	 		= new ArrayList<CancelSeatBean>();
-
+		this.cancelSeatBean		= new CancelSeatBean();
+		
 		this.seatingNoBegin		= "";
 		this.seatingNoEnd		= "";
 		this.ticketId			= "";
 		this.fieldZoneId 		= "";
-		this.sesson 			= "";
+		this.season 			= "";
 		this.matchId 			= "";
+		this.resultSize			= "0";
+		this.awayTeamNameTH		= "";
 	}
 
 	//*****************************************************//
@@ -109,12 +115,12 @@ public class CancelSeatForm {
 		this.matchId = matchId;
 	}
 
-	public String getSesson() {
-		return sesson;
+	public String getSeason() {
+		return season;
 	}
 
-	public void setSesson(String sesson) {
-		this.sesson = sesson;
+	public void setSeason(String season) {
+		this.season = season;
 	}
 
 	public List<String> getSeasonList() {
@@ -131,6 +137,30 @@ public class CancelSeatForm {
 
 	public void setTeamList(List<CancelSeatBean> teamList) {
 		this.teamList = teamList;
+	}
+
+	public CancelSeatBean getCancelSeatBean() {
+		return cancelSeatBean;
+	}
+
+	public void setCancelSeatBean(CancelSeatBean cancelSeatBean) {
+		this.cancelSeatBean = cancelSeatBean;
+	}
+
+	public String getResultSize() {
+		return resultSize;
+	}
+
+	public void setResultSize(String resultSize) {
+		this.resultSize = resultSize;
+	}
+
+	public String getAwayTeamNameTH() {
+		return awayTeamNameTH;
+	}
+
+	public void setAwayTeamNameTH(String awayTeamNameTH) {
+		this.awayTeamNameTH = awayTeamNameTH;
 	}
 	
 }
