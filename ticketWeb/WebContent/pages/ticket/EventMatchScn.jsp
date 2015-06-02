@@ -56,20 +56,33 @@
 	    var toDay 	        = d.getDate() + '/' + (d.getMonth() + 1) + '/' + (d.getFullYear() + 543);
 	    
 		$(document).ready(function(){
-			
 			$('#menu1').ptMenu();
 			gv_service 	= "service=" + $('#service').val();
+ 
+			$("#btnSave").attr('disabled','disabled');
+			$("#btnCancel").attr('disabled','disabled');
+			$("#buttonAdd").attr('disabled','disabled');
+			
+	        if($("#seasonNew").val() != '') {
+	        	$("#btnSave").removeAttr('disabled');
+	        	$("#btnCancel").removeAttr('disabled');
+	        	$("#buttonAdd").removeAttr('disabled');
+	        }
+	        
+	    	 
+	    	$(".dateFormat").live("focus", function(){
+			    $(this).datepicker({ changeMonth: true, changeYear: true,dateFormat: 'dd/mm/yy', 
+							    	isBuddhist: true, 
+							    	defaultDate: toDay,dayNames: ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],
+						            dayNamesMin: ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'],
+						            monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+						            monthNamesShort: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']});
+			});
+			
 	 
 		});
-		
-		$(".dateFormat").live("click", function(){
-		    $(this).datepicker({ changeMonth: true, changeYear: true,dateFormat: 'dd/mm/yy', 
-						    	isBuddhist: true, 
-						    	defaultDate: toDay,dayNames: ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],
-					            dayNamesMin: ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'],
-					            monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
-					            monthNamesShort: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']});
-		});
+	
+	 
 		
 		function lp_checkFormatdate(av_object){ 
 		//alert(av_object.id);	
@@ -79,6 +92,17 @@
 				
 			}catch(e){
 				alert("lp_checkFormatdate :: " + e);
+			}
+		}
+		
+		function lp_checkFormattime(av_object){ 
+			var lv_time = av_object.value;
+			try{ 
+				if(lv_time){
+					
+				}  
+			}catch(e){
+				alert("lp_checkFormattime :: " + e);
 			}
 		}
 		
@@ -109,6 +133,8 @@
 			var lv_class		= "";
 			var lv_click		= "";
 			
+		
+			    
 			try{
 				lo_table 		= document.getElementById("result_season");
 				lv_length 		= lo_table.rows.length;
@@ -169,10 +195,15 @@
 		}
 		
        function lp_changeSeason(av_season){
+       
+    	    if (confirm("ยืนยันการเปลี่ยนปีการแข่งขัน ?") == false) {
+    	    	 return false;
+    	    }  
+    	    
     	    gv_mode             = "UpdateSeason";
 			var lo_hidSeason 	= null;
 			var lo_seasonTitle	= null;
-		    //alert(av_season);
+	 
 			try{
 				lo_hidSeason 	= document.getElementById("hidSeason");
 				lo_seasonTitle 	= document.getElementById("seasonNew");
@@ -369,6 +400,11 @@
 		
 		function lp_add_row_season(){ //เปิดปิดให้ใส่ข้อมูลใหม่ทั้งหมด
 			//alert("add season new");
+			  if($("#seasonNew").val() != '') {
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#buttonAdd").removeAttr('disabled');
+		      }
 			gv_mode          = "NewSeason";
 			lo_season 	     = document.getElementById("seasonNew");
 			lo_season.value  = "";  
@@ -442,7 +478,7 @@
 			var lv_matchId          = null; 	
 			var i                   = 0;
 			var count				= 0;
-		//alert(lo_tabResultDtl.rows.length);	
+			//alert(lo_tabResultDtl.rows.length);	
 			if(lo_tabResultDtl.rows.length==3){
 				alert("ปีการแข่งขันจะต้องมีอย่างน้อย 1 Match");
 				return;			
@@ -471,58 +507,7 @@
 								rowNumber = i+1;
 								lo_tabResultDtl.rows[i+1].cells[0].innerHTML=rowNumber;
 				    		} 
-						}
-							
-							/*  lv_params = gv_service 
-				              + "&matchId=" +lv_matchId  
-				              + "&pageAction=delRecord";
-
-						   $.ajax({
-								async:false,
-					            type: "POST",
-					            url: gv_url,
-					            data: lv_params,
-					            beforeSend: "",
-					            success: function(data){
-					            	var jsonObj 			= null;
-					            	var status				= null; 
-					            	var errMsg				= null;
-					            	var index				= 1;
-					            	
-					            	try{
-					            	    jsonObj = JSON.parse(data);
-					            		status	= jsonObj.status;
-					                  //alert(status);
-					            		
-					            		if(status=="SUCCESS"){
-					            			
-					            			count = parseInt(jsonObj.COUNT);
-		            			
-		            		                if(count>0){
-		            		                	alert("ไม่สามารถลบ  Match นี้ได้ เนื่องจากมีรายการขายแล้ว");
-		            		                	return;
-		            		                }else{
-						            			gv_delList.push(lv_matchId);
-						            			lo_tabResultDtl.deleteRow(lv_index); 
-									    		var length = lo_tabResultDtl.rows.length-2; 
-									    		for(var i=0;i<length;i++){ 
-													rowNumber = i+1;
-													lo_tabResultDtl.rows[i+1].cells[0].innerHTML=rowNumber;
-									    		} 
-		            		                }
-								    		    
-					            		}else{
-					            			errMsg = jsonObj.errMsg; 
-					            			alert(errMsg);
-					            		} 
-					            	}catch(e){
-					            		alert("in btnDelete :: " + e);
-					            	}
-					            	 
-							    }
-							});
-						}*/
-				  
+						}   
 					} 
 				} 
 		    }
@@ -569,6 +554,7 @@
 		                  //alert(status);		
 			            	if(status=="SUCCESS"){
 			            		alert("บันทึกรายการเรียบร้อย  ");  
+			            		gv_mode         = "saved";
 			            		window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
 		            		}else{
 		            			errMsg = jsonObj.errMsg; 
@@ -648,6 +634,11 @@
 			lv_season   = document.getElementById("seasonNew").value; 
 			lo_table 	= document.getElementById("result_season");
             //alert("lv_season ::"+ lv_season);	 
+             if(lv_season != '') {
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#buttonAdd").removeAttr('disabled');
+		     }
         	lv_length 	= lo_table.rows.length;
         	
         	for(var i =0 ; i < lv_length ; i ++){
@@ -657,6 +648,8 @@
         			break;
         		}
         	}
+        	
+        	
 		}
 		
 		var getId = (function () {
@@ -682,7 +675,8 @@
 		    i++;
 		    //alert();
 		});
-  
+		
+	 
 	</script>
 	
 </head>
@@ -740,7 +734,7 @@
 										   </td>
 						                   <td style='width:80%;padding:0px !important'>
 						                    <div style="padding:10px;" >
-						                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"> 
+						                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
 						                    </div>
 						                    <br>
 						                  	 <div class='sim-panel-result' style="padding:10px;">
@@ -778,7 +772,7 @@
 																 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
 															</td>
 															<td align="center">
-																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>"/>
+																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>" onblur="lp_checkFormattime(this);"  />
 															</td>
 															<td style="text-align: center;">  
 									                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
@@ -795,7 +789,7 @@
 														<td style="visibility:hidden;"></td>
 														<td style="visibility:hidden;"></td>
 														<td style="text-align: center;"> 
-								                       		<input type="button"  class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
+								                       		<input type="button"  id="buttonAdd" class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
 								                       		 <input type="hidden" name="hidStartus" id="hidStartus"  value=""/>
 									                         <input type="hidden" name="matchId" id="matchId"  value=""/>  
 								                       	 </td>
@@ -807,8 +801,8 @@
 					                 <tr>
 					        			<td align="center" colspan="6">
 					        				<br/><br/>
-					        				<input type="button"  ondblclick="return false;" id="btnSave" name="btnSave" value="บันทึก"  class="btn action-add-btn btn-success" onclick="lp_save_page();"/> &nbsp;&nbsp;&nbsp;
-					        				<button ondblclick="return false;" id="btnCancel" name="btnCancel"  class="btn action-del-btn btn-danger"   onclick="lp_reset_page();">ยกเลิก</button> 
+					        				<input type="button"  ondblclick="return false;" id="btnSave" name="btnSave" value="บันทึก"  class="btn action-add-btn btn-success" onclick="lp_save_page();" /> &nbsp;&nbsp;&nbsp;
+					        				<button ondblclick="return false;" id="btnCancel" name="btnCancel"  class="btn action-del-btn btn-danger"   onclick="lp_reset_page();"  >ยกเลิก</button> 
 					        			</td>
 					        		</tr>
 					             </table>	

@@ -2,6 +2,7 @@ package th.go.ticket.web.enjoy.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -43,7 +44,6 @@ import th.go.ticket.app.enjoy.main.Constants;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
 import th.go.ticket.app.enjoy.utils.EnjoyUtils;
 import th.go.ticket.web.enjoy.common.EnjoyStandardSvc;
- 
 import th.go.ticket.web.enjoy.utils.EnjoyUtil;
 
   
@@ -99,8 +99,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
  			}else if(pageAction.equals("UpdateZone")){
  				this.lp_onclick_saveSeatingDetail();
  			}else if(pageAction.equals("getBookingTypeName")){
- 				this.getBookingTypeName();
- 				
+ 				this.getBookingTypeName(); 
+ 			}else if(pageAction.equals("validateBookingTypeName")){
+ 				this.validateBookingTypeName();
  			}
  		
  			System.out.print("userBean.getUserLevel()::"+this.userBean.getUserLevel());
@@ -128,8 +129,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			System.out.println("onLoad zoneList :: "+zoneList.size());	
 			if(zoneList!=null && zoneList.size() > 0){ 
 				this.lp_onSet_zoneDetail(zoneList.get(0).getFieldZoneId(),zoneList.get(0).getFieldZoneName()); 
-				this.form.setFieldzonemasterBeans(zoneList);
-			}	
+				this.form.setZoneMasterList(zoneList); 
+			} 
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -142,26 +143,29 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 	}
 	
 	private void lp_onSet_zoneDetail(int zoneId,String zoneName) throws EnjoyException{
-		logger.info("[lp_onSet_zoneDetail][Begin]");
-		List<SeatingDetailBean> 	seatingDetailBeans	= null;
+		logger.info("[lp_onSet_zoneDetail][Begin]"); 
+		FieldzonemasterBean         fieldzonemasterBean 	= null;
+		List<FieldZoneDetailBean> 	fieldZoneDetailBeans	= null;
 		System.out.println("lp_onSet_zoneDetail zoneName :: "+zoneId);
 		try{
-			logger.info("[lp_onSet_zoneDetail] : send  zoneName :: " +zoneName);
-			seatingDetailBeans	= this.dao.getDetailSeatingByZoneName(zoneId);
-			
-			logger.info("[lp_onSet_zoneDetail] : size :: " +seatingDetailBeans.size());
-			logger.info("[lp_onSet_zoneDetail] :  " +seatingDetailBeans.toString());
+			logger.info("[lp_onSet_zoneDetail] : send  zoneName :: " +zoneName); 
+			fieldZoneDetailBeans = this.dao.getDetailSeatingByZoneId(zoneId); 
+			fieldzonemasterBean = this.dao.getFieldMasterByZoneName(zoneId);
 			
 			this.form.setFieldzonemasterName(zoneName);
-			this.form.setSeatingDetailBeans(seatingDetailBeans);
+			this.form.setFieldZoneId(zoneId);
+			this.form.setFieldzonemasterBean(fieldzonemasterBean);
+			this.form.setFieldZoneDetailBeans(fieldZoneDetailBeans); 
 			
-			System.out.println("lp_onSet_zoneDetail getSeatingDetailBeans :: "+this.form.getFieldzonemasterName());
-			System.out.println("lp_onSet_zoneDetail getSeatingDetailBeans :: "+this.form.getSeatingDetailBeans());
+			System.out.println("lp_onSet_zoneDetail getSeatingDetailBeans :: "+this.form.getFieldzonemasterName()); 
+			System.out.println("lp_onSet_zoneDetail getSeatingDetailBeans :: "+this.form.getFieldzonemasterBean());
+			System.out.println("lp_onSet_zoneDetail fieldZoneDetailBeans :: "+this.form.getFieldZoneDetailBeans());
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new EnjoyException("lp_onSet_zoneDetail :: " + e.getMessage());
 		}finally{
-			seatingDetailBeans		= null;
+			fieldzonemasterBean		= null;
+			fieldZoneDetailBeans	= null;
 			logger.info("[lp_onSet_zoneDetail][End]");
 		}
 		
@@ -173,12 +177,12 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 		
 		int							    zoneId			    = 0;
 		String                          zoneName            = null;
-		JSONObject 						obj 				= null;
+		JSONObject 						obj 				= null; 
 		JSONObject 						objDetail 			= null;
 		JSONObject                      objBook             = null;
 		JSONObject 						objSeason 			= null;
-		List<SeatingDetailBean> 	    detailList			= null;
-		SeatingDetailBean			    detail				= null;
+		List<FieldZoneDetailBean> 	    detailList			= null;
+		FieldzonemasterBean			    master				= null;
 		FieldZoneDetailBean			    zoneDetail			= null;
 		JSONArray 						detailJSONArray 	= null; 
 		JSONArray 						bookJSONArray 	    = null;
@@ -196,43 +200,41 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			
 			if(zoneName != ""){
 				this.lp_onSet_zoneDetail(zoneId,zoneName);
-			 
-				detailList 	= this.form.getSeatingDetailBeans();
-				zoneList	= this.form.getFieldzonemasterBeans();
+				this.form.setFieldZoneId(zoneId);
+				detailList 	= this.form.getFieldZoneDetailBeans();
+				zoneList	= this.form.getZoneMasterList();
+				master      = this.form.getFieldzonemasterBean();
 				
 				obj.put("ZONE_NAME", 		zoneName); 
 				obj.put(STATUS, 			SUCCESS);  
+				 
+				objDetail 		= new JSONObject(); 
+				objDetail.put("fieldZoneId", 	master.getFieldZoneId());
+				objDetail.put("fieldZoneName", 	master.getFieldZoneName());
+				objDetail.put("rows", 			master.getRows());
+				objDetail.put("seating", 		master.getSeating());
+				objDetail.put("totalSeating", 	master.getTotalSeating());
+				objDetail.put("typeRowName", 	master.getTypeRowName());
+				objDetail.put("rowName", 		master.getNameRow());
+				objDetail.put("fieldZoneNameTicket", master.getFieldZoneNameTicket());
+				objDetail.put("startSeatingNo", 	master.getStartSeatingNo());
 				
-				for(int i=0;i<detailList.size();i++){
-					detail 			= detailList.get(i);
-					objDetail 		= new JSONObject(); 
-					objDetail.put("fieldZoneId", 	detail.getFieldZoneId());
-					objDetail.put("fieldZoneName", 	detail.getFieldZoneName());
-					objDetail.put("rows", 			detail.getRows());
-					objDetail.put("seating", 		detail.getSeating());
-					objDetail.put("totalSeating", 	detail.getTotalSeating());
-					objDetail.put("typeRowName", 	detail.getTypeRowName());
-					objDetail.put("rowName", 		detail.getNameRow());
-					objDetail.put("fieldZoneNameTicket", detail.getFieldZoneNameTicket());
-					objDetail.put("startSeatingNo", 	detail.getStartSeatingNo());
-					
-					if(detail.getFieldZoneDetailBeans() != null){
-						for(int j = 0 ; j < detail.getFieldZoneDetailBeans().size() ; j++){ 
-							zoneDetail = detail.getFieldZoneDetailBeans().get(j);
-							objBook    = new JSONObject(); 
-							objBook.put("bookingTypeId", 	zoneDetail.getBookingTypeId());
-							objBook.put("bookingTypeName",zoneDetail.getBookingTypeName());
-							objBook.put("bookingPrices", 	zoneDetail.getBookingPrices());
-							objBook.put("seq", 	zoneDetail.getSeq());
-							bookJSONArray.add(objBook);
-						}
-						objDetail.put("bookingList",bookJSONArray);
-					}
-					obj.put("detailSize", 		detail.getFieldZoneDetailBeans().size());
-					
+				for(int i=0;i<detailList.size();i++){		 
+					zoneDetail = detailList.get(i);
+					objBook    = new JSONObject(); 
+					objBook.put("bookingTypeId", 	zoneDetail.getBookingTypeId());
+					objBook.put("bookingTypeName",zoneDetail.getBookingTypeName());
+					objBook.put("bookingPrices", 	zoneDetail.getBookingPrices());
+					objBook.put("seq", 	zoneDetail.getSeq());
+					bookJSONArray.add(objBook);
+					 
+					objDetail.put("bookingList",bookJSONArray);
+				}
+				
+				obj.put("detailSize", 	detailList.size()); 
  
 					detailJSONArray.add(objDetail); 
-				}  
+				   
 				
 				for(int i=0;i<zoneList.size();i++){ 
 					this.lp_onSet_zoneDetail(zoneId,zoneName);
@@ -263,7 +265,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			objDetail 			= null;
 			objSeason 			= null;
 			detailList			= null;
-			detail				= null;
+			master				= null;
 			detailJSONArray 	= null;
 			zoneJSONArray 	    = null;
 			zoneList			= null; 
@@ -272,17 +274,53 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 		
 	}
 	
+	private void validateBookingTypeName(){
+		System.out.println("[validateBookingTypeName][Begin]");
+		String							bookingTypeName			= null;
+		int			        			CountbookingTypeName 	= 0; 
+		BookingTypeBean 				bookingTypeBean			= null;
+		JSONObject 			   			obj 			        = null;  
+		
+	   try{
+		   bookingTypeName				= EnjoyUtils.nullToStr(this.request.getParameter("bookingTypeName"));
+		   bookingTypeBean				= this.form.getBookingTypeBean();
+		   obj                          = new JSONObject();
+		   
+		   logger.info("[validateBookingTypeName] bookingTypeName :: " + bookingTypeName);
+		   
+		   bookingTypeBean.setBookingTypeName(bookingTypeName);
+		   CountbookingTypeName 		= this.dao.findBookType(bookingTypeName);
+		    
+			if(CountbookingTypeName==0){
+				obj.put("status", 		"ERROR"); 
+				obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
+				throw new EnjoyException("validateBookingTypeName : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
+			}else{
+				obj.put("status", 		"SUCCESS"); 
+			}
+			
+	   }catch(Exception e){
+		   e.printStackTrace();
+		   logger.info("[validateBookingTypeName] " + e.getMessage());
+	   }finally{
+		   this.enjoyUtil.writeMSG(obj.toString());  
+		   logger.info("[validateBookingTypeName][End]");
+	   }
+	   System.out.println("[validateBookingTypeName][End]");
+	}
+	
 	private void getBookingTypeName(){
 		System.out.println("[getBookingTypeName][Begin]");
 		String							bookingTypeName			= null;
 		List<String>			        list 					= new ArrayList<String>();
 		String[]						strArray				= null;
 		BookingTypeBean 				bookingTypeBean			= null;
-	       
+	  
+		
 	   try{
 		   bookingTypeName				= EnjoyUtils.nullToStr(this.request.getParameter("bookingTypeName"));
 		   bookingTypeBean				= this.form.getBookingTypeBean();
-		   
+		                     
 		   logger.info("[getBookingTypeName] bookingTypeName :: " + bookingTypeName);
 		   
 		   bookingTypeBean.setBookingTypeName(bookingTypeName);
@@ -321,9 +359,10 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			int                    hidZoneMasterId          = 0;
 			int  	  			   seq	                	= 0;
 			String  			   bookingTypeName	        = null;
-			Double  			   bookingTypePrice	        = 0.00; 
+//			Double  			   bookingTypePrice	        = 0.00; 
+			String  			   bookingTypePrice	        = null; 
 			int                    fieldZoneId              = 0;
-			SeatingDetailBean 	   bean 		    		= null; 
+			FieldzonemasterBean    bean 		    		= null; 
 			JSONObject 			   obj 			    		= null;    
 			int                    bookingTypeId            = 0;
 			FieldZoneDetailBean    fieldZoneDetailBean      = null; 
@@ -331,8 +370,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			String                 status                   = null;
 			List<FieldZoneDetailBean>   fieldZoneDetailBeans  = null;
 			int                    seqLast              	  = 0;
-			int                    newSeq               	  = 0; 
-			
+			int                    newSeq               	  = 0;  
 			try{  
 				obj 						= new JSONObject();
 				getSeqList					= this.request.getParameterValues("hidSeq"); 
@@ -353,9 +391,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			  
 				System.out.println("[saveSeatingDetail][zoneSelect  : ]" + zoneMasterList[0]); 
 				System.out.println("[saveSeatingDetail][getBookingTypeNameList.length  : ]" + getBookingTypeNameList.length); 
-				
+ 
 				fieldZoneId         = Integer.valueOf(EnjoyUtils.nullToStr(zoneMasterList[0]));    
-				bean = new SeatingDetailBean(); 
+				bean = new FieldzonemasterBean(); 
 				bean.setFieldZoneId(hidZoneMasterId);
 				bean.setFieldZoneName(fieldZoneName);
 				bean.setRows(rows); 
@@ -367,6 +405,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				bean.setStartSeatingNo(startSeating); 
 				System.out.println("SeatingDetailBean:"+bean.toString());	
 				
+				 
 				seqLast = this.dao.selectMaxSeq(hidZoneMasterId);
 				System.out.println("seqLast :: "+seqLast);
 				newSeq  = seqLast;
@@ -378,7 +417,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 						System.out.println("seq:"+seq);	
 						bookingTypeName     = EnjoyUtils.nullToStr(getBookingTypeNameList[i]);     
 						System.out.println("bookingTypeName:"+bookingTypeName);	
-						bookingTypePrice    = Double.valueOf(EnjoyUtils.nullToStr(getBookingTypePriceList[i]));   
+						//bookingTypePrice    = Double.valueOf(EnjoyUtils.nullToStr(getBookingTypePriceList[i])); 
+						bookingTypePrice    = EnjoyUtils.nullToStr(getBookingTypePriceList[i]);  
 						System.out.println("bookingTypePrice:"+bookingTypePrice);	
 						status        		= EnjoyUtils.nullToStr(statusList[i]); 
 						System.out.println("status:"+status);	
@@ -390,6 +430,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 							obj.put(ERR_MSG, 		"ระบุประเภทตั๋วไม่ถูกต้อง"); 
 							throw new EnjoyException("saveSeatingDetail : " +"ระบุประเภทตั๋วไม่ถูกต้อง");
 						}
+						
+					
 						System.out.println("status detail :"+status);	
 						fieldZoneDetailBean = new FieldZoneDetailBean();
 						fieldZoneDetailBean.setSeq(seq);
@@ -437,7 +479,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				nameRow	                = null;
 				seq	                    = 0;
 				bookingTypeName	        = null;
-				bookingTypePrice	    = 0.00; 
+				bookingTypePrice	    = null; 
 				fieldZoneId             = 0;
 				bean 		    		= null; 
 				obj 			    	= null;  
@@ -465,10 +507,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 		String  			   nameRow	                = null;
 		int  	  			   seq	                	= 0;
 		String  			   bookingTypeName	        = null;
-		Double  			   bookingTypePrice	        = 0.00;
+		String  			   bookingTypePrice	        = null;
+		//Double  			   bookingTypePrice	        = 0.00;
 		String  			   status	                = null;
 		int                    fieldZoneId              = 0;
-		SeatingDetailBean 	   bean 		    		= null; 
+		FieldzonemasterBean    bean 		    		= null; 
 		JSONObject 			   obj 			    		= new JSONObject();  
 		int						bookingTypeId           = 0;
 		FieldZoneDetailBean     fieldZoneDetailBean     = null;
@@ -490,7 +533,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			fieldNameTicket   			= EnjoyUtils.nullToStr(this.request.getParameter("nameTicket")); 
 			startSeating 				= Integer.valueOf(EnjoyUtils.nullToStr(this.request.getParameter("startNo")));
    
-			bean = new SeatingDetailBean();  
+			bean = new FieldzonemasterBean();  
 			bean.setFieldZoneName(fieldZoneName);
 			bean.setRows(rows); 
 			bean.setSeating(seating);
@@ -499,15 +542,15 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 			bean.setNameRow(nameRow);
 			bean.setFieldZoneNameTicket(fieldNameTicket);
 			bean.setStartSeatingNo(startSeating);
-			this.dao.saveNewSeatingMaster(bean);
+//			this.dao.saveNewSeatingMaster(bean);
  	 
-			if(getBookingTypeNameList.length>0){ 
-				findFieldZoneMasterId = this.dao.findFieldZoneMasterId(fieldZoneName);
-				System.out.println("findFieldZoneMasterId:"+findFieldZoneMasterId);	
+			if(getBookingTypeNameList.length>0){  
 				fieldZoneDetailBeans = new ArrayList<>();
 				for(int i = 0 ; i < getBookingTypeNameList.length ; i++){    
+					System.out.println("getBookingTypeNameList[i]:"+getBookingTypeNameList[i]);	
 					bookingTypeName     = EnjoyUtils.nullToStr(getBookingTypeNameList[i]);     
-					bookingTypePrice    = Double.valueOf(EnjoyUtils.nullToStr(getBookingTypePriceList[i]));   
+					//bookingTypePrice    = Double.valueOf(EnjoyUtils.nullToStr(getBookingTypePriceList[i]));   
+					bookingTypePrice    = EnjoyUtils.nullToStr(getBookingTypePriceList[i]);   
 					
 					bookingTypeId = this.dao.findBookTypeId(bookingTypeName);
 					
@@ -523,7 +566,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 					fieldZoneDetailBean.setSeq(seqNo++); 
 					fieldZoneDetailBean.setBookingPrices(bookingTypePrice); 
 					fieldZoneDetailBean.setBookingTypeId(bookingTypeId); 
-					fieldZoneDetailBean.setFieldZoneId(findFieldZoneMasterId);
+					//fieldZoneDetailBean.setFieldZoneId(findFieldZoneMasterId);
 					System.out.println("fieldZoneDetailBean:"+fieldZoneDetailBean.toString());	
 					
 					fieldZoneDetailBeans.add(fieldZoneDetailBean);
@@ -532,7 +575,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				  
 			}
 			
-			this.dao.saveNewSeatingDetail(fieldZoneDetailBeans);      
+			this.dao.saveNewSeatingDetail(bean,fieldZoneDetailBeans);      
 			obj.put("status",   "SUCCESS");  
 			 
 			}catch(Exception e){  
@@ -557,7 +600,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				nameRow	                = null;
 				seq	                    = 0;
 				bookingTypeName	        = null;
-				bookingTypePrice	    = 0.00;
+				bookingTypePrice	    = null;
 				status	                = null;
 				fieldZoneId             = 0;
 				bean 		    		= null; 
