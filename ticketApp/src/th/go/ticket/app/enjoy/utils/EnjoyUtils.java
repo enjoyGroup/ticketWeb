@@ -509,32 +509,31 @@ public class EnjoyUtils {
         return display;
     }
 
-    public static List<Integer>  generateListOfHour(){
-    	List<Integer>  	returnList = null; 
-        try{ 
-    		returnList = new ArrayList<>();
-    		for(int i = 0 ; i < 24 ; i++){
-    			returnList.add(i);
+    public static List<String> getListHours(){
+    	List<String> hours = new ArrayList<>();
+    	for(int i = 0 ; i <= 24 ; i ++ ){ 
+    		if(String.valueOf(i).length() == 1){
+    			hours.add("0"+String.valueOf(i));
+    		}else{
+    			hours.add(String.valueOf(i));
     		}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-           
-        return returnList;
+    	}
+    	System.out.println("hours ::"+hours.toString());
+    	return hours;
     }
     
-    public static List<Integer>  generateListOfMinute(){
-    	List<Integer>  	returnList = null; 
-        try{ 
-    		returnList = new ArrayList<>();
-    		for(int i = 0 ; i < 60 ; i++){
-    			returnList.add(i);
+    public static List<String> getListMinuts(){
+    	List<String> minuts = new ArrayList<>();
+    	for(int i = 0 ; i <= 60 ; i ++ ){ 
+    		
+    		if(String.valueOf(i).length() == 1){
+    			minuts.add("0"+String.valueOf(i));
+    		}else{
+    			minuts.add(String.valueOf(i));
     		}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-           
-        return returnList;
+    	}
+    	System.out.println("minuts ::"+minuts.toString());
+    	return minuts;
     }
 	
 }

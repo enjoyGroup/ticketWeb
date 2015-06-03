@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
  
 
+
 import th.go.ticket.app.enjoy.bean.EventMatchBean; 
 
 public class EventMatchForm {
 	
 	List<String> 					seasonList;
 	List<EventMatchBean> 	        eventMatchList;
-	String							season; 
+	String							season;  
 	
 	public EventMatchForm(){
 		this.seasonList     = new ArrayList<String>();
 		this.eventMatchList = new ArrayList<EventMatchBean>();
 		this.season		    = ""; 
+		 
 	}
 
 	public List<String> getSeasonList() {

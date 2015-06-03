@@ -107,13 +107,18 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 		JSONObject 						obj 				= null;
 		JSONObject 						objDetail 			= null;
 		JSONArray 						detailJSONArray 	= null;
+		List<String> 					listHours  			= null;
+		List<String> 					listMinuts  		= null;
 		
 		try{
 			seasonList 				= this.dao.seasonList();
 			obj 					= new JSONObject();
 			detailJSONArray 		= new JSONArray();
+			listHours  				= EnjoyUtils.getListHours();
+			listMinuts				= EnjoyUtils.getListMinuts();
 			
 			if(seasonList!=null && seasonList.size() > 0){
+		 
 				season 		= seasonList.get(0);
 				this.lp_onSet_eventMatchList(season);
 				
@@ -133,7 +138,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				
 				obj.put("detail", 			detailJSONArray);
 		 
-			}
+			} 
 			
 			this.form.setSeasonList(seasonList);
 			
@@ -318,11 +323,30 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 						bean.setSeason(seasonSelect);
 						bean.setMatchId(matchId);
 						bean.setStatus(status);
+						
+						int count = 0;
 						if(status.equals("N")){  
 							newMatchid    = newMatchid + 1;
 							System.out.println("newMatchid :: "+newMatchid); 
 							System.out.println("insert : " + " seasonSelect = "+seasonSelect+" match = "+newMatchid );
 							bean.setMatchId(String.valueOf(newMatchid));  
+							count = this.dao.validateMatch(bean);
+							
+							if(count > 0){ 
+								System.out.print("servlet count:"+ count);	
+								obj.put("status", 		"ERROR"); 
+								obj.put(ERR_MSG, 		"ทีมคู่แข่งนี้มีในปีนี้แล้ว ไม่สามารถบันทึกซ้ำ"); 
+								throw new EnjoyException("saveEventMatch :" +" Match is duplicate");
+							} 
+						}else{
+							count = this.dao.validateMatchUpdate(bean);
+							
+							if(count > 0){ 
+								System.out.print("servlet count:"+ count);	
+								obj.put("status", 		"ERROR"); 
+								obj.put(ERR_MSG, 		"ทีมคู่แข่งนี้มีในปีนี้แล้ว ไม่สามารถบันทึกซ้ำ"); 
+								throw new EnjoyException("saveEventMatch :" +" Match is duplicate");
+							} 
 						}
 
 						System.out.print("bean:"+bean.toString());	
@@ -336,9 +360,9 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 				obj.put("status",   "SUCCESS"); 
 
 			}catch(Exception e){
-				obj.put("status", 		"ERROR"); 
-				obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล"); 
-				throw new EnjoyException("saveEventMatch : " +"เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+				//obj.put("status", 		"ERROR"); 
+				//obj.put(ERR_MSG, 		"เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+				throw new EnjoyException(e.getMessage()); 
 				
 			}finally{   
 				this.enjoyUtil.writeMSG(obj.toString());  
@@ -372,7 +396,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 			String                 matchTime                = null; 
 			EventMatchBean 	       bean 		    		= null; 
 			JSONObject 			   obj 			    		= new JSONObject();   
-			int 				   matchId       			= 0;
+			int 				   matchId       			= 1;
 			List<EventMatchBean>   eventMatchBeanList       = null;
 			JSONArray 			   seasonJSONArray 			= null;
 			try{
