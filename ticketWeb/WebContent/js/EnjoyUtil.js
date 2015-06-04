@@ -517,3 +517,57 @@ function formatNumber(obj) {
         obj.value = x1 + x2;
     }
 }
+
+function gp_validateTime(ao_obj){
+	var errorMsg		= "";
+	var re				= null;
+	var lv_time			= "";
+	var lv_timeTmp		= "";
+	var lv_txtLength	= 0;
+
+	try{
+		re			= /^(\d{1,2}):(\d{2})(:00)?([ap]m)?$/;
+		lv_time		= gp_trim(ao_obj.value);
+
+		if(lv_time != "") {
+			lv_txtLength = lv_time.length;
+			if(lv_txtLength==3 && lv_time.indexOf(":") < 0){
+				lv_timeTmp		= lv_time.substring(0, 1) + ":" + lv_time.substring(1, 3);
+				ao_obj.value	= lv_timeTmp;
+			}else if(lv_txtLength==4 && lv_time.indexOf(":") < 0){
+				lv_timeTmp		= lv_time.substring(0, 2) + ":" + lv_time.substring(2, 4);
+				ao_obj.value	= lv_timeTmp;
+			}else{
+				lv_timeTmp = lv_time;
+			}
+
+			if(regs = lv_timeTmp.match(re)) {
+				if(!regs[4]) {
+				  // 24-hour time format
+				  if(regs[1] > 23) {
+					errorMsg = "Invalid value for hours: " + regs[1];
+				  }
+				}
+
+				if(!errorMsg && regs[2] > 59) {
+				  errorMsg = "Invalid value for minutes: " + regs[2];
+				}
+
+			} else {
+				errorMsg = "Invalid time format: " + lv_timeTmp;
+			}
+		}
+
+		if(errorMsg != "") {
+		  alert(errorMsg);
+		  //ao_obj.focus();
+		  return false;
+		}
+
+		return true;
+
+	}catch(e){
+		alert("gp_validateTime :: " + e);
+		return false;
+	}
+  }
