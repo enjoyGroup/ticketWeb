@@ -668,11 +668,10 @@
 		});
 		
 
-	 	function lp_checkFormattime(av_object){ 
-			var lv_time = av_object.value;
+	 	function lp_checkFormattime(av_object){  
 			try{ 
-				if(lv_time){
-					
+				if(!validateTime(av_object)){
+					return;
 				}  
 			}catch(e){
 				alert("lp_checkFormattime :: " + e);
