@@ -547,6 +547,8 @@ function gp_validateTime(ao_obj){
 				  if(regs[1] > 23) {
 					errorMsg = "Invalid value for hours: " + regs[1];
 				  }
+				}else{
+					errorMsg = "Invalid time format: " + lv_timeTmp;
 				}
 
 				if(!errorMsg && regs[2] > 59) {
