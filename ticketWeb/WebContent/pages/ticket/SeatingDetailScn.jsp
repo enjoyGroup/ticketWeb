@@ -825,7 +825,7 @@
 				if((lo_rows.value<=0) && (lo_seating.value<=0) && (lv_startNo<=0) ) { 
 		   			document.getElementById("nameRowInd2").checked = true;
 					document.getElementById("nameRowInd1").checked = false;
-					$("#nameRow").attr('disabled','disabled');//ไม่ปิด
+					$("#nameRow").prop('disabled',true);//ไม่ปิด
 					$('#nameRowInd1').prop("disabled",true); 
 					$('#nameRowInd2').prop("disabled",true); 
 				}else if(lv_rows==0){ 
