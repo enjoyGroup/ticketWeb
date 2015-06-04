@@ -289,7 +289,7 @@
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
 					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 					                  "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -312,7 +312,7 @@
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
 					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 									 "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -356,7 +356,7 @@
 				cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100'  value=''/>" ;
 				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value=''/>";
+				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value='' onblur='gp_validateTime(this);'/>";
 				cell6.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='matchId' id='matchId'  value='0'/></td>";
@@ -439,7 +439,7 @@
 				cell3.innerHTML = "<input type='text' id='awayTeamNameEN'  name='awayTeamNameEN' maxlength='100' value=''/>";	
 				cell4.innerHTML = "<input type='text' id='matchDate1'   name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text' id='matchTime' name='matchTime' maxlength='5' value=''/>";
+				cell5.innerHTML = "<input type='text' id='matchTime' name='matchTime' maxlength='5' value='' onblur='gp_validateTime(this);' />";
 				cell6.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='matchId' id='matchId'  value='0'/>";
@@ -504,7 +504,6 @@
 		    }
 		
 		function lp_save_page(){
-       	   gp_progressBarOn();
        	    
 			if(!lp_validate_data()){
 				return;
@@ -533,7 +532,7 @@
 		            type: "POST",
 		            url: gv_url,
 		            data: lv_params,
-		            beforeSend: "",
+		            beforeSend: gp_progressBarOn(),
 		            success: function(data){
 		            	var jsonObj 			= null;
 		            	var status				= null;
@@ -597,6 +596,7 @@
 			
 			var la_idName               = new Array("seasonNew");
 		    var la_msg               	= new Array("ปีการแข่งขัน");   
+		    var la_matchTime			= document.getElementsByName("matchTime");
         //, "awayTeamNameTH", "awayTeamNameEN", "matchDate" , "matchTime"
         //, "ทีมคู่แข่งภาษาไทย", "ทีมคู่แข่งภาษาอังกฤษ", "วันที่แข่ง" ,"เวลาที่แข่ง"
 		    
@@ -612,9 +612,19 @@
 		            }
 		        }
 				
+				/*validate เวลาที่แข่ง*/
+				for(var i=0;i<la_matchTime.length;i++){
+					if(!gp_validateTime(la_matchTime[i])){
+						la_matchTime[i].focus();
+						return false;
+					}  
+				}
+				
+				
+				
 				
 			}catch(e){
-				alert("lp_validate :: " + e);
+				alert("lp_validate_data :: " + e);
 				return false;
 			}
 			
@@ -665,28 +675,14 @@
 			}).end().appendTo("#result_match");
 		    i++;
 		    //alert();
-		});
-		
-
-	 	function lp_checkFormattime(av_object){  
-			try{ 
-				if(!validateTime(av_object)){
-					return;
-				}  
-			}catch(e){
-				alert("lp_checkFormattime :: " + e);
-			}
-		}  
-		
- 
-		
+		});	
 	 
 	</script>
 	
 </head>
 <body>
 	
-<form id="frm">
+<form id="frm" onsubmit="return false;">
 <input type="hidden" id="service" 	name="service" value="servlet.EventMatchServlet" />  
 <input type="hidden" id="hidSeason" name="hidSeason" value="<%=eventMatchForm.getSeason()%>" />  
 <div id="menu" style="width: 100%;background: black;">
@@ -776,7 +772,7 @@
 																 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
 															</td>
 															<td align="center">
-																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>" onblur="lp_checkFormattime(this);"  />
+																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>" onblur="gp_validateTime(this);"  />
 															</td>
 															<td style="text-align: center;">  
 									                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
