@@ -113,9 +113,7 @@ public class EventMatchServlet extends EnjoyStandardSvc {
 		try{
 			seasonList 				= this.dao.seasonList();
 			obj 					= new JSONObject();
-			detailJSONArray 		= new JSONArray();
-			listHours  				= EnjoyUtils.getListHours();
-			listMinuts				= EnjoyUtils.getListMinuts();
+			detailJSONArray 		= new JSONArray(); 
 			
 			if(seasonList!=null && seasonList.size() > 0){
 		 

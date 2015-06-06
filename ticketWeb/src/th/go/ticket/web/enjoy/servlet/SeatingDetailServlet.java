@@ -160,6 +160,11 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 		List<FieldzonemasterBean>		zoneList			= null;
 		
 		try{
+			
+			obj 					= new JSONObject();
+			detailJSONArray 		= new JSONArray();
+			zoneJSONArray 		    = new JSONArray();
+			bookJSONArray           = new JSONArray();
 			zoneList 				= this.dao.getZoneList(); 
 			System.out.println("onLoad zoneList :: "+zoneList.size());	
 			if(zoneList!=null && zoneList.size() > 0){  
@@ -171,13 +176,9 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				detailList 	= this.form.getFieldZoneDetailBeans();
 				zoneList	= this.form.getZoneMasterList();
 				master      = this.form.getFieldzonemasterBean();
-				obj 					= new JSONObject();
-				detailJSONArray 		= new JSONArray();
-				zoneJSONArray 		    = new JSONArray();
-				bookJSONArray           = new JSONArray();
+				
 				obj.put("ZONE_NAME", 		zoneName); 
-				obj.put(STATUS, 			SUCCESS);  
-				 
+			 
 				objDetail 		= new JSONObject(); 
 				objDetail.put("fieldZoneId", 	master.getFieldZoneId());
 				objDetail.put("fieldZoneName", 	master.getFieldZoneName());
@@ -208,10 +209,8 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				obj.put("detail", 			detailJSONArray);
 		
 				
-			}else{
-				obj.put(STATUS, 			ERROR);
-				obj.put(ERR_MSG, 			"Zone ต้องไม่เท่ากับค่าว่าง");
 			}
+			obj.put(STATUS, 			SUCCESS);  
 			  
 			
 		}catch(Exception e){
