@@ -196,7 +196,7 @@ public class EventMatchDao {
 			}catch(Exception e){
 				e.printStackTrace();
 				logger.info(e.getMessage());
-				throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
+				throw new EnjoyException("เน€เธ�โ�ฌเน€เธ�๏ฟฝเน€เธ�เธ”เน€เธ�โ€�เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ”เน€เธ�โ€�เน€เธ�๏ฟฝเน€เธ�เธ…เน€เธ�เธ’เน€เธ�โ€�");
 			}finally{  
 				sqlQuery 							= null;
 				sql                                 = null;
@@ -372,7 +372,7 @@ public class EventMatchDao {
 		}catch(Exception e){
 			e.printStackTrace();
 			logger.info(e.getMessage());
-			throw new EnjoyException("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธ�เธฑเธ�เธ—เธถเธ�เธ�เน�เธญเธกเธนเธฅ");
 		}finally{  
 			sqlQuery 							= null;
 			sql                                 = null;
@@ -394,7 +394,8 @@ public class EventMatchDao {
 		try{ 
 			sessionFactory 				= HibernateUtil.getSessionFactory();
 			session 					= sessionFactory.openSession();
-			sql             = "SELECT COUNT(*) as count from Eventmatch WHERE awayTeamNameTH = '" +eventMatchBean.getAwayTeamNameTH() +"'";
+			sql             = "SELECT COUNT(*) as count from Eventmatch WHERE awayTeamNameTH = '" +eventMatchBean.getAwayTeamNameTH() +"'" 
+							+ " and season = " + eventMatchBean.getSeason() ;
 			sqlQuery		= session.createSQLQuery(sql); 
 			sqlQuery.addScalar("count"	, new IntegerType());
 			list            =  sqlQuery.list(); 

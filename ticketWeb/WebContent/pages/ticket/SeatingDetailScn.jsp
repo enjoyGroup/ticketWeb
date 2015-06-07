@@ -58,12 +58,13 @@
 		$(document).ready(function(){ 
 			$('#menu1').ptMenu();
 			gv_service 	= "service=" + $('#service').val();    
-			 
+ 
+			
 			if($("#hidUserLevel").val()  == "9"){
 				if(($("#fieldZoneName").val()=="") || ($("#nameTicket").val()=="")||  ($("#nameRow").val()=="")){
-					$("#btnSave").attr('disabled','disabled');
-					$("#btnCancel").attr('disabled','disabled');
-					$("#btnAdd").attr('disabled','disabled');
+					$("#btnSave").prop('disabled',true); 
+					$('#btnCancel').prop("disabled",true); 
+					$('#btnAdd').prop("disabled",true); 
 				}else{ 
 		        	$("#btnSave").removeAttr('disabled');
 		        	$("#btnCancel").removeAttr('disabled');
@@ -230,22 +231,9 @@
 		}
 		
 		function lp_add_row_zone(){ //เปิดปิดให้ใส่ข้อมูลใหม่ทั้งหมด
-			
-			if(($("#rows").val() <=0) || ($("#seating").val()<=0) 
-					|| ($("#totalSeating").val()<=0) || ($("#startNo").val()<=0)  
-					|| ($("#fieldZoneName").val() =="") 
-					|| ($("#nameTicket").val() =="") 
-					|| ($("#nameRow").val() ==""))
-			{
-				$("#btnSave").attr('disabled','disabled');
-				$("#btnCancel").attr('disabled','disabled');
-				$("#btnAdd").attr('disabled','disabled');
-			}else{ 
-	        	$("#btnSave").removeAttr('disabled');
-	        	$("#btnCancel").removeAttr('disabled');
-	        	$("#btnAdd").removeAttr('disabled');
-	        }
-		
+			$("#btnSave").attr('disabled','disabled');
+			$("#btnCancel").attr('disabled','disabled');
+			$("#btnAdd").attr('disabled','disabled');
 			gv_mode          = "NewZone";
 			document.getElementById("hidZoneName").value = "";
 			document.getElementById("hidZoneId").value = "";
@@ -634,9 +622,9 @@
 		
 		function lp_save_page(){ 
        	    
-			if(!lp_validate_data()){
+			/* if(!lp_validate_data()){
 				return;
-			}
+			} */
 			
 			var pageAction			= "UpdateZone";
 			var lv_params			= gv_service; 
@@ -660,9 +648,9 @@
 		    	}
 		    	
 		    	if(lo_ind1.checked==true){
-		    		"&nameRowInd=1";
+		    		lv_params 	+= "&nameRowInd=1";
 		    	}else{
-		    		"&nameRowInd=2";
+		    		lv_params 	+="&nameRowInd=2";
 		    	}
 			//alert(lv_params);  
  				gp_progressBarOn();
@@ -959,10 +947,14 @@
 					$("#btnSave").attr('disabled','disabled');
 					$("#btnCancel").attr('disabled','disabled');
 					$("#btnAdd").attr('disabled','disabled');
-				}else{
-				   	$("#btnSave").removeAttr('disabled');
+		 
+				}else{ 
+					$("#btnSave").removeAttr('disabled');
 		        	$("#btnCancel").removeAttr('disabled');
 		        	$("#btnAdd").removeAttr('disabled');
+		    		/* $("#btnSave").prop('disabled',false); 
+					$('#btnCancel').prop("disabled",false); 
+					$('#btnAdd').prop("disabled",false);  */
 				}
 			    
 			}else{
@@ -989,7 +981,7 @@
         	for(var i =0 ; i < lv_length ; i ++){
             // alert(gp_trim(lo_table.rows[i].cells[0].innerHTML));
         		if(gp_trim(lv_zone) == gp_trim(lo_table.rows[i].cells[0].innerHTML)){
-        			alert("ไท่สามารถระบุชื่อ zone ซ้ำได้");
+        			alert("ไม่สามารถระบุชื่อ zone ซ้ำได้");
         			break;
         		}
         	}
@@ -1040,11 +1032,11 @@
 											<div class="panel-body">
 						        				<table style='width:100%;' border="0">
 													<tr>
-					              					<td style='width:15%;padding:0px;vertical-align: top;'>
+					              					<td style='width:10%;padding:0px;vertical-align: top;'>
 					              						<table>
 					              							<tr>
 					              								<td>   
-													                 <td style='width:15%;padding:0px !important'> 
+													                 <td style='width:10%;padding:0px !important'> 
 												                      <table class="table sim-panel-result-table" id="result_zone">
 																		<tr><th>ปีการแข่งขัน</th> </tr>
 																		<%
@@ -1073,39 +1065,39 @@
 					              						</table>
 									   				</td>
 						                   				<td style='width:100%;padding:0px !important;text-align: center;vertical-align: top;'>
-						                   					<table width="90%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
+						                   					<table width="100%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
 						                   					 <% 
 						                   					    FieldzonemasterBean	master	= seatingDetailForm.getFieldzonemasterBean(); 
 															 %>
 						                   						<tr>
-						                   							<td align="right" width="200px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
-						                   							<td align="left" width="100px;">
+						                   							<td align="right" width="250px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
+						                   							<td align="left" width="200px;">
 												        				<input type='text' 
 												        					id="fieldZoneName" 
 												        					name='fieldZoneName' 
-												        					maxlength="50"  
+												        					maxlength="10"  
 												        					value="<%=master.getFieldZoneName()%>"
 												        					onblur="lp_check_data(),lp_onblur_check_zone();"/> 
 												        			    <input type="hidden" 
 												        			    		name="fieldZoneMasterId" 
 												        			    		id="fieldZoneMasterId"  
-												        			    		value="<%=master.getFieldZoneId()%>"/> 
-												        			    &nbsp;<span style="color: red;"><b>*</b></span>
+												        			    		value="<%=master.getFieldZoneId()%>"> 
+												        			    &nbsp;<span style="color: red;"><b>*</b></span> 
 												        			</td>
-												        			<td align="right" width="150px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
-						                   							<td align="left" colspan="3">
+												        			<td align="right" width="200px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
+						                   							<td align="left" colspan="3" width="600px;">
 												        				<input type='text' 
 												        					id="nameTicket" 
 												        					name='nameTicket' 
-												        					maxlength="50"  
+												        					maxlength="10"  
 												        					onblur="lp_check_data();"
 												        					value="<%=master.getFieldZoneNameTicket()%>"/>  
 												        				&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
 						                   						</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">จำนวนแถว : &nbsp;</td>
-												        			<td align="left" width="100px;">
+												        			<td align="right" width="250px;">จำนวนแถว : &nbsp;</td>
+												        			<td align="left"  width="200px;">
 												        				<input type='text' id="rows" 
 												        				       name='rows' maxlength="50"      
 												        				       class="numberOnly" 
@@ -1113,8 +1105,8 @@
                                                      						   onblur="lp_calTotalSeating();onKeyDownNumber(event),lp_check_data()"/>
                                                      						   &nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="150px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
-												        			<td align="left" width="150px;">
+												        			<td align="right" width="200px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
+												        			<td align="left"  width="200px;">
 												        				<input  type='text' 
 												        						id="seating" 
 												        						name="seating" 
@@ -1124,8 +1116,8 @@
 												        						onblur="lp_calTotalSeating(),lp_check_data();"/>
 												        						&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="150px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
-												        			<td align="left" width="150px;">
+												        			<td align="right" width="200px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
+												        			<td align="left" width="200px;">
 												        				<input  type='text' 
 												        						id="startNo" 
 												        						name="startNo" 
@@ -1137,7 +1129,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
+												        			<td align="right" width="250px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
 												        			<td align="left" colspan="5">
 												        				<input type='text' 
 												        					id="totalSeating" 
@@ -1149,7 +1141,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">ชื่อแถว: &nbsp;</td>
+												        			<td align="right" width="250px;">ชื่อแถว: &nbsp;</td>
 												        			<td align="left">
 												        			 <input type='radio' 
 												        					id="nameRowInd1" 
@@ -1169,7 +1161,7 @@
 												        		</tr>
 												        		<tr></tr>
 												        		<tr> 
-												        			<td align="right" width="200px;">รายชื่อแถว : &nbsp;</td>
+												        			<td align="right" width="250px;">รายชื่อแถว : &nbsp;</td>
 												        			<td align="left"  colspan="3">
 												        				<textarea   id="nameRow" 
 												        							name='nameRow'
