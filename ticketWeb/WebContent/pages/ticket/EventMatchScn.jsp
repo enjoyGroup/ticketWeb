@@ -22,13 +22,23 @@
 		.link{
 			color: black;
 			font-weight:bold;
-		
+			padding: 0; 
+			border-bottom: 1px solid #d4d4d4;
+			border-top: none;
+			background: linear-gradient(#f7f7f7 0%, #ececec 100%);
+			height: 30px;
+			vertical-align: middle;
 		}
 		
 		.unLink{
 			color: red;
 			font-weight:bold;
-		
+			padding: 0; 
+			border-bottom: 1px solid #d4d4d4;
+			border-top: none;
+			background: linear-gradient(#f7f7f7 0%, #ececec 100%);
+			height: 30px;
+			vertical-align: middle;
 		}
 		
 		.unLink:hover{
@@ -671,64 +681,80 @@
 	</script>
 	
 </head>
-<body>
-	
+<body>	
 <form id="frm" onsubmit="return false;">
-<input type="hidden" id="service" 	name="service" value="servlet.EventMatchServlet" />  
-<input type="hidden" id="hidSeason" name="hidSeason" value="<%=eventMatchForm.getSeason()%>" />  
-<div id="menu" style="width: 100%;background: black;">
-	<%@ include file="/pages/menu/menu.jsp"%>
-</div>
-<section class="vbox">
- <section>
-   <section class="hbox stretch">
-	 <section id="content">
-		<section class="vbox">
-			<section class="scrollable padder">
-				<div class="alert alert-block alert-error fade in">
-	            	<h4 class="alert-heading">เพิ่ม Match การแข่งขัน</h4>
-	          	</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<section class="panel panel-default">
-							<header class="panel-heading font-bold">รายละเอียด Match การแข่งขัน</header>
-							<div class="panel-body">
-						        <table style='width:100%;' class='table'>
-									<tr>
-						              <td style='width:15%;padding:0px !important'>
-						                  <div class='sim-panel-result' style="padding:10px;">
-						                      <table class="table sim-panel-result-table" id="result_season">
-												<tr><th>ปีการแข่งขัน</th> </tr>
-												<%
-												 List<String>  list			=   eventMatchForm.getSeasonList();
+	<input type="hidden" id="service" 	name="service" value="servlet.EventMatchServlet" />  
+	<input type="hidden" id="hidSeason" name="hidSeason" value="<%=eventMatchForm.getSeason()%>" />  
+	<div id="menu" style="width: 100%;background: black;">
+		<%@ include file="/pages/menu/menu.jsp"%>
+	</div>
+	<section class="vbox">
+ 		<section>
+   			<section class="hbox stretch">
+	 			<section id="content">
+					<section class="vbox">
+						<section class="scrollable padder">
+							<div class="alert alert-block alert-error fade in">
+				            	<h4 class="panel-title">เพิ่ม Match การแข่งขัน</h4>
+				          	</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<section class="panel panel-info">
+										<div class="panel-heading">
+											<h4 class="panel-title">รายละเอียด Match การแข่งขัน</h4>
+										</div>
+										<div class="panel-body">
+						        			<table style='width:100%;' class='table'>
+												<tr>
+						              				<td style='width:12%;padding:0px !important'>
+						              					<div style="min-width: 205px;">
+						              						<span class="label label-inverse" style="width: 100%;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																<B>ปีการแข่งขัน</B>
+															</span>
+														<br/>
+						              					</div>
+						                  				<div id='cssmenu' style="min-height:auto;  background:#0A5F8B;" class='sim-panel-result' style="padding:10px;" >
+						                     				 <table class="table sim-panel-result-table" id="result_season" style="margin-top:0px !important">
+																<%
+												 					List<String>  list			=   eventMatchForm.getSeasonList();
 												 
-												  if(list.size()>0){
-													for(int i=0;i<list.size();i++){
+												  					if(list.size()>0){
+																	for(int i=0;i<list.size();i++){
 													
-															%>
-															 <tr>
+																%>
+															 	<tr>
 															 
-															 	<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
-															 		<td class="unLink" align="center" title="<%=list.get(i)%>" >
+															 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
+															 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
+																			<%=list.get(i)%>
+																		</td>	
+															 		<%}else{%>
+															 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
 																		<%=list.get(i)%>
-																	</td>	
-															 	<%}else{%>
-															 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																		<%=list.get(i)%>
+																		</td>
+															 		<%}%>
+																</tr> 
+																<% } 
+												 				} %>
+									 							<tr>
+									 								<td align="center" class="link" onclick="lp_add_row_season();">
+									 									<a href="#">
+										 									<span>
+																				<B>+เพิ่มปีการแข่งขัน</B>
+																			</span>
+																			<br/>
+																		</a>
 																	</td>
-															 	<%}%>
-															</tr> 
-													<% } 
-												 } %>
-									 			<tr><td align="center" class="link" onclick="lp_add_row_season();"><a href="#">+เพิ่มปีการแข่งขัน</a></tr>
-									 		</table>
-										   </td>
-						                   <td style='width:80%;padding:0px !important'>
-						                    <div style="padding:10px;" >
-						                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
-						                    </div>
-						                    <br>
-						                  	 <div class='sim-panel-result' style="padding:10px;">
+																</tr>
+									 						</table>
+									 					</div>
+									 				</td>
+						                   			<td style='width:80%;padding:0px !important;vertical-align: top;'>
+									                    <div style="padding:10px;" >
+									                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
+									                    </div>
+						                    			<br>
+						                  	 			<div class='sim-panel-result' style="padding:10px;">
 						                        <table class="table sim-panel-result-table" id="result_match">
 													<tr>
 							                            <th>ลำดับ</th>
@@ -739,84 +765,85 @@
 							                            <th>Action</th>
 						                          	</tr>
 												<%
-													List<EventMatchBean>  	detailList			= eventMatchForm.getEventMatchList();
-													EventMatchBean			detail				= null;
-													int						seq					= 0;
+														List<EventMatchBean>  	detailList			= eventMatchForm.getEventMatchList();
+														EventMatchBean			detail				= null;
+														int						seq					= 0;
 																 
-													if(detailList.size()>0){
-														for(int i=0;i<detailList.size();i++){
-															detail = detailList.get(i);
-															seq++;
-													  %>
-														 <tr>
-															<td align="center">
-																<%=seq%>
-															</td>
-															<td align="center">
-																<input type="text" id="awayTeamNameTH" name="awayTeamNameTH" maxlength="100"  class="awayTeamNameTH" value="<%=detail.getAwayTeamNameTH()%>" />
-															</td>
-															<td align="center">
-																<input type="text" id="awayTeamNameEN" name="awayTeamNameEN" maxlength="100"  class="awayTeamNameEN" value="<%=detail.getAwayTeamNameEN()%>"/>
-															</td>
-															<td align="center"> 
-																 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate"  maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
-																 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
-															</td>
-															<td align="center">
-																<input type="text" id="matchTime" name="matchTime" maxlength="5"  class="matchTime" value="<%=detail.getMatchTime()%>" onblur="gp_validateTime(this);"  />
-															</td>
-															<td style="text-align: center;">  
-									                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
-									                           	 <input type="hidden" name="hidStartus" id="hidStartus"  value="U"/>
-									                           	 <input type="hidden" name="matchId" id="matchId"  value="<%=detail.getMatchId()%>"/>  
-								                            </td>
-														</tr> 
-														<% } 
-													} %>
-											       <tr>
-											 			<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="text-align: center;"> 
-								                       		<input type="button"  id="buttonAdd" class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
-								                       		 <input type="hidden" name="hidStartus" id="hidStartus"  value=""/>
-									                         <input type="hidden" name="matchId" id="matchId"  value=""/>  
-								                       	 </td>
-													</tr> 
-											</table>
-						               	</div>
-					                   </td>
-					                 </tr>
-					                 <tr>
-					        			<td align="center" colspan="6">
-					        				<br/><br/>
-					        				<input type="button"  
-					        					   ondblclick="return false;" 
-					        					   id="btnSave" 
-					        					   name="btnSave" 
-					        					   value="บันทึก"  
-					        					   class="btn action-add-btn btn-success" 
-					        					   onclick="lp_save_page();" /> &nbsp;&nbsp;&nbsp;
-					        				<button ondblclick="return false;" 
-					        						id="btnCancel" 
-					        						name="btnCancel"   
-					        						class="btn btn-danger"  
-					        						onclick="lp_reset_page();">ยกเลิก</button>  
-					        			</td>
-					        		</tr>
-					             </table>	
-							</section>
-						</div> 
-					</div>
-				</section>
+															if(detailList.size()>0){
+																for(int i=0;i<detailList.size();i++){
+																	detail = detailList.get(i);
+																	seq++;
+															  %>
+														 			<tr>
+																		<td align="center">
+																			<%=seq%>
+																		</td>
+																		<td align="center">
+																			<input type="text" id="awayTeamNameTH" name="awayTeamNameTH" maxlength="100"  class="awayTeamNameTH" value="<%=detail.getAwayTeamNameTH()%>" />
+																		</td>
+																		<td align="center">
+																			<input type="text" id="awayTeamNameEN" name="awayTeamNameEN" maxlength="100"  class="awayTeamNameEN" value="<%=detail.getAwayTeamNameEN()%>"/>
+																		</td>
+																		<td align="center"> 
+																			 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate"  maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
+																			 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
+																		</td>
+																		<td align="center">
+																			<input type="text" id="matchTime" name="matchTime" maxlength="5"  class="matchTime" value="<%=detail.getMatchTime()%>" onblur="gp_validateTime(this);"  />
+																		</td>
+																		<td style="text-align: center;">  
+												                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
+												                           	 <input type="hidden" name="hidStartus" id="hidStartus"  value="U"/>
+												                           	 <input type="hidden" name="matchId" id="matchId"  value="<%=detail.getMatchId()%>"/>  
+								                            			</td>
+																	</tr> 
+																	<% } 
+																} %>
+											       				<tr>
+														 			<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="text-align: center;"> 
+								                       					<input type="button"  id="buttonAdd" class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
+								                       		 			<input type="hidden" name="hidStartus" id="hidStartus"  value=""/>
+									                         			<input type="hidden" name="matchId" id="matchId"  value=""/>  
+								                       		 		</td>
+																</tr> 
+															</table>
+						               					</div>
+					                   				</td>
+					             				</tr>
+								                <tr>
+								        			<td align="center" colspan="6">
+								        				<br/><br/>
+								        				<input type="button"  
+								        					   ondblclick="return false;" 
+								        					   id="btnSave" 
+								        					   name="btnSave" 
+								        					   value="บันทึก"  
+								        					   class="btn action-add-btn btn-success" 
+								        					   onclick="lp_save_page();" /> &nbsp;&nbsp;&nbsp;
+								        				<button ondblclick="return false;" 
+								        						id="btnCancel" 
+								        						name="btnCancel"   
+								        						class="btn btn-danger"  
+								        						onclick="lp_reset_page();">ยกเลิก</button>  
+								        			</td>
+								        		</tr>
+					             			</table>	
+					            		</div>
+									</section>
+								</div> 
+							</div>
+						</section>
+					</section>
+				</section>  
+				<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
 			</section>
-		</section>  
-		<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+ 		</section>
 	</section>
- </section>
-</section>
 	<div align="center" class="FreezeScreen" style="display:none;">
         <center>
         	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />
