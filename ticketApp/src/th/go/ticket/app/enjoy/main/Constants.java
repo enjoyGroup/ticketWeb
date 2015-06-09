@@ -30,4 +30,6 @@ public class Constants {
 	/*Error Type*/
 	public static final String ERR_ERROR 			= "E";
 	public static final String ERR_WARNING 			= "W";
+	
+	public static final String ADMIN				= "admin";
 }

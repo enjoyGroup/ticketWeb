@@ -340,6 +340,7 @@ public class UserDetailsDao {
 				for(int i=0;i<list.size();i++){
 					row 				= list.get(i);
 					userDetailsBean 	= new UserDetailsBean();
+					privilegeName   	= "";
 					
 					logger.info("[getListUserdetail] userUniqueId 		:: " + row[0]);
 					logger.info("[getListUserdetail] userId 			:: " + row[1]);

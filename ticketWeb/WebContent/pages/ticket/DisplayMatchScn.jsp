@@ -72,7 +72,10 @@
 													<tr>
 														<td align="left" valign="top">
 															<div style="width:200px;" align="left">
-																<span class='topic-head'><B>ฤดูกาลแข่งขัน</B></span><br/>
+																<span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																	<B>ฤดูกาลแข่งขัน</B>
+																</span>
+																<br/>
 																<div id='cssmenu' style="min-height:auto;  background:#000000; ">
 													                <ul>
 													                <%
@@ -85,11 +88,12 @@
 												           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
 													                %>
 													                   <li class='has-sub'>
-													                   	  <a href='#' id="<%=listId %>">
-													                   	  	<span>
-													                   	  		<%=season%>
-													                   	  	</span>
-													                   	  </a>
+													                   		<a href='#' id="<%=listId %>">
+														                   	  <span>
+														                   	  	<img src="<%=imgURL%>/football01.png" style="padding-right: 5px;">
+														                   	  		<%=season%>
+														                   	  </span>
+														                  </a>									                   	 
 													                      <ul>
 													                      	<%
 													                      		for(DisplayMatchDetailBean bean:matchList){
