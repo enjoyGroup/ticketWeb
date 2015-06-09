@@ -803,7 +803,7 @@
 			        	}
 			        }
 			       
-			       lv_userLevel = "1";
+			      // lv_userLevel = "1";
 			        
 				   for(var j=0 ; j < la_bookingTypeName.length;j++){
 			           if(la_bookingTypePrice[j].value == ""){
