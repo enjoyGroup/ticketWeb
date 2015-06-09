@@ -9,7 +9,7 @@
 			$('#logOut').click(function(){ 
 				try{
 					if(confirm("ต้องการออกจากระบบ?")){   
-						window.location.replace('/ticketWeb');
+						window.location.replace('<%=servURL1%>');
 					}	
 				}catch(err){
 					alert("logOut :: " + err);
@@ -21,7 +21,7 @@
 <div class="headwrap">
 	<div class="row" style="position: relative;">
     	<div class="brand span4" style="padding-left: 15px;">
-        	<img src="/ticketWeb/images/logo2.png" >
+        	<img src="<%=servURL1%>/images/logo2.png" >
         </div>
         
         <div class="span8 user"  style="position: absolute;margin-right: 0px;width: 95%;">
@@ -58,7 +58,9 @@
 	<%		
 		}
 	%>
+	<%if(!userDeatil.getUserId().equals(Constants.ADMIN)){ %>
  	<li><a href="/ticketWeb/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
+ 	<%} %>
  	<li><a href="#" id="logOut" name="logOut" >ออกจากระบบ</a></li>
   	<!-- 
 	<li><a href="#">รายงาน</a>
