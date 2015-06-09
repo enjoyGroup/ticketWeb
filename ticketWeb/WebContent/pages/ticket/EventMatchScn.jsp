@@ -484,9 +484,9 @@
 		    }
 		
 		function lp_save_page(){
-       	    
+       	   // alert("lp_save_page :: "+lp_validate_data());
 		    if(!lp_validate_data()){
-				return;
+				return false;
 			}  
 			
 			var pageAction			= "UpdateSeason";
@@ -571,8 +571,16 @@
 			var lo_table 	= document.getElementById("result_match");
 			var lv_length 	= lo_table.rows.length; 
 			var lv_season   = document.getElementById("seasonNew").value; 
-		   
-			try{ 
+		    var la_awayTeamNameTH = document.getElementsByName("awayTeamNameTH"); 
+		    var la_awayTeamNameEN = document.getElementsByName("awayTeamNameEN"); 
+		    var la_matchDate	  = document.getElementsByName("matchDate"); 
+		    var la_matchTime	  = document.getElementsByName("matchTime"); 
+		    var lv_flag1           = false;
+		    var lv_flag2           = false;
+		    var lv_flag3           = false;
+		    var lv_flag4           = false;
+			
+		    try{ 
 				
 	            if(gp_trim(lv_season)==""){
 	            	alert("กรุณากรอกรายละเอียด  season "); 
@@ -582,40 +590,50 @@
 				if(lv_length <= 2){
 					alert("กรุณาระบุ รายการ Match อย่างน้อย 1 รายการ ");
 					return false;
-				}  else {
-					return true;
-				/* 	$.each($('.awayTeamNameTH').serializeArray(), function(i, field1) {
-					   
-					    if(field1.value == ""){
-							alert("กรุณาระบุทีมคู่แข่งภาษาไทย  ");
-							return false;
-					    }
-					});
-					
-					$.each($('.awayTeamNameEN').serializeArray(), function(k, field2) {
-					 
-					    if(field2.value == ""){
-							alert("กรุณาระบุทีมคู่แข่งภาษาอังกฤษ  ");
-							return false;
-					    }  
-					});
-					
-					$.each($('.dateFormat').serializeArray(), function(l, field3) {
-					 
-					    if(field3.value == ""){
-							alert("กรุณาระบุวันที่แข่งขัน");
-							return false;
-					    } 
-					});
-					
-					$.each($('.matchTime').serializeArray(), function(m, field4) {
-			 
-					    if(field4.value == ""){
-							alert("กรุณาระบุเวลาที่แข่งขัน  ");
-							return false;
-					    }  
-					}); */
+				}  else { 
+			        for(var a=0 ; a < la_awayTeamNameTH.length;a++){
+			        	if(la_awayTeamNameTH[a].value == ""){
+			        		alert("กรุณาระบุทีมคู่แข่งภาษาไทย  ");
+			        		lv_flag1 = false;
+			        	}else{
+			        		lv_flag1 = true; 
+			        	}
+			        }
 			        
+			        for(var b=0 ; b < la_awayTeamNameEN.length;b++){
+			        	if(la_awayTeamNameEN[b].value == ""){
+			        		alert("กรุณาระบุทีมคู่แข่งภาษาอังกฤษ  ");
+			        		lv_flag2 = false;
+			        	}else{
+			        		lv_flag2 = true; 
+			        	}
+			        }
+			        
+			        for(var c=0 ; c < la_matchDate.length;c++){
+			        	if(la_matchDate[c].value == ""){
+			        		alert("กรุณาระบุวันที่แข่งขัน");
+			        		lv_flag3 = false;
+			        	}else{
+			        		lv_flag3 = true; 
+			        	}
+			        }
+			        
+			        for(var d=0 ; d < la_matchTime.length;d++){
+			        	if(la_matchTime[d].value == ""){
+			        		alert("กรุณาระบุเวลาที่แข่งขัน  ");
+			        		lv_flag4 = false;
+			        	}else{
+			        		lv_flag4 = true; 
+			        	}
+			        }
+				 
+			        if(lv_flag1==true && lv_flag2==true && lv_flag3==true && lv_flag4==true){
+			       	   return true;
+		        	}else{
+		        	   return false;
+		        	}
+			        
+				  
 				} 
 				
 				
