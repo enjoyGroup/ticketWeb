@@ -89,38 +89,80 @@
 			}
 			
 	        
-				$(".bookingTypeNameClass").live("focus",function(){
-					$(this).autocomplete({
-				
-					source: function(request, response) {
-			           $.ajax({
-			           	async:false,
-				            type: "POST",
-			               url: gv_url,
-			               dataType: "json",
-			               data: gv_service + "&pageAction=getBookingTypeName&bookingTypeName=" + gp_trim(request.term),//request,
-			               success: function( data, textStatus, jqXHR) {
-			                   var items = data;
-			                   response(items);
-			               },
-			               error: function(jqXHR, textStatus, errorThrown){
-			                    alert( textStatus);
-			               }
-			           });
-			         },
-				      minLength: 0,//กี่ตัวอักษรถึงทำงาน
-				      open: function() {
-							//Data return กลับมาแล้วทำไรต่อ
-				      },
-				      close: function() { 
-				      },
-				      focus:function(event,ui) { 
-				      },
-				      select: function( event, ui ) { 
-				      }
-			     });
+			$(".bookingTypeNameClass").live("focus",function(){
+				$(this).autocomplete({
+			
+				source: function(request, response) {
+		           $.ajax({
+		           	async:false,
+			            type: "POST",
+		               url: gv_url,
+		               dataType: "json",
+		               data: gv_service + "&pageAction=getBookingTypeName&bookingTypeName=" + gp_trim(request.term),//request,
+		               success: function( data, textStatus, jqXHR) {
+		                   var items = data;
+		                   response(items);
+		               },
+		               error: function(jqXHR, textStatus, errorThrown){
+		                    alert( textStatus);
+		               }
+		           });
+		         },
+			      minLength: 0,//กี่ตัวอักษรถึงทำงาน
+			      open: function() {
+						//Data return กลับมาแล้วทำไรต่อ
+			      },
+			      close: function() { 
+			      },
+			      focus:function(event,ui) { 
+			      },
+			      select: function( event, ui ) { 
+			      }
+		     });
 			
 		   });
+			
+			$('#btnSave').click(function(e) {
+				
+		        var isValid = true;
+		
+		        $('input[type="text"]').each(function() {
+		
+		            if ($.trim($(this).val()) == '') {
+		
+		                isValid = false;
+		
+		                $(this).css({
+		
+		                    "border": "1px solid red",
+		
+		                    "background": "#FFCECE"
+		
+		                });
+		
+		            }
+		
+		            else {
+		
+		                $(this).css({
+		
+		                    "border": "",
+		
+		                    "background": ""
+		
+		                });
+		
+		            }
+		
+		        });
+		
+		        if (isValid == false){
+		
+		            e.preventDefault();
+		
+		        } 
+		    });
+
 				
 		});
 		
@@ -621,10 +663,10 @@
 		}
 		
 		function lp_save_page(){ 
-       	    
-			/* if(!lp_validate_data()){
+       	    //alert("lp_validate_data():"+lp_validate_data());  
+		    if(!lp_validate_data()){
 				return;
-			} */
+			}  
 			
 			var pageAction			= "UpdateZone";
 			var lv_params			= gv_service; 
@@ -721,8 +763,13 @@
 			var lv_totalSeating 	= document.getElementById("totalSeating").value;
 			var lv_rowName 			= document.getElementById("nameRow").value;
 			var lv_length 			= lo_table.rows.length; 
-			var lv_userLevel = document.getElementById("hidUserLevel").value;
-			
+			var lv_userLevel        = document.getElementById("hidUserLevel").value;
+			var la_bookingTypeName  = document.getElementsByName("bookingTypeName");
+			var la_bookingTypePrice  = document.getElementsByName("bookingTypePrice");
+			var  lv_userLevel = document.getElementById("hidUserLevel").value;
+			var lv_flag1           = false;
+		    var lv_flag2           = false;
+			  
 			if(lv_userLevel == "9"){
 				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="") 
 						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
@@ -740,34 +787,48 @@
 				}
 			}
 		
-			try{   
-				var lv_length = lo_table.rows.length;
- 
+			try{    
 			//alert(lv_length);
 				if(lv_length <= 2){
 					alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
 					return false;
-				}else{ 
-			  
-					$.each($('.bookingTypeNameClass').serializeArray(), function(i, field) {
-					    //alert(field.value);
-					    if(field.value == ""){
-							alert("กรุณาระบุประเภทตั๋ว  ");
-							return false;
-					    } 
-					});
-				  
-				   var  lv_userLevel = document.getElementById("hidUserLevel").value;
-				   if(lv_userLevel != "9"){
-						$.each($('.bookingTypePriceClass').serializeArray(), function(j, price) {
-						    //alert(price.value);
-						    if(price.value <= "0.00"){ 
-								alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
-								return false;
-						    } 
-						});
-				   }
+				}else{
+					
+			        for(var i=0 ; i < la_bookingTypeName.length;i++){
+			        	if(la_bookingTypeName[i].value == ""){
+			        		alert("กรุณาระบุประเภทตั๋ว  ");
+			        		lv_flag1 = false;
+			        	}else{
+			        		lv_flag1 = true;
+			        	}
+			        }
+			       
+			      // lv_userLevel = "1";
+			        
+				   for(var j=0 ; j < la_bookingTypeName.length;j++){
+			           if(la_bookingTypePrice[j].value == ""){
+			        		alert("กรุณาระบุราคาตั๋ว  ");
+			        		lv_flag2 =  false;
+			           }else{
+			        	    lv_flag2 =  true;
+			           }
+			        	
+		        	   if(lv_userLevel != "9"){
+		        		   if(la_bookingTypePrice[j].value <= "0.00"){ 
+							   alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
+							   lv_flag2 =  false;
+						   } else{
+							   lv_flag2 =  true;
+				           }
+		        	   }
+			        }
+				 
 			   
+				   if(lv_flag1==true && lv_flag2==true){
+					   return true;
+				   }else{
+					   return false;
+				   }
 				}
 				
 			}catch(e){
