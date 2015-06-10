@@ -504,7 +504,7 @@
 					        				<input type="button" id="btnResetPass" class="btn btn-sm btn-warning" value='Reset Password' onclick="lp_resetPass();" />&nbsp;&nbsp;&nbsp;
 					        				<%}%>
 					        				
-	     									<input type="reset" id="btnReset" class="btn btn-sm btn-danger" value='เริ่มใหม่' />
+	     									<input type="button" id="btnReset" onclick="lp_reset();" class="btn btn-sm btn-danger" value='เริ่มใหม่' />
 	     								</span>
 									</div>
 								</div>
