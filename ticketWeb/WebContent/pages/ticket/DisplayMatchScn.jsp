@@ -88,7 +88,7 @@
 												           					matchList = (List<DisplayMatchDetailBean>) displayMacthForm.getMatchMap().get(season);
 													                %>
 													                   <li class='has-sub'>
-													                   		<a href='#' id="<%=listId %>">
+													                   		<a href='javascript:void(0)' id="<%=listId %>">
 														                   	  <span>
 														                   	  	<img src="<%=imgURL%>/football01.png" style="padding-right: 5px;">
 														                   	  		<%=season%>
@@ -99,7 +99,7 @@
 													                      		for(DisplayMatchDetailBean bean:matchList){
 													                      	%>
 																			<li onclick="">
-																				<a href="#" onclick="lp_getReportByTicketType('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
+																				<a href="javascript:void(0)" onclick="lp_getReportByTicketType('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
 																					<%=bean.getAwayTeamNameTH() %>
 																				</a>
 																			</li>

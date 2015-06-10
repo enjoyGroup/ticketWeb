@@ -288,7 +288,9 @@ function gp_checkAmtOnly(ao_obj){
 }
 
 function gp_progressBarOn(){
+	var h = $(document).height();
     
+	$('.FreezeScreen').css('height', h);
     $(".FreezeScreen").fadeIn();
 }
 

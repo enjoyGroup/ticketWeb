@@ -4,8 +4,33 @@
 	final String servURL1		= Constants.SERV_URL;
 	UserDetailsBean userDeatil 	= (UserDetailsBean) request.getSession().getAttribute("userBean");
 %>
+	<style>
+		.fixs{
+			position: fixed;
+			margin-top: 0px;
+			margin-left:0px;
+			width: 100%;
+			background: black;
+			z-index: 9999;
+		}
+	</style>
 	<script>
 		$(document).ready(function(){
+			
+			var h = $(document).height();
+			
+			$('#menu1').ptMenu();
+			$(window).scroll(function(){//alert($(window).scrollTop());
+		        if($(window).scrollTop() > 10){
+		        	document.getElementById("m1").className 			= "fixs";
+		        	document.getElementById("headwrap").style.display 	= "none";
+		        	$('body').css('height', h);
+		        }else{
+		        	document.getElementById("m1").className 			= "";
+		        	document.getElementById("headwrap").style.display 	= "block";
+		        }
+		    });
+			
 			$('#logOut').click(function(){ 
 				try{
 					if(confirm("ต้องการออกจากระบบ?")){   
@@ -18,7 +43,7 @@
 			});		
 		});
 	</script>
-<div class="headwrap">
+<div class="headwrap" id="headwrap">
 	<div class="row" style="position: relative;">
     	<div class="brand span4" style="padding-left: 15px;">
         	<img src="<%=servURL1%>/images/logo2.png" >
@@ -35,7 +60,7 @@
         </div>
     </div><!-- container -->
 </div><!-- headwrap -->
-<div align="left">
+<div align="left" id="m1">
   <ul id="menu1">
 	<%
 		UserPrivilegeBean 			userPrivilegeBean 		= null;
@@ -59,7 +84,7 @@
 		}
 	%>
 	<%if(!userDeatil.getUserId().equals(Constants.ADMIN)){ %>
- 	<li><a href="/ticketWeb/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
+ 	<li><a href="<%=servURL1%>/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
  	<%} %>
  	<li><a href="#" id="logOut" name="logOut" >ออกจากระบบ</a></li>
   	<!-- 
@@ -93,5 +118,14 @@
 	</li>
 	 -->	
 </ul>
-<script>$('#menu1').ptMenu();</script>
 </div>
+
+
+
+
+
+
+
+
+
+

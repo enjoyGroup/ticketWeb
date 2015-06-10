@@ -133,7 +133,7 @@
 														           					matchList = (List<SeatZoneBean>) seatZoneForm.getMatchMap().get(season);
 															                %>
 															                   <li class='has-sub'>
-															                   	  <a href='#' id="<%=listId %>">
+															                   	  <a href='javascript:void(0)' id="<%=listId %>">
 																                   	  <span>
 																                   	  	<img src="<%=imgURL%>/football01.png" style="padding-right: 5px;">
 																                   	  		<%=season%>
@@ -144,7 +144,7 @@
 															                      		for(SeatZoneBean bean:matchList){
 															                      	%>
 																					<li onclick="">
-																						<a href="#" onclick="lp_selectMatch('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
+																						<a href="javascript:void(0)" onclick="lp_selectMatch('<%=bean.getMatchId()%>', '<%=season%>', '<%=bean.getAwayTeamNameTH() %>')">
 																							<%=bean.getAwayTeamNameTH() %>
 																						</a>
 																					</li>
