@@ -6,15 +6,7 @@
 <%@ page import="java.util.*"%>
 <jsp:useBean id="seatingDetailForm" class="th.go.ticket.app.enjoy.form.SeatingDetailForm" scope="session"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
- <%
- 	List<SeatingDetailBean>  	detailList			= seatingDetailForm.getSeatingDetailBeans();
-	SeatingDetailBean			detail				= null; 
-	if(detailList.size()>0){
-		for(int i=0;i<detailList.size();i++){
-			detail = detailList.get(i);  
-		}
-	}
- %>
+
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=EDGE">
@@ -65,42 +57,151 @@
 		
 		$(document).ready(function(){ 
 			$('#menu1').ptMenu();
-			gv_service 	= "service=" + $('#service').val();  
-		 	 
-				$(".bookingTypeNameClass").live("focus",function(){
-					$(this).autocomplete({
-				
-					source: function(request, response) {
-			           $.ajax({
-			           	async:false,
-				            type: "POST",
-			               url: gv_url,
-			               dataType: "json",
-			               data: gv_service + "&pageAction=getBookingTypeName&bookingTypeName=" + gp_trim(request.term),//request,
-			               success: function( data, textStatus, jqXHR) {
-			                   var items = data;
-			                   response(items);
-			               },
-			               error: function(jqXHR, textStatus, errorThrown){
-			                    alert( textStatus);
-			               }
-			           });
-			         },
-				      minLength: 0,//กี่ตัวอักษรถึงทำงาน
-				      open: function() {
-							//Data return กลับมาแล้วทำไรต่อ
-				      },
-				      close: function() { 
-				      },
-				      focus:function(event,ui) { 
-				      },
-				      select: function( event, ui ) { 
-				      }
-			     });
+			gv_service 	= "service=" + $('#service').val();    
+ 
+			
+			if($("#hidUserLevel").val()  == "9"){
+				if(($("#fieldZoneName").val()=="") || ($("#nameTicket").val()=="")||  ($("#nameRow").val()=="")){
+					$("#btnSave").prop('disabled',true); 
+					$('#btnCancel').prop("disabled",true); 
+					$('#btnAdd').prop("disabled",true); 
+				}else{ 
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#btnAdd").removeAttr('disabled');
+		        }
+			    
+			}else{
+				if(($("#rows").val() <=0) || ($("#seating").val()<=0) 
+						|| ($("#totalSeating").val()<=0) || ($("#startNo").val()<=0)  
+						|| ($("#fieldZoneName").val() =="") 
+						|| ($("#nameTicket").val() =="") 
+						|| ($("#nameRow").val() ==""))
+				{
+					$("#btnSave").attr('disabled','disabled');
+					$("#btnCancel").attr('disabled','disabled');
+					$("#btnAdd").attr('disabled','disabled');
+				}else{ 
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#btnAdd").removeAttr('disabled');
+		        }
+			}
+			
+	        
+			$(".bookingTypeNameClass").live("focus",function(){
+				$(this).autocomplete({
+			
+				source: function(request, response) {
+		           $.ajax({
+		           	async:false,
+			            type: "POST",
+		               url: gv_url,
+		               dataType: "json",
+		               data: gv_service + "&pageAction=getBookingTypeName&bookingTypeName=" + gp_trim(request.term),//request,
+		               success: function( data, textStatus, jqXHR) {
+		                   var items = data;
+		                   response(items);
+		               },
+		               error: function(jqXHR, textStatus, errorThrown){
+		                    alert( textStatus);
+		               }
+		           });
+		         },
+			      minLength: 0,//กี่ตัวอักษรถึงทำงาน
+			      open: function() {
+						//Data return กลับมาแล้วทำไรต่อ
+			      },
+			      close: function() { 
+			      },
+			      focus:function(event,ui) { 
+			      },
+			      select: function( event, ui ) { 
+			      }
+		     });
 			
 		   });
+			
+			$('#btnSave').click(function(e) {
+				
+		        var isValid = true;
+		
+		        $('input[type="text"]').each(function() {
+		
+		            if ($.trim($(this).val()) == '') {
+		
+		                isValid = false;
+		
+		                $(this).css({
+		
+		                    "border": "1px solid red",
+		
+		                    "background": "#FFCECE"
+		
+		                });
+		
+		            }
+		
+		            else {
+		
+		                $(this).css({
+		
+		                    "border": "",
+		
+		                    "background": ""
+		
+		                });
+		
+		            }
+		
+		        });
+		
+		        if (isValid == false){
+		
+		            e.preventDefault();
+		
+		        } 
+		    });
+
 				
 		});
+		
+		function lp_onblur_bookingTypeName(ao_obj){
+		//alert(ao_obj.value);   
+		 
+		    try{ 
+				$.ajax({
+					async:false,
+		            type: "POST",
+		            url: gv_url,
+		            data: gv_service + "&pageAction=validateBookingTypeName&bookingTypeName=" +ao_obj.value,
+		            beforeSend: "",
+		            success: function(data){ 
+		            	var jsonObj 			= null;
+		            	var status				= null;
+		            	var errMsg				= null;
+		             //alert(data);          	
+		            	try{
+		            		jsonObj = JSON.parse(data);
+		            		status	= jsonObj.status;
+		                 //alert(status);		
+			            	if(status=="SUCCESS"){ 
+		            		}else{
+		            			errMsg = jsonObj.errMsg; 
+		            			alert(errMsg);
+		            		}   
+		            	}catch(e){
+		            		alert("in lp_onblur_bookingTypeName :: " + e);
+		            	}  
+		             
+		            }
+		        });
+		    	  
+		    }catch(e){
+		    	alert("lp_onblur_bookingTypeName :: " + e);
+		    }
+	    
+		}
 		
 	function lp_addTableZone(av_zoneId,av_zone){ 
 			var lo_table		= null;
@@ -171,7 +272,10 @@
 			}
 		}
 		
-		function lp_add_row_zone(){ //เปิดปิดให้ใส่ข้อมูลใหม่ทั้งหมด 
+		function lp_add_row_zone(){ //เปิดปิดให้ใส่ข้อมูลใหม่ทั้งหมด
+			$("#btnSave").attr('disabled','disabled');
+			$("#btnCancel").attr('disabled','disabled');
+			$("#btnAdd").attr('disabled','disabled');
 			gv_mode          = "NewZone";
 			document.getElementById("hidZoneName").value = "";
 			document.getElementById("hidZoneId").value = "";
@@ -189,6 +293,11 @@
 		}
 		
        function lp_changeZone(av_zone,av_zoneId){
+
+   	    if (confirm("ยืนยันการเปลี่ยนปีการแข่งขัน ?") == false) {
+   	    	 return false;
+   	    }  
+   	    
     		gv_changeZone       = true;
     	    gv_mode             = "UpdateZone";
 			var lo_hidZone 	    = null;
@@ -324,9 +433,9 @@
 	
 			if(av_size == av_index){
 				cell1.innerHTML = av_index ;
-				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass' value='"+av_bookingTypeName+ "'/>"+
+				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)'  value='"+av_bookingTypeName+ "'/>"+
 				  				  "<input type='hidden' name='bookingTypeId' id='bookingTypeId'  value='"+av_bookingTypeId+ "'/>";
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='moneyOnly'  onblur='lp_onBlurFormatNumber(this);' value='"+av_bookingPrices+ "'/>" ;
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  onblur='lp_onBlurFormatNumber(this);' value='"+av_bookingPrices+ "'/>" ;
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='"+av_fieldZoneId+"'/>" +
@@ -345,9 +454,9 @@
 					  
 			}else{
 				cell1.innerHTML = av_index ;
-				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass' value='"+av_bookingTypeName+ "'/>" +
+				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass' onblur='lp_onblur_bookingTypeName(this)' value='"+av_bookingTypeName+ "'/>" +
 				 				  "<input type='hidden' name='bookingTypeId' id='bookingTypeId'  value='"+av_bookingTypeId+ "'/>";
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice' onblur='lp_onBlurFormatNumber(this);' class='moneyOnly'  value='"+av_bookingPrices+ "'/>" ; 
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass' onblur='lp_onBlurFormatNumber(this);'  value='"+av_bookingPrices+ "'/>" ; 
 				cell4.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+ 
 								  "<input type='hidden' name ='seq' id ='seq'  value='" + av_seq + "' />"+
@@ -386,8 +495,8 @@
 				cell4.align		= "center";   
 				lv_seq          = lv_length ;
  				cell1.innerHTML =  lv_seq ;
-				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass' value=''/>" ;
-				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='moneyOnly' onblur='lp_onBlurFormatNumber(this);'  value=''/>" ; 
+				cell2.innerHTML = "<input type='text'  id='bookingTypeName'  name='bookingTypeName'  class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)'  value=''/>" ;
+				cell3.innerHTML = "<input type='text'  id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  class='moneyOnly' onblur='lp_onBlurFormatNumber(this);'  value='0.00'/>" ; 
 				cell4.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value=''/>" + 
@@ -449,8 +558,8 @@
 				cell4.align	= "center";  
             
 				cell1.innerHTML = "1";
-				cell2.innerHTML = "<input  type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass' value=''/>"; 
-				cell3.innerHTML = "<input type='text' id='bookingTypePrice'  name='bookingTypePrice' class='moneyOnly' onblur='lp_onBlurFormatNumber(this);'  value=''/>"; 
+				cell2.innerHTML = "<input  type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass'  onblur='lp_onblur_bookingTypeName(this)' value=''/>"; 
+				cell3.innerHTML = "<input type='text' id='bookingTypePrice'  name='bookingTypePrice'  class='bookingTypePriceClass'  onblur='lp_onBlurFormatNumber(this);'  value=''/>"; 
 				cell4.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+ 
@@ -493,32 +602,14 @@
 				cell2 		= row.insertCell(1);
 				cell3 		= row.insertCell(2);
 				cell4 		= row.insertCell(3);  
-				
-				cell1.align	= "center"; 
-				cell2.align	= "center";
-				cell3.align	= "center"; 
-				cell4.align	= "center";    
-			    
-				cell1.innerHTML = "1"; 
-				cell2.innerHTML = "<input  type='text'  id='bookingTypeName'  name='bookingTypeName' class='bookingTypeNameClass' value=''/>"; 
-				cell3.innerHTML = "<input type='text' id='bookingTypePrice'  name='bookingTypePrice' class='moneyOnly'  onblur='lp_onBlurFormatNumber(this);'  value=''/>"; 
-				cell4.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
-								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
-								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value=''/>"+
-								  "<input type='hidden' name ='seq' id ='seq'  value='1'  />"+
-								  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='1' />";
-								  
-				row 		= lo_table.insertRow(2); 
-				cell1 		= row.insertCell(0);
-				cell2 		= row.insertCell(1);
-				cell3 		= row.insertCell(2);
-				cell4 		= row.insertCell(3); 
+				  
+
 				cell4.align	= "center";    
 				cell4.innerHTML = "<input type='button' class='btn action-add-btn btn-success' style='text-align: center;' ondblclick='return false;' onclick='lp_add_row_zoneDetail();' value='+' />"+
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value=''/>"+
 								  "<input type='hidden' name='fieldZoneId' id='fieldZoneId'  value='0'/>"+
-				  				  "<input type='hidden' name ='seq' id ='seq'  value='2' />"+
-				  				  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='2' />";
+				  				  "<input type='hidden' name ='seq' id ='seq'  value='1' />"+
+				  				  "<input type='hidden' name ='hidSeq' id ='hidSeq'  value='1' />";
 			  
 				
 			}catch(e){
@@ -572,18 +663,18 @@
 		}
 		
 		function lp_save_page(){ 
-       	    
-			if(!lp_validate_data()){
+       	    //alert("lp_validate_data():"+lp_validate_data());  
+		    if(!lp_validate_data()){
 				return;
-			}
+			}  
 			
 			var pageAction			= "UpdateZone";
 			var lv_params			= gv_service; 
 			var lo_ind1             = document.getElementById("nameRowInd1");
 			var lo_totalSeating     = document.getElementById("totalSeating");
 			var lv_rowName 			= document.getElementById("nameRow");
-			
-			if(gv_mode == "NewZone"){
+	 
+			if(gv_mode == "NewZone" || $('#hidZoneId').val() == 0){
 				pageAction			= "NewZone";
 			} 	 
 		 
@@ -599,11 +690,11 @@
 		    	}
 		    	
 		    	if(lo_ind1.checked==true){
-		    		"&nameRowInd=1";
+		    		lv_params 	+= "&nameRowInd=1";
 		    	}else{
-		    		"&nameRowInd=2";
+		    		lv_params 	+="&nameRowInd=2";
 		    	}
-			 //alert(lv_params);  
+			//alert(lv_params);  
  				gp_progressBarOn();
 				$.ajax({
 					async:false,
@@ -662,48 +753,88 @@
 		    
 		}
 		
-		function lp_validate_data(){
+		function lp_validate_data(){ 
 			var lo_table 			= document.getElementById("result_zone_detail");
+			var lv_fieldZoneName	= document.getElementById("fieldZoneName").value;
+			var lv_nameTicket		= document.getElementById("nameTicket").value;
 			var lv_rows 			= document.getElementById("rows").value;
 			var lv_seating 			= document.getElementById("seating").value;
+			var lv_startNo 			= document.getElementById("startNo").value;
 			var lv_totalSeating 	= document.getElementById("totalSeating").value;
 			var lv_rowName 			= document.getElementById("nameRow").value;
-			var lv_length 			= lo_table.rows.length;
-			
-			if((lv_rows<=0) || (lv_seating<=0) || (lv_totalSeating<=0) || (lv_rowName=="")){
-				alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
-				return false;
+			var lv_length 			= lo_table.rows.length; 
+			var lv_userLevel        = document.getElementById("hidUserLevel").value;
+			var la_bookingTypeName  = document.getElementsByName("bookingTypeName");
+			var la_bookingTypePrice  = document.getElementsByName("bookingTypePrice");
+			var  lv_userLevel = document.getElementById("hidUserLevel").value;
+			var lv_flag1           = false;
+		    var lv_flag2           = false;
+			  
+			if(lv_userLevel == "9"){
+				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="") 
+						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
+					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
+					return false;
+				}
+			    
+			}else{
+				if((lv_rows<=0) || (lv_seating<=0) || (lv_totalSeating<=0) 
+						|| (lv_startNo<=0) || (lv_fieldZoneName=="") 
+						|| (lv_nameTicket=="") || (lv_rowName=="") 
+						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
+					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
+					return false;
+				}
 			}
-		    
-			if(lv_length < 2){
-				alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
-				return false;
-			}
-			
-			var la_idName               = new Array("fieldZoneName","rows","seating");
-		    var la_msg               	= new Array("ชื่อ zone ที่นั่ง","จำนวนแถว","จำนวนที่นั่งต่อแถว");   
-        //, "awayTeamNameTH", "awayTeamNameEN", "matchDate" , "matchTime"
-        //, "ทีมคู่แข่งภาษาไทย", "ทีมคู่แข่งภาษาอังกฤษ", "วันที่แข่ง" ,"เวลาที่แข่ง"
-		    
-			try{
-				
-				for(var i=0;i<la_idName.length;i++){
-		            lo_obj          = eval('$("#' + la_idName[i] + '")');
-		            
-		            if(gp_trim(lo_obj.val())==""){
-		            	alert("กรุณาระบุ " + la_msg[i]);
-		            	lo_obj.focus();
-		                return false;
-		            }
-		        }
-				
+		
+			try{    
+			//alert(lv_length);
+				if(lv_length <= 2){
+					alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
+					return false;
+				}else{
+					
+			        for(var i=0 ; i < la_bookingTypeName.length;i++){
+			        	if(la_bookingTypeName[i].value == ""){
+			        		alert("กรุณาระบุประเภทตั๋ว  ");
+			        		lv_flag1 = false;
+			        	}else{
+			        		lv_flag1 = true;
+			        	}
+			        }
+			       
+			      // lv_userLevel = "1";
+			        
+				   for(var j=0 ; j < la_bookingTypeName.length;j++){
+			           if(la_bookingTypePrice[j].value == ""){
+			        		alert("กรุณาระบุราคาตั๋ว  ");
+			        		lv_flag2 =  false;
+			           }else{
+			        	    lv_flag2 =  true;
+			           }
+			        	
+		        	   if(lv_userLevel != "9"){
+		        		   if(la_bookingTypePrice[j].value <= "0.00"){ 
+							   alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
+							   lv_flag2 =  false;
+						   } else{
+							   lv_flag2 =  true;
+				           }
+		        	   }
+			        }
+				 
+			   
+				   if(lv_flag1==true && lv_flag2==true){
+					   return true;
+				   }else{
+					   return false;
+				   }
+				}
 				
 			}catch(e){
-				alert("lp_validate :: " + e);
-				return false;
+				alert("lp_validate_data :: " + e);
 			}
-			
-			return true;
+			 
 		}
 		
 		function lp_onblur_validate(ao_price){
@@ -711,9 +842,9 @@
 			lo_price     = document.getElementsByName("bookingTypePrice");
 			lv_price     = lo_price[lv_index-1].value;
 			lv_userLevel = document.getElementById("hidUserLevel").value;
-          //alert("lv_price ::"+ lv_price);	
-			 
-			if(lv_price<=0.00 && lv_userLevel != "9"){ 
+         //alert(lv_userLevel);	
+         //alert(lv_price);
+			if(lv_price<= "0.00" && lv_userLevel != "9"){ 
 				alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
 				return;
 			}
@@ -727,34 +858,35 @@
 			var lv_rows				= 0;
 			var lv_seating 			= 0;
 			var lv_totalSeating		= 0; 
+			var lv_startNo          = 0;
 			
 			try{ 
 				lo_rows					= document.getElementById("rows");
 				lo_seating			    = document.getElementById("seating");
 				lo_totalSeating			= document.getElementById("totalSeating");
+				lv_startNo
 				lo_nameInd              = document.getElementsByName("nameRowInd");
+				lv_startNo              = document.getElementById("startNo").value;
 				//$("control_id").attr("checked",true);
 			 	
 				lv_rows 			    = lo_rows.value;
 		   	
-				if(lv_rows==0){ 
+				if((lo_rows.value<=0) && (lo_seating.value<=0) && (lv_startNo<=0) ) { 
+		   			document.getElementById("nameRowInd2").checked = true;
+					document.getElementById("nameRowInd1").checked = false;
+					$("#nameRow").prop('disabled',true);//ไม่ปิด
+					$('#nameRowInd1').prop("disabled",true); 
+					$('#nameRowInd2').prop("disabled",true); 
+				}else if(lv_rows==0){ 
 					document.getElementById("nameRowInd1").checked = true;
 					document.getElementById("nameRowInd2").checked = false;
-					document.getElementById("nameRow").value = "";
-					//$("#nameRowInd2").attr("checked",true); 
-					//$("#nameRowInd1").removeAttr("checked");
-					//$('#nameRowInd1').prop("disabled",true); 
-					//$('#nameRowInd2').prop("disabled",true); 
+					document.getElementById("nameRow").value = ""; 
 					$('#nameRow').removeProp("disabled"); 
 				}else if(lv_rows>0){ 
 					document.getElementById("nameRowInd2").checked = true;
-					document.getElementById("nameRowInd1").checked = false;
-					//$("#nameRowInd1").attr("checked",true); 
-					//$("#nameRowInd2").removeAttr("checked");
-					//$('#nameRowInd1').removeProp("disabled"); 
-					//$('#nameRowInd2').removeProp("disabled"); 
+					document.getElementById("nameRowInd1").checked = false; 
 					generateNameOfRows();
-					$('#nameRow').prop("disabled",true); 
+					$("#nameRow").attr('disabled','disabled');
 				}
 				
 				lv_seating 			    = lo_seating.value;
@@ -791,6 +923,8 @@
 		           lo_nameRow   = document.getElementById("nameRow");
 		           
 		           if(lv_rows > 0 && lv_rows <=26){
+		   			document.getElementById("nameRowInd2").checked = false;
+					document.getElementById("nameRowInd1").checked = true;
 		            // alert(lv_rows);
 		        	  for(var i = 0 ; i < lv_rows ; i ++){
 		                  //alert(name[i]);
@@ -802,6 +936,8 @@
 		        	  }
 		        
 		        	  lo_nameRow.value = nameOfRow; 
+		           }else{
+		        	   $('#nameRow').prop("disabled",false); 
 		           }
 		        } catch (e) {
 		            alert("generateNameOfRows : "+e);
@@ -855,7 +991,81 @@
 				alert("lp_onBlurFormatNumber :: " + e);
 			}
 		}
+		
+		function lp_check_data(){ 
+			var lv_fieldZoneName	= document.getElementById("fieldZoneName").value;
+			var lv_nameTicket		= document.getElementById("nameTicket").value;
+			var lv_rows 			= document.getElementById("rows").value;
+			var lv_seating 			= document.getElementById("seating").value;
+			var lv_startNo 			= document.getElementById("startNo").value;
+			var lv_totalSeating 	= document.getElementById("totalSeating").value;
+			var lv_rowName 			= document.getElementById("nameRow").value;
+			
+			var lv_userLevel        = document.getElementById("hidUserLevel").value;
+			
+			if(lv_userLevel == "9"){
+				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="")){
+					$("#btnSave").attr('disabled','disabled');
+					$("#btnCancel").attr('disabled','disabled');
+					$("#btnAdd").attr('disabled','disabled');
+		 
+				}else{ 
+					$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#btnAdd").removeAttr('disabled');
+		    		/* $("#btnSave").prop('disabled',false); 
+					$('#btnCancel').prop("disabled",false); 
+					$('#btnAdd').prop("disabled",false);  */
+				}
+			    
+			}else{
+				if((lv_rows<=0) || (lv_seating<=0) || (lv_totalSeating<=0) || (lv_startNo<=0) || (lv_fieldZoneName=="") 
+						|| (lv_nameTicket=="") || (lv_rowName=="")){
+					$("#btnSave").attr('disabled','disabled');
+					$("#btnCancel").attr('disabled','disabled');
+					$("#btnAdd").attr('disabled','disabled');
+				}else{
+				   	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#btnAdd").removeAttr('disabled');
+				}
+			}
+		}
   
+		function lp_onblur_check_zone(){ 
+			lv_zone     = document.getElementById("fieldZoneName").value; 
+			lo_table 	= document.getElementById("result_zone");
+             //alert("lv_zone ::"+ lv_zone);	 
+             
+        	lv_length 	= lo_table.rows.length;
+        	
+        	for(var i =0 ; i < lv_length ; i ++){
+            // alert(gp_trim(lo_table.rows[i].cells[0].innerHTML));
+        		if(gp_trim(lv_zone) == gp_trim(lo_table.rows[i].cells[0].innerHTML)){
+        			alert("ไม่สามารถระบุชื่อ zone ซ้ำได้");
+        			break;
+        		}
+        	}
+        	
+        	
+		}
+		
+		function lp_check_fieldNumber(){
+			var lv_rows 			= document.getElementById("rows").value;
+			var lv_seating 			= document.getElementById("seating").value;
+			var lv_startNo 			= document.getElementById("startNo").value; 
+			var lo_rowName 			= document.getElementById("nameRow");
+			
+			if((lv_rows<=0) && (lv_seating<=0) && (lv_startNo<=0) ) {
+				$("#nameRow").attr('disabled','disabled'); 
+				$("#nameRowInd").attr('disabled','disabled'); 
+	   			document.getElementById("nameRowInd2").checked = true;
+				document.getElementById("nameRowInd1").checked = falsse;
+			} 
+					
+		}
+		
+		
 	</script>
 </head>
 
@@ -863,7 +1073,7 @@
 	<form id="frm">  
 		<input type="hidden" id="service" 	name="service" value="servlet.SeatingDetailServlet" />
 		<input type="hidden" id="hidZoneName" name="hidZoneName" value="<%=seatingDetailForm.getFieldzonemasterName()%>" />  
-		<input type="hidden" id="hidZoneId"   name="hidZoneId" value="<%=detail.getFieldZoneId()%>" />  
+		<input type="hidden" id="hidZoneId"   name="hidZoneId" value="<%=seatingDetailForm.getFieldZoneId()%>" />  
 		<input type="hidden" id="hidUserLevel" name="hidUserLevel" value="<%=seatingDetailForm.getUserLevel()%>">
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
@@ -883,15 +1093,15 @@
 											<div class="panel-body">
 						        				<table style='width:100%;' border="0">
 													<tr>
-					              					<td style='width:15%;padding:0px;vertical-align: top;'>
+					              					<td style='width:10%;padding:0px;vertical-align: top;'>
 					              						<table>
 					              							<tr>
 					              								<td>   
-													                 <td style='width:15%;padding:0px !important'> 
+													                 <td style='width:10%;padding:0px !important'> 
 												                      <table class="table sim-panel-result-table" id="result_zone">
 																		<tr><th>ปีการแข่งขัน</th> </tr>
 																		<%
-																		List<FieldzonemasterBean>  list	=  seatingDetailForm.getFieldzonemasterBeans();
+																		List<FieldzonemasterBean>  list	=  seatingDetailForm.getZoneMasterList();
 																		 
 																		if(list.size()>0){
 																			for(int i=0;i<list.size();i++){ 
@@ -916,60 +1126,71 @@
 					              						</table>
 									   				</td>
 						                   				<td style='width:100%;padding:0px !important;text-align: center;vertical-align: top;'>
-						                   					<table width="90%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
+						                   					<table width="100%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
+						                   					 <% 
+						                   					    FieldzonemasterBean	master	= seatingDetailForm.getFieldzonemasterBean(); 
+															 %>
 						                   						<tr>
-						                   							<td align="right" width="200px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
-						                   							<td align="left" width="100px;">
+						                   							<td align="right" width="250px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
+						                   							<td align="left" width="200px;">
 												        				<input type='text' 
 												        					id="fieldZoneName" 
 												        					name='fieldZoneName' 
-												        					maxlength="50"  
-												        					value="<%=detail.getFieldZoneName()%>"/> 
+												        					maxlength="10"  
+												        					value="<%=master.getFieldZoneName()%>"
+												        					onblur="lp_check_data(),lp_onblur_check_zone();"/> 
 												        			    <input type="hidden" 
 												        			    		name="fieldZoneMasterId" 
 												        			    		id="fieldZoneMasterId"  
-												        			    		value="<%=detail.getFieldZoneId()%>"/> 
+												        			    		value="<%=master.getFieldZoneId()%>"> 
+												        			    &nbsp;<span style="color: red;"><b>*</b></span> 
 												        			</td>
-												        			<td align="right" width="150px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
-						                   							<td align="left" colspan="3">
+												        			<td align="right" width="200px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
+						                   							<td align="left" colspan="3" width="600px;">
 												        				<input type='text' 
 												        					id="nameTicket" 
 												        					name='nameTicket' 
-												        					maxlength="50"  
-												        					value="<%=detail.getFieldZoneNameTicket()%>"/>  
+												        					maxlength="10"  
+												        					onblur="lp_check_data();"
+												        					value="<%=master.getFieldZoneNameTicket()%>"/>  
+												        				&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
 						                   						</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">จำนวนแถว : &nbsp;</td>
-												        			<td align="left" width="100px;">
+												        			<td align="right" width="250px;">จำนวนแถว : &nbsp;</td>
+												        			<td align="left"  width="200px;">
 												        				<input type='text' id="rows" 
 												        				       name='rows' maxlength="50"      
 												        				       class="numberOnly" 
-                                                     						   value="<%=detail.getRows()%>" 
-                                                     						   onblur="lp_calTotalSeating(),onKeyDownNumber(event);"/>
+                                                     						   value="<%=master.getRows()%>" 
+                                                     						   onblur="lp_calTotalSeating();onKeyDownNumber(event),lp_check_data()"/>
+                                                     						   &nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="150px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
-												        			<td align="left" width="150px;">
+												        			<td align="right" width="200px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
+												        			<td align="left"  width="200px;">
 												        				<input  type='text' 
 												        						id="seating" 
 												        						name="seating" 
 												        						maxlength="20"  
 												        					    class="numberOnly" 
-												        						value="<%=detail.getSeating()%>"
-												        						onblur="lp_calTotalSeating();"/>
+												        						value="<%=master.getSeating()%>"
+												        						onblur="lp_calTotalSeating(),lp_check_data();"/>
+												        						&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="150px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
-												        			<td align="left" width="150px;">
+												        			<td align="right" width="200px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
+												        			<td align="left" width="200px;">
 												        				<input  type='text' 
 												        						id="startNo" 
 												        						name="startNo" 
 												        						maxlength="20"  
 												        					    class="numberOnly" 
-												        						value="<%=detail.getStartSeatingNo()%>" />
+												        					    onblur="lp_check_data(),lp_calTotalSeating();"
+												        						value="<%=master.getStartSeatingNo()%>" />
+												        						&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
+												        			<td align="right" width="250px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
 												        			<td align="left" colspan="5">
 												        				<input type='text' 
 												        					id="totalSeating" 
@@ -977,16 +1198,16 @@
 												        					maxlength="20" 
 												        					class="inputDisabled" 
 												        					disabled="disabled"  
-												        					value="<%=detail.getTotalSeating()%>"/>
+												        					value="<%=master.getTotalSeating()%>"/>
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="200px;">ชื่อแถว: &nbsp;</td>
+												        			<td align="right" width="250px;">ชื่อแถว: &nbsp;</td>
 												        			<td align="left">
 												        			 <input type='radio' 
 												        					id="nameRowInd1" 
 												        					name='nameRowInd' 
-												        		            <%if(detail !=null && detail.getTypeRowName()==1 ){%> checked="checked" <%} %>  
+												        		            <%if(master !=null && master.getTypeRowName()==1 ){%> checked="checked" <%} %>  
 												        					value="1" 
 												        					onclick="lp_onclick_nameInd();"/>ตามตัวอักษร A-Z 
 												        			</td>
@@ -994,22 +1215,24 @@
 												        			 <input type='radio' 
 												        			 		id="nameRowInd2" 
 												        			 		name='nameRowInd'  
-												        	                <%if(detail !=null && detail.getTypeRowName()==2 ){%> checked="checked" <%} %> 
+												        	                <%if(master !=null && master.getTypeRowName()==2 ){%> checked="checked" <%} %> 
 												        			 		value="2" 
 												        			 		onclick="lp_onclick_nameInd();"/>ตั้งชื่อแถวเอง
 												        			 		</td>
 												        		</tr>
 												        		<tr></tr>
 												        		<tr> 
-												        			<td align="right" width="200px;">รายชื่อแถว : &nbsp;</td>
+												        			<td align="right" width="250px;">รายชื่อแถว : &nbsp;</td>
 												        			<td align="left"  colspan="3">
 												        				<textarea   id="nameRow" 
 												        							name='nameRow'
 																					rows="4" 
 																					cols="70" 
-																					value="<%=detail.getNameRow()%>"
-																					onblur="lp_validate_nameOfRows(this);" ><%=detail.getNameRow()%>
+																					onblur="lp_check_data();"
+																					value="<%=master.getNameRow()%>"
+																					onblur="lp_validate_nameOfRows(this);" ><%=master.getNameRow()%> 
 																		</textarea>
+																		&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
 												        		</tr>
 												        	</table>
@@ -1021,42 +1244,34 @@
 											                            <th align="center">การทำงาน</th>
 										                          	</tr>
 																<%
-																	List<FieldZoneDetailBean>  	fieldZoneDetail	    = detail.getFieldZoneDetailBeans(); 
+																	List<FieldZoneDetailBean>  	fieldZoneDetail	    = seatingDetailForm.getFieldZoneDetailBeans(); 
 																	FieldZoneDetailBean         fieldZoneDetailBean = null;
 																	int						    seq					= 0;
 																				 
 																	if(fieldZoneDetail.size()>0){
 																		for(int i=0;i<fieldZoneDetail.size();i++){ 
 																			fieldZoneDetailBean = fieldZoneDetail.get(i); 
+																			System.out.print("seq is  : "+fieldZoneDetail.get(i).getSeq());
 																			seq++;
 																	  %>
 																		 <tr>
 																			<td align="center">
-																				<%=seq%>
-																				<input  type="hidden" 
-																						name="seq" 
-																						id="seq"  
-																						value="<%=fieldZoneDetailBean.getSeq()%>"/>
-																				<input type="hidden" 
-									                           	 				 		name="hidSeq" 
-									                           	 				 		id="hidSeq"  
-									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/> 
+																				<%=seq%>  
 																			</td>
 																			<td align="center">
 																				<input  type="text" 
 																						id="bookingTypeName" 
 																						name="bookingTypeName" 
 																						class="bookingTypeNameClass" 
-																						value="<%=fieldZoneDetailBean.getBookingTypeName()%>"/>
+																					    onblur="lp_onblur_bookingTypeName(this)"  
+																						value="<%=fieldZoneDetailBean.getBookingTypeName()%>"/> 
 																			</td>
 																			<td align="center">
 																				<input type="text" 
 																					   id="bookingTypePrice" 
 																					   name="bookingTypePrice"  
-																					   class="moneyOnly"
-                                                     								   onfocus="removeComma(this)"
-                                                     								   onblur='lp_onBlurFormatNumber(this);'
-																					   onclick="lp_onblur_validate(this)"  
+																					   class="bookingTypePriceClass" 
+																					   onclick="lp_onblur_validate(this),lp_onBlurFormatNumber(this);"  
 																					   value="<%=fieldZoneDetailBean.getBookingPrices()%>"/>
 																			</td> 
 																			<td style="text-align: center;">  
@@ -1074,6 +1289,14 @@
 									                           	 				 		name="fieldZoneId" 
 									                           	 				 		id="fieldZoneId"  
 									                           	 				 		value="<%=fieldZoneDetailBean.getFieldZoneId()%>"/>  
+									                           	 				 <input  type="hidden" 
+																						name="seq" 
+																						id="seq"  
+																						value="<%=fieldZoneDetailBean.getSeq()%>"/>
+																				 <input type="hidden" 
+									                           	 				 		name="hidSeq" 
+									                           	 				 		id="hidSeq"  
+									                           	 				 		value="<%=fieldZoneDetailBean.getSeq()%>"/> 
 												                            </td>
 																		</tr> 
 																		<% } 
@@ -1083,7 +1306,8 @@
 																		<td style="visibility:hidden;"></td>
 																		<td style="visibility:hidden;"></td> 
 																		<td style="text-align: center;"> 
-												                       		 <input type="button"  
+												                       		 <input type="button" 
+												                       				id="btnAdd"  
 												                       				class="btn action-add-btn btn-success" 
 												                       				style="text-align: center;"  
 												                       				ondblclick="return false;" 

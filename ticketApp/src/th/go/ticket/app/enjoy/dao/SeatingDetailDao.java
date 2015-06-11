@@ -1,6 +1,7 @@
 package th.go.ticket.app.enjoy.dao;
  
    
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,9 @@ import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
    
+
+
+
 import th.go.ticket.app.enjoy.bean.FieldZoneDetailBean;
 import th.go.ticket.app.enjoy.bean.FieldzonemasterBean;
 import th.go.ticket.app.enjoy.bean.SeatingDetailBean;
@@ -176,6 +180,88 @@ public class SeatingDetailDao {
 		return returnList;
 	}
 	
+	public FieldzonemasterBean getFieldMasterByZoneName(int zoneId) throws EnjoyException {
+		logger.info("[getDetailSeatingByZoneName][Begin]"); 
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		String							sql									= null;
+		List<Object[]>	 				list								= null;
+		FieldzonemasterBean             returnObj                           = null;
+		SQLQuery 						query 								= null;
+		String							zone								= null;
+		
+		try{
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			session.getTransaction().begin();  
+			 
+			
+			sql				= "SELECT 	a.fieldZoneId,a.typeRowName,a.rowName"
+									+ ", a.fieldZoneName, a.rows, a.seating, a.totalSeating" 
+									+ ", a.fieldZoneNameTicket, a.startSeatingNo "
+									+ " FROM fieldzonemaster a, fieldzonedetail  b, bookingtype  c"
+									+ " WHERE a.fieldZoneId  = b.fieldZoneId "
+									+ " and b.bookingTypeId = c.bookingTypeId " 
+									+ " and a.fieldZoneId =  '" + zoneId + "'" 
+									+ " ORDER BY a.fieldZoneId";
+			query			= session.createSQLQuery(sql);
+			
+			query.addScalar("fieldZoneId"		, new IntegerType());
+			query.addScalar("typeRowName"		, new IntegerType());
+			query.addScalar("rowName"		    , new StringType());
+			query.addScalar("fieldZoneName"	    , new StringType());
+			query.addScalar("rows"				, new IntegerType());
+			query.addScalar("seating"			, new IntegerType());
+			query.addScalar("totalSeating"		, new IntegerType()); 
+			query.addScalar("fieldZoneNameTicket" , new StringType());
+			query.addScalar("startSeatingNo"	  , new IntegerType());
+			
+			
+			list		 	= query.list();
+			
+			for(Object[] row : list){
+				returnObj = new FieldzonemasterBean();
+				
+				logger.info("[DetailSeatingByZoneName] fieldZoneId 		:: " + row[0].toString());
+				logger.info("[DetailSeatingByZoneName] typeRowName 		:: " + row[1].toString());
+				logger.info("[DetailSeatingByZoneName] rowName 		    :: " + row[2].toString());
+				logger.info("[DetailSeatingByZoneName] fieldZoneName 	:: " + row[3].toString());
+				logger.info("[DetailSeatingByZoneName] rows 			:: " + row[4].toString());
+				logger.info("[DetailSeatingByZoneName] seating 			:: " + row[5].toString());
+				logger.info("[DetailSeatingByZoneName] totalSeating 	:: " + row[6].toString()); 
+				logger.info("[DetailSeatingByZoneName] fieldZoneNameTicket 	:: " + row[7].toString());
+				logger.info("[DetailSeatingByZoneName] startSeatingNo 	:: " + row[8].toString());
+				
+				returnObj.setFieldZoneId(Integer.valueOf(row[0].toString()));
+				returnObj.setTypeRowName(Integer.valueOf(row[1].toString()));
+				returnObj.setNameRow(row[2].toString().trim());
+				returnObj.setFieldZoneName(row[3].toString());
+				returnObj.setRows(Integer.valueOf(row[4].toString()));
+				returnObj.setSeating(Integer.valueOf(row[5].toString()));
+				returnObj.setTotalSeating(Integer.valueOf(row[6].toString())); 
+				returnObj.setFieldZoneNameTicket(row[7].toString());
+				returnObj.setStartSeatingNo(Integer.valueOf(row[8].toString())); 
+			}
+			
+			 
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException(e.getMessage());
+		}finally{
+			session.close(); 
+			sessionFactory						= null;
+			session								= null;
+			sql									= null;
+			list								= null;
+			query 								= null;
+			logger.info("[getDetailSeatingByZoneName][End]");
+		}
+		
+		return returnObj;
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<FieldZoneDetailBean>  getDetailSeatingByZoneId(int zoneId) throws EnjoyException {
 		logger.info("[getDetailSeatingByZoneId][Begin]");
@@ -216,13 +302,13 @@ public class SeatingDetailDao {
 				 
 				logger.info("[DetailSeatingByZoneName] bookingTypeId 	:: " + row[0].toString());
 				logger.info("[DetailSeatingByZoneName] bookingTypeName 	:: " + row[1].toString());
-				logger.info("[DetailSeatingByZoneName] bookingPrices 	:: " + row[2].toString());
+				System.out.print("[DetailSeatingByZoneName] bookingPrices 	:: " + BigDecimal.valueOf(Double.valueOf(row[2].toString())));
 				logger.info("[DetailSeatingByZoneName] seq 	:: " + row[3].toString());
 				  
 				bean = new FieldZoneDetailBean();
 				bean.setBookingTypeId(Integer.valueOf(row[0].toString()));
 				bean.setBookingTypeName(row[1].toString());
-				bean.setBookingPrices(Double.valueOf(row[2].toString()));
+				bean.setBookingPrices(EnjoyUtils.convertFloatToDisplay(row[2].toString(), 2));
 				bean.setSeq(Integer.valueOf(row[3].toString()));
 				bean.setFieldZoneId(zoneId);
 				fieldZoneDetailBeans.add(bean);
@@ -290,7 +376,45 @@ public class SeatingDetailDao {
 		return returnList;
 	}
 	
-	public void insertSeatingMaster(Session session,SeatingDetailBean seatingDetailBean) throws EnjoyException{
+	public int findBookType(String bookingTypeName) throws EnjoyException{
+		logger.info("[countOrderFromMatch][Begin]"); 
+		String							sql									= null;   
+		SQLQuery 						sqlQuery 							= null;   
+		List<Integer>                   list                                = null;
+		Integer                         count 							    = null;
+		SessionFactory 					sessionFactory						= null;
+		Session 						session								= null;
+		try{ 
+			sessionFactory 	= HibernateUtil.getSessionFactory();
+			session 		= sessionFactory.openSession();
+			sql             = "SELECT COUNT(*) as count from bookingtype WHERE bookingTypeName = '"+ bookingTypeName +"'";
+			sqlQuery		= session.createSQLQuery(sql); 
+			sqlQuery.addScalar("count"	, new IntegerType());
+			list            =  sqlQuery.list(); 
+			System.out.println("list.get(0): "+list.get(0));
+			if(list !=null && list.size() > 0){
+				count = list.get(0);
+				logger.info("countOrderFromMatch order of count ::  "+ count); 
+			}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
+		}finally{  
+			session.close(); 
+			sessionFactory						= null;
+			session								= null;
+			sqlQuery 							= null;
+			sql                                 = null;
+			list                                = null;  
+			logger.info("[countOrderFromMatch][End]");
+		}
+		
+	return count;
+}
+	
+	public void insertSeatingMaster(Session session,FieldzonemasterBean seatingDetailBean) throws EnjoyException{
 		logger.info("[insertSeatingMaster][Begin]");
 		  
 		String							sql				  		= null; 
@@ -384,7 +508,7 @@ public class SeatingDetailDao {
 			fieldzoneDB 	  = new Fieldzonedetail();  
 			fieldzoneDB.setId(fieldzonedetailPK);  
 			fieldzoneDB.setBookingTypeId(fielZoneDetailBean.getBookingTypeId());
-			fieldzoneDB.setBookingPrices(fielZoneDetailBean.getBookingPrices()); 
+			fieldzoneDB.setBookingPrices(Double.valueOf(fielZoneDetailBean.getBookingPrices())); 
 			session.save(fieldzoneDB); 
 			
 		}catch(Exception e){
@@ -445,6 +569,46 @@ public class SeatingDetailDao {
 		 
 	}
 	
+	public int countZoneName(String fieldZoneName) throws EnjoyException{
+		logger.info("[findBookTypeId][Begin]");
+		  
+		String							sql				  		= null; 
+		SQLQuery 						sqlQuery 			  	= null;  
+		SessionFactory 		   			sessionFactory	  		= null;
+		Session 			   			session  		  		= null;
+		int                             count                   = 0; 
+		List<Integer>                   list                    = null;
+		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			session.getTransaction().begin();
+			   
+			 sql             = "SELECT COUNT(*) as count from fieldZoneName WHERE fieldZoneName = '"+ fieldZoneName +"'";
+			 sqlQuery		 = session.createSQLQuery(sql); 
+			 sqlQuery.addScalar("count"	, new IntegerType());
+			 list            =  sqlQuery.list(); 
+			 System.out.println("list.get(0): "+list.get(0));
+			 if(list !=null && list.size() > 0){
+				 count = list.get(0);
+				 logger.info("countOrderFromMatch order of count ::  "+ count); 
+			 }
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			session.getTransaction().rollback(); 
+			throw new EnjoyException("เกิดข้อผิดพลาดในการดึงข้อมูล"); 
+		}finally{    
+			sqlQuery 							= null;
+			sql                                 = null;
+			list                                = null; 
+			logger.info("[findBookTypeId][End]");
+		}
+		
+		return count;
+		 
+	}
+	
 	public void insertSeatingDetail(Session session,FieldZoneDetailBean seatingDetailBean) throws EnjoyException{
 		logger.info("[insertSeatingDetail][Begin]");
 		  
@@ -462,7 +626,7 @@ public class SeatingDetailDao {
 			fieldzoneDB 	  = new Fieldzonedetail();   
 			fieldzoneDB.setId(fieldzonedetailPK);
 			fieldzoneDB.setBookingTypeId(seatingDetailBean.getBookingTypeId());
-			fieldzoneDB.setBookingPrices(seatingDetailBean.getBookingPrices());
+			fieldzoneDB.setBookingPrices(Double.valueOf(seatingDetailBean.getBookingPrices()));
 		 
 			session.persist(fieldzoneDB);  
 			  
@@ -507,7 +671,7 @@ public class SeatingDetailDao {
 		} 
 	}
 	
-	public void updateSeatingMaster(Session session,SeatingDetailBean seatingDetailBean) throws EnjoyException{
+	public void updateSeatingMaster(Session session,FieldzonemasterBean seatingDetailBean) throws EnjoyException{
 		logger.info("[updateSeatingDetail][Begin]"+seatingDetailBean.toString());
 		  
 		String							hql									= null; 
@@ -560,7 +724,7 @@ public class SeatingDetailDao {
 			System.out.println("matchDB.getSeq() :: "+bean.getSeq());
 			 
 			fieldzoneDB.setBookingTypeId(bean.getBookingTypeId());
-			fieldzoneDB.setBookingPrices(bean.getBookingPrices()); 
+			fieldzoneDB.setBookingPrices(Double.valueOf(bean.getBookingPrices())); 
 			session.saveOrUpdate(fieldzoneDB);  
 			session.flush(); 
 			session.clear(); 
@@ -591,7 +755,7 @@ public class SeatingDetailDao {
 			fieldzoneDB 	  = new Fieldzonedetail();  
 			fieldzoneDB.setId(fieldzonedetailPK); 
 			fieldzoneDB.setBookingTypeId(bean.getBookingTypeId());
-			fieldzoneDB.setBookingPrices(bean.getBookingPrices());
+			fieldzoneDB.setBookingPrices(Double.valueOf(bean.getBookingPrices()));
 			session.save(fieldzoneDB);  
 			session.flush(); 
 			session.clear(); 
@@ -611,7 +775,7 @@ public class SeatingDetailDao {
 		
 	}
 	
-    public void saveSeatingDetail(SeatingDetailBean seatingDetailBean,List<FieldZoneDetailBean> fieldZoneDetailBeans,String getDelList )throws EnjoyException{
+    public void saveSeatingDetail(FieldzonemasterBean seatingDetailBean,List<FieldZoneDetailBean> fieldZoneDetailBeans,String getDelList )throws EnjoyException{
     	SessionFactory 		   sessionFactory		    = null;
 		Session 			   session				    = null;
 		Transaction            tx                       = null;
@@ -669,7 +833,7 @@ public class SeatingDetailDao {
 		}
     }
     
-    public void saveNewSeatingMaster(SeatingDetailBean seatingDetailBean )throws EnjoyException{
+    public void saveNewSeatingMaster(Session session1,FieldzonemasterBean fieldzonemasterBean )throws EnjoyException{ 
     	SessionFactory 		   sessionFactory		    = null;
 		Session 			   session				    = null;
 		Transaction            tx                       = null;
@@ -678,18 +842,18 @@ public class SeatingDetailDao {
 			session 			= sessionFactory.openSession();
 			tx                  = session.beginTransaction();
 			
-			if(seatingDetailBean != null){ 
-				this.insertSeatingMaster(session,seatingDetailBean);
+			if(fieldzonemasterBean != null){ 
+				this.insertSeatingMaster(session,fieldzonemasterBean);
 			} 
 			
-			tx.commit();
+			tx.commit(); 
 			session.close();
-		}catch(Exception e){
+		}catch(Exception e){ 
 			session.getTransaction().rollback();
 			e.printStackTrace();
 			logger.info(e.getMessage());
 			throw new EnjoyException(e.getMessage());
-		}finally{    
+		}finally{     
 			session                             = null;
 			sessionFactory                      = null;
 			tx                                  = null;
@@ -697,16 +861,21 @@ public class SeatingDetailDao {
 		}
     }
     
-    public void saveNewSeatingDetail(List<FieldZoneDetailBean> fieldZoneDetailBeans )throws EnjoyException{
+    public void saveNewSeatingDetail(FieldzonemasterBean fieldzonemasterBean,List<FieldZoneDetailBean> fieldZoneDetailBeans )throws EnjoyException{
     	SessionFactory 		   sessionFactory		    = null;
 		Session 			   session				    = null;
 		Transaction            tx                       = null;
+		int                    findFieldZoneMasterId    = 0;
 		try{ 
 			sessionFactory 		= HibernateUtil.getSessionFactory();
 			session 			= sessionFactory.openSession();
 			tx                  = session.beginTransaction(); 
-			 
+			this.saveNewSeatingMaster(session,fieldzonemasterBean);
+			findFieldZoneMasterId = this.findFieldZoneMasterId(fieldzonemasterBean.getFieldZoneName());
+			System.out.println("findFieldZoneMasterId:"+findFieldZoneMasterId);	
+			
 			for(FieldZoneDetailBean fieldZoneDetailBean:fieldZoneDetailBeans){  
+				fieldZoneDetailBean.setFieldZoneId(findFieldZoneMasterId);
 				this.insertFieldZoneDetail(session,fieldZoneDetailBean);     
 			}
 			
@@ -721,7 +890,7 @@ public class SeatingDetailDao {
 			session                             = null;
 			sessionFactory                      = null;
 			tx                                  = null;
-			logger.info("[saveSeatingDetail][End]");
+			logger.info("[saveNewSeatingDetail][End]");
 		}
     }
 

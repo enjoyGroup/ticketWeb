@@ -22,13 +22,23 @@
 		.link{
 			color: black;
 			font-weight:bold;
-		
+			padding: 0; 
+			border-bottom: 1px solid #d4d4d4;
+			border-top: none;
+			background: linear-gradient(#f7f7f7 0%, #ececec 100%);
+			height: 30px;
+			vertical-align: middle;
 		}
 		
 		.unLink{
 			color: red;
 			font-weight:bold;
-		
+			padding: 0; 
+			border-bottom: 1px solid #d4d4d4;
+			border-top: none;
+			background: linear-gradient(#f7f7f7 0%, #ececec 100%);
+			height: 30px;
+			vertical-align: middle;
 		}
 		
 		.unLink:hover{
@@ -56,20 +66,33 @@
 	    var toDay 	        = d.getDate() + '/' + (d.getMonth() + 1) + '/' + (d.getFullYear() + 543);
 	    
 		$(document).ready(function(){
-			
 			$('#menu1').ptMenu();
 			gv_service 	= "service=" + $('#service').val();
+ 
+			$("#btnSave").attr('disabled','disabled');
+			$("#btnCancel").attr('disabled','disabled');
+			$("#buttonAdd").attr('disabled','disabled');
+			
+	        if($("#seasonNew").val() != '') {
+	        	$("#btnSave").removeAttr('disabled');
+	        	$("#btnCancel").removeAttr('disabled');
+	        	$("#buttonAdd").removeAttr('disabled');
+	        }
+	        
+	    	 
+	    	$(".dateFormat").live("focus", function(){
+			    $(this).datepicker({ changeMonth: true, changeYear: true,dateFormat: 'dd/mm/yy', 
+							    	isBuddhist: true, 
+							    	defaultDate: toDay,dayNames: ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],
+						            dayNamesMin: ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'],
+						            monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+						            monthNamesShort: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']});
+			});
+			
 	 
 		});
-		
-		$(".dateFormat").live("click", function(){
-		    $(this).datepicker({ changeMonth: true, changeYear: true,dateFormat: 'dd/mm/yy', 
-						    	isBuddhist: true, 
-						    	defaultDate: toDay,dayNames: ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'],
-					            dayNamesMin: ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'],
-					            monthNames: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
-					            monthNamesShort: ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']});
-		});
+	
+	 
 		
 		function lp_checkFormatdate(av_object){ 
 		//alert(av_object.id);	
@@ -81,6 +104,8 @@
 				alert("lp_checkFormatdate :: " + e);
 			}
 		}
+		
+	
 		
 		function lp_dateClick(ao_obj){
 			   
@@ -109,6 +134,8 @@
 			var lv_class		= "";
 			var lv_click		= "";
 			
+		
+			    
 			try{
 				lo_table 		= document.getElementById("result_season");
 				lv_length 		= lo_table.rows.length;
@@ -169,10 +196,15 @@
 		}
 		
        function lp_changeSeason(av_season){
+       
+    	    if (confirm("ยืนยันการเปลี่ยนปีการแข่งขัน ?") == false) {
+    	    	 return false;
+    	    }  
+    	    
     	    gv_mode             = "UpdateSeason";
 			var lo_hidSeason 	= null;
 			var lo_seasonTitle	= null;
-		    //alert(av_season);
+	 
 			try{
 				lo_hidSeason 	= document.getElementById("hidSeason");
 				lo_seasonTitle 	= document.getElementById("seasonNew");
@@ -263,11 +295,11 @@
 				
 				if(av_size == av_index){
 					cell1.innerHTML = av_index ;
-					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  maxlength='100' value='"+av_awayTeamNameTH+ "'/>" ;
-					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
-					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
+					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  class='awayTeamNameTH' maxlength='100' value='"+av_awayTeamNameTH+ "'/>" ;
+					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  class='awayTeamNameEN' maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
+					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 					                  "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' class='matchTime' value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -286,11 +318,11 @@
 									  
 				}else{
 					cell1.innerHTML = av_index ;
-					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  maxlength='100'  value='"+av_awayTeamNameTH+ "'/>" ;
-					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
-					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
+					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH' class='awayTeamNameTH'  maxlength='100'  value='"+av_awayTeamNameTH+ "'/>" ;
+					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN' class='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
+					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 									 "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  value='"+av_matchTime+ "'/>";
+					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  class='matchTime'  value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
 									  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
 									  "<input type='hidden' name='matchId' id='matchId'  value='"+av_matchId+"'/>";
@@ -330,11 +362,11 @@
 				cell6.align		= "center"; 
 			  
 				cell1.innerHTML = lv_length++ ;
-				cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  maxlength='100'  value=''/>" ;
-				cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  maxlength='100'  value=''/>" ;
-				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"'  name='matchDate'  maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
+				cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  class='awayTeamNameTH' maxlength='100'  value=''/>" ;
+				cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  class='awayTeamNameEN' maxlength='100'  value=''/>" ;
+				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' value=''/>";
+				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' class='matchTime' value='' onblur='gp_validateTime(this);'/>";
 				cell6.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
 				 				  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
 				  				  "<input type='hidden' name='matchId' id='matchId'  value='0'/></td>";
@@ -369,6 +401,11 @@
 		
 		function lp_add_row_season(){ //เปิดปิดให้ใส่ข้อมูลใหม่ทั้งหมด
 			//alert("add season new");
+			  if($("#seasonNew").val() != '') {
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#buttonAdd").removeAttr('disabled');
+		      }
 			gv_mode          = "NewSeason";
 			lo_season 	     = document.getElementById("seasonNew");
 			lo_season.value  = "";  
@@ -391,39 +428,19 @@
 	  
 			try{
 				lo_table 	= document.getElementById("result_match");  
-				row 		= lo_table.insertRow(1);
+				row 		= lo_table.insertRow(1);   
 				cell1 		= row.insertCell(0);
 				cell2 		= row.insertCell(1);
 				cell3 		= row.insertCell(2);
 				cell4 		= row.insertCell(3);
 				cell5 		= row.insertCell(4);
-				cell6 		= row.insertCell(5);  
-			 
-				
+				cell6 		= row.insertCell(5);   
+				 
 				cell1.align	= "center"; 
 				cell2.align	= "center";
 				cell3.align	= "center"; 
 				cell4.align	= "center"; 
 				cell5.align	= "center"; 
-				cell6.align	= "center";   
-            
-				cell1.innerHTML = "1";
-				cell2.innerHTML = "<input  type='text'  id='awayTeamNameTH' maxlength='100' name='awayTeamNameTH' value=''/>"; 
-				cell3.innerHTML = "<input type='text' id='awayTeamNameEN'  name='awayTeamNameEN' maxlength='100' value=''/>";	
-				cell4.innerHTML = "<input type='text' id='matchDate1'   name='matchDate' maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
-									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
-				cell5.innerHTML = "<input type='text' id='matchTime' name='matchTime' maxlength='5' value=''/>";
-				cell6.innerHTML = "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
-								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='U'/>"+
-								  "<input type='hidden' name='matchId' id='matchId'  value='0'/>";
-			 
-				row 		= lo_table.insertRow(2); 
-				cell1 		= row.insertCell(0);
-				cell2 		= row.insertCell(1);
-				cell3 		= row.insertCell(2);
-				cell4 		= row.insertCell(3);
-				cell5 		= row.insertCell(4);
-				cell6 		= row.insertCell(5);  
 				cell6.align	= "center";    
 				cell6.innerHTML = "<input type='button' class='btn action-add-btn btn-success' style='text-align: center;' ondblclick='return false;' onclick='lp_add_row_match();' value='+' />"+
 								  "<input type='hidden' name='hidStartus' id='hidStartus'  value='N'/>"+
@@ -442,7 +459,7 @@
 			var lv_matchId          = null; 	
 			var i                   = 0;
 			var count				= 0;
-		//alert(lo_tabResultDtl.rows.length);	
+			//alert(lo_tabResultDtl.rows.length);	
 			if(lo_tabResultDtl.rows.length==3){
 				alert("ปีการแข่งขันจะต้องมีอย่างน้อย 1 Match");
 				return;			
@@ -471,68 +488,16 @@
 								rowNumber = i+1;
 								lo_tabResultDtl.rows[i+1].cells[0].innerHTML=rowNumber;
 				    		} 
-						}
-							
-							/*  lv_params = gv_service 
-				              + "&matchId=" +lv_matchId  
-				              + "&pageAction=delRecord";
-
-						   $.ajax({
-								async:false,
-					            type: "POST",
-					            url: gv_url,
-					            data: lv_params,
-					            beforeSend: "",
-					            success: function(data){
-					            	var jsonObj 			= null;
-					            	var status				= null; 
-					            	var errMsg				= null;
-					            	var index				= 1;
-					            	
-					            	try{
-					            	    jsonObj = JSON.parse(data);
-					            		status	= jsonObj.status;
-					                  //alert(status);
-					            		
-					            		if(status=="SUCCESS"){
-					            			
-					            			count = parseInt(jsonObj.COUNT);
-		            			
-		            		                if(count>0){
-		            		                	alert("ไม่สามารถลบ  Match นี้ได้ เนื่องจากมีรายการขายแล้ว");
-		            		                	return;
-		            		                }else{
-						            			gv_delList.push(lv_matchId);
-						            			lo_tabResultDtl.deleteRow(lv_index); 
-									    		var length = lo_tabResultDtl.rows.length-2; 
-									    		for(var i=0;i<length;i++){ 
-													rowNumber = i+1;
-													lo_tabResultDtl.rows[i+1].cells[0].innerHTML=rowNumber;
-									    		} 
-		            		                }
-								    		    
-					            		}else{
-					            			errMsg = jsonObj.errMsg; 
-					            			alert(errMsg);
-					            		} 
-					            	}catch(e){
-					            		alert("in btnDelete :: " + e);
-					            	}
-					            	 
-							    }
-							});
-						}*/
-				  
+						}   
 					} 
 				} 
 		    }
 		
 		function lp_save_page(){
-       	   gp_progressBarOn();
-       	    
-			if(!lp_validate_data()){
-				return;
-			}
+       	   // alert("lp_save_page :: "+lp_validate_data());
+		    if(!lp_validate_data()){
+				return false;
+			}  
 			
 			var pageAction			= "UpdateSeason";
 			var lv_params			= gv_service; 
@@ -550,14 +515,14 @@
 		    	}else{
 		    		lv_params 	+= "&deleteList=none";
 		    	}
-	      // alert(lv_params);  
+	     //alert(lv_params);  
 	
 				$.ajax({
 					async:false,
 		            type: "POST",
 		            url: gv_url,
 		            data: lv_params,
-		            beforeSend: "",
+		            beforeSend: gp_progressBarOn(),
 		            success: function(data){
 		            	var jsonObj 			= null;
 		            	var status				= null;
@@ -569,6 +534,7 @@
 		                  //alert(status);		
 			            	if(status=="SUCCESS"){
 			            		alert("บันทึกรายการเรียบร้อย  ");  
+			            		gv_mode         = "saved";
 			            		window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
 		            		}else{
 		            			errMsg = jsonObj.errMsg; 
@@ -593,13 +559,15 @@
 		 
 		    try{
 		    	lv_params 	+= "&pageAction=" + pageAction ; 
+		  // alert(lv_params);
 				$.ajax({
 					async:false,
 		            type: "POST",
 		            url: gv_url,
 		            data: lv_params,
 		            beforeSend: "",
-		            success: function(data){  
+		            success: function(data){ 
+		            	window.location = gv_url + "?service=servlet.EventMatchServlet&pageAction=new";
 		            }
 		        });
 		    	  
@@ -609,46 +577,92 @@
 		    
 		}
 		
-		function lp_validate_data(){
-			lo_table 	= document.getElementById("result_match");
-			lv_length 	= lo_table.rows.length;
-		    
-			if(lv_length < 2){
-				alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
-				return false;
-			}
+		function   lp_validate_data(){
+			var lo_table 	= document.getElementById("result_match");
+			var lv_length 	= lo_table.rows.length; 
+			var lv_season   = document.getElementById("seasonNew").value; 
+		    var la_awayTeamNameTH = document.getElementsByName("awayTeamNameTH"); 
+		    var la_awayTeamNameEN = document.getElementsByName("awayTeamNameEN"); 
+		    var la_matchDate	  = document.getElementsByName("matchDate"); 
+		    var la_matchTime	  = document.getElementsByName("matchTime"); 
+		    var lv_flag1           = false;
+		    var lv_flag2           = false;
+		    var lv_flag3           = false;
+		    var lv_flag4           = false;
 			
-			var la_idName               = new Array("seasonNew");
-		    var la_msg               	= new Array("ปีการแข่งขัน");   
-        //, "awayTeamNameTH", "awayTeamNameEN", "matchDate" , "matchTime"
-        //, "ทีมคู่แข่งภาษาไทย", "ทีมคู่แข่งภาษาอังกฤษ", "วันที่แข่ง" ,"เวลาที่แข่ง"
-		    
-			try{
+		    try{ 
 				
-				for(var i=0;i<la_idName.length;i++){
-		            lo_obj          = eval('$("#' + la_idName[i] + '")');
-		            
-		            if(gp_trim(lo_obj.val())==""){
-		            	alert("กรุณาระบุ " + la_msg[i]);
-		            	lo_obj.focus();
-		                return false;
-		            }
-		        }
+	            if(gp_trim(lv_season)==""){
+	            	alert("กรุณากรอกรายละเอียด  season "); 
+	                return false;
+	            }  
+    
+				if(lv_length <= 2){
+					alert("กรุณาระบุ รายการ Match อย่างน้อย 1 รายการ ");
+					return false;
+				}  else { 
+			        for(var a=0 ; a < la_awayTeamNameTH.length;a++){
+			        	if(la_awayTeamNameTH[a].value == ""){
+			        		alert("กรุณาระบุทีมคู่แข่งภาษาไทย  ");
+			        		lv_flag1 = false;
+			        	}else{
+			        		lv_flag1 = true; 
+			        	}
+			        }
+			        
+			        for(var b=0 ; b < la_awayTeamNameEN.length;b++){
+			        	if(la_awayTeamNameEN[b].value == ""){
+			        		alert("กรุณาระบุทีมคู่แข่งภาษาอังกฤษ  ");
+			        		lv_flag2 = false;
+			        	}else{
+			        		lv_flag2 = true; 
+			        	}
+			        }
+			        
+			        for(var c=0 ; c < la_matchDate.length;c++){
+			        	if(la_matchDate[c].value == ""){
+			        		alert("กรุณาระบุวันที่แข่งขัน");
+			        		lv_flag3 = false;
+			        	}else{
+			        		lv_flag3 = true; 
+			        	}
+			        }
+			        
+			        for(var d=0 ; d < la_matchTime.length;d++){
+			        	if(la_matchTime[d].value == ""){
+			        		alert("กรุณาระบุเวลาที่แข่งขัน  ");
+			        		lv_flag4 = false;
+			        	}else{
+			        		lv_flag4 = true; 
+			        	}
+			        }
+				 
+			        if(lv_flag1==true && lv_flag2==true && lv_flag3==true && lv_flag4==true){
+			       	   return true;
+		        	}else{
+		        	   return false;
+		        	}
+			        
+				  
+				} 
 				
 				
 			}catch(e){
-				alert("lp_validate :: " + e);
-				return false;
-			}
-			
-			return true;
+				alert("lp_validate_data :: " + e); 
+				 
+			}  
 		}
 		
 		function lp_onblur_check_season(){ 
-			lv_season   = document.getElementById("seasonNew").value; 
-			lo_table 	= document.getElementById("result_season");
-            //alert("lv_season ::"+ lv_season);	 
-        	lv_length 	= lo_table.rows.length;
+			var lv_season   = document.getElementById("seasonNew").value; 
+			var lo_table 	= document.getElementById("result_season");
+ 
+             if(lv_season != '') {
+		        	$("#btnSave").removeAttr('disabled');
+		        	$("#btnCancel").removeAttr('disabled');
+		        	$("#buttonAdd").removeAttr('disabled');
+		     }
+             var lv_length 	= lo_table.rows.length;
         	
         	for(var i =0 ; i < lv_length ; i ++){
         		//alert(gp_trim(lo_table.rows[i].cells[0].innerHTML));
@@ -657,6 +671,8 @@
         			break;
         		}
         	}
+        	
+        	
 		}
 		
 		var getId = (function () {
@@ -674,76 +690,89 @@
 			var i = 1;
 			$("tbody tr:last").find("input").each(function() {
 			$(this).attr({
-			  'id': function(_, id) { return id + i; }
-			  //'name': function(_, name) { return name + i },
-			  //'value': ''               
+			  'id': function(_, id) { return id + i; } 
 			});
 			}).end().appendTo("#result_match");
-		    i++;
-		    //alert();
-		});
-  
+		    i++; 
+		});	
+	 
 	</script>
 	
 </head>
-<body>
-	
-<form id="frm">
-<input type="hidden" id="service" 	name="service" value="servlet.EventMatchServlet" />  
-<input type="hidden" id="hidSeason" name="hidSeason" value="<%=eventMatchForm.getSeason()%>" />  
-<div id="menu" style="width: 100%;background: black;">
-	<%@ include file="/pages/menu/menu.jsp"%>
-</div>
-<section class="vbox">
- <section>
-   <section class="hbox stretch">
-	 <section id="content">
-		<section class="vbox">
-			<section class="scrollable padder">
-				<div class="alert alert-block alert-error fade in">
-	            	<h4 class="alert-heading">เพิ่ม Match การแข่งขัน</h4>
-	          	</div>
-				<div class="row">
-					<div class="col-sm-12">
-						<section class="panel panel-default">
-							<header class="panel-heading font-bold">รายละเอียด Match การแข่งขัน</header>
-							<div class="panel-body">
-						        <table style='width:100%;' class='table'>
-									<tr>
-						              <td style='width:15%;padding:0px !important'>
-						                  <div class='sim-panel-result' style="padding:10px;">
-						                      <table class="table sim-panel-result-table" id="result_season">
-												<tr><th>ปีการแข่งขัน</th> </tr>
-													<%
-												 List<String>  list			=   eventMatchForm.getSeasonList();
+<body>	
+<form id="frm" onsubmit="return false;">
+	<input type="hidden" id="service" 	name="service" value="servlet.EventMatchServlet" />  
+	<input type="hidden" id="hidSeason" name="hidSeason" value="<%=eventMatchForm.getSeason()%>" />  
+	<div id="menu" style="width: 100%;background: black;">
+		<%@ include file="/pages/menu/menu.jsp"%>
+	</div>
+	<section class="vbox">
+ 		<section>
+   			<section class="hbox stretch">
+	 			<section id="content">
+					<section class="vbox">
+						<section class="scrollable padder">
+							<div class="alert alert-block alert-error fade in">
+				            	<h4 class="panel-title">เพิ่ม Match การแข่งขัน</h4>
+				          	</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<section class="panel panel-info">
+										<div class="panel-heading">
+											<h4 class="panel-title">รายละเอียด Match การแข่งขัน</h4>
+										</div>
+										<div class="panel-body">
+						        			<table style='width:100%;' class='table'>
+												<tr>
+						              				<td style='width:12%;padding:0px !important'>
+						              					<div style="min-width: 205px;">
+						              						<span class="label label-inverse" style="width: 100%;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																<B>ปีการแข่งขัน</B>
+															</span>
+														<br/>
+						              					</div>
+						                  				<div id='cssmenu' style="min-height:auto;  background:#0A5F8B;" class='sim-panel-result' style="padding:10px;" >
+						                     				 <table class="table sim-panel-result-table" id="result_season" style="margin-top:0px !important">
+																<%
+												 					List<String>  list			=   eventMatchForm.getSeasonList();
 												 
-												if(list.size()>0){
-													for(int i=0;i<list.size();i++){
+												  					if(list.size()>0){
+																	for(int i=0;i<list.size();i++){
 													
-															%>
-															 <tr>
+																%>
+															 	<tr>
 															 
-															 	<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
-															 		<td class="unLink" align="center" title="<%=list.get(i)%>" >
+															 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
+															 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
+																			<%=list.get(i)%>
+																		</td>	
+															 		<%}else{%>
+															 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
 																		<%=list.get(i)%>
-																	</td>	
-															 	<%}else{%>
-															 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																		<%=list.get(i)%>
+																		</td>
+															 		<%}%>
+																</tr> 
+																<% } 
+												 				} %>
+									 							<tr>
+									 								<td align="center" class="link" onclick="lp_add_row_season();">
+									 									<a href="#">
+										 									<span>
+																				<B>+เพิ่มปีการแข่งขัน</B>
+																			</span>
+																			<br/>
+																		</a>
 																	</td>
-															 	<%}%>
-															</tr> 
-															<% } 
-														} %>
-									 			<tr><td align="center" class="link" onclick="lp_add_row_season();"><a href="#">+เพิ่มปีการแข่งขัน</a></tr>
-									 		</table>
-										   </td>
-						                   <td style='width:80%;padding:0px !important'>
-						                    <div style="padding:10px;" >
-						                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"> 
-						                    </div>
-						                    <br>
-						                  	 <div class='sim-panel-result' style="padding:10px;">
+																</tr>
+									 						</table>
+									 					</div>
+									 				</td>
+						                   			<td style='width:80%;padding:0px !important;vertical-align: top;'>
+									                    <div style="padding:10px;" >
+									                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
+									                    </div>
+						                    			<br>
+						                  	 			<div class='sim-panel-result' style="padding:10px;">
 						                        <table class="table sim-panel-result-table" id="result_match">
 													<tr>
 							                            <th>ลำดับ</th>
@@ -754,74 +783,85 @@
 							                            <th>Action</th>
 						                          	</tr>
 												<%
-													List<EventMatchBean>  	detailList			= eventMatchForm.getEventMatchList();
-													EventMatchBean			detail				= null;
-													int						seq					= 0;
+														List<EventMatchBean>  	detailList			= eventMatchForm.getEventMatchList();
+														EventMatchBean			detail				= null;
+														int						seq					= 0;
 																 
-													if(detailList.size()>0){
-														for(int i=0;i<detailList.size();i++){
-															detail = detailList.get(i);
-															seq++;
-													  %>
-														 <tr>
-															<td align="center">
-																<%=seq%>
-															</td>
-															<td align="center">
-																<input type="text" id="awayTeamNameTH" name="awayTeamNameTH" maxlength="100"  value="<%=detail.getAwayTeamNameTH()%>" />
-															</td>
-															<td align="center">
-																<input type="text" id="awayTeamNameEN" name="awayTeamNameEN" maxlength="100"  value="<%=detail.getAwayTeamNameEN()%>"/>
-															</td>
-															<td align="center"> 
-																 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate"  maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
-																 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
-															</td>
-															<td align="center">
-																<input type="text" id="matchTime" name="matchTime" maxlength="5"  value="<%=detail.getMatchTime()%>"/>
-															</td>
-															<td style="text-align: center;">  
-									                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
-									                           	 <input type="hidden" name="hidStartus" id="hidStartus"  value="U"/>
-									                           	 <input type="hidden" name="matchId" id="matchId"  value="<%=detail.getMatchId()%>"/>  
-								                            </td>
-														</tr> 
-														<% } 
-													} %>
-											       <tr>
-											 			<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="visibility:hidden;"></td>
-														<td style="text-align: center;"> 
-								                       		<input type="button"  class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
-								                       		 <input type="hidden" name="hidStartus" id="hidStartus"  value=""/>
-									                         <input type="hidden" name="matchId" id="matchId"  value=""/>  
-								                       	 </td>
-													</tr> 
-											</table>
-						               	</div>
-					                   </td>
-					                 </tr>
-					                 <tr>
-					        			<td align="center" colspan="6">
-					        				<br/><br/>
-					        				<input type="button"  ondblclick="return false;" id="btnSave" name="btnSave" value="บันทึก"  class="btn action-add-btn btn-success" onclick="lp_save_page();"/> &nbsp;&nbsp;&nbsp;
-					        				<button ondblclick="return false;" id="btnCancel" name="btnCancel"  class="btn action-del-btn btn-danger"   onclick="lp_reset_page();">ยกเลิก</button> 
-					        			</td>
-					        		</tr>
-					             </table>	
-							</section>
-						</div> 
-					</div>
-				</section>
+															if(detailList.size()>0){
+																for(int i=0;i<detailList.size();i++){
+																	detail = detailList.get(i);
+																	seq++;
+															  %>
+														 			<tr>
+																		<td align="center">
+																			<%=seq%>
+																		</td>
+																		<td align="center">
+																			<input type="text" id="awayTeamNameTH" name="awayTeamNameTH" maxlength="100"  class="awayTeamNameTH" value="<%=detail.getAwayTeamNameTH()%>" />
+																		</td>
+																		<td align="center">
+																			<input type="text" id="awayTeamNameEN" name="awayTeamNameEN" maxlength="100"  class="awayTeamNameEN" value="<%=detail.getAwayTeamNameEN()%>"/>
+																		</td>
+																		<td align="center"> 
+																			 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate"  maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
+																			 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
+																		</td>
+																		<td align="center">
+																			<input type="text" id="matchTime" name="matchTime" maxlength="5"  class="matchTime" value="<%=detail.getMatchTime()%>" onblur="gp_validateTime(this);"  />
+																		</td>
+																		<td style="text-align: center;">  
+												                             <input type="button" class="btn action-del-btn btn-danger" style="text-align: center;"  ondblclick="return false;" onclick="lp_del_row_table(this)" value="-"/>
+												                           	 <input type="hidden" name="hidStartus" id="hidStartus"  value="U"/>
+												                           	 <input type="hidden" name="matchId" id="matchId"  value="<%=detail.getMatchId()%>"/>  
+								                            			</td>
+																	</tr> 
+																	<% } 
+																} %>
+											       				<tr>
+														 			<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="visibility:hidden;"></td>
+																	<td style="text-align: center;"> 
+								                       					<input type="button"  id="buttonAdd" class="btn action-add-btn btn-success" style="text-align: center;"  ondblclick="return false;" onclick="lp_add_row_match();" value="+"/>
+								                       		 			<input type="hidden" name="hidStartus" id="hidStartus"  value=""/>
+									                         			<input type="hidden" name="matchId" id="matchId"  value=""/>  
+								                       		 		</td>
+																</tr> 
+															</table>
+						               					</div>
+					                   				</td>
+					             				</tr>
+								                <tr>
+								        			<td align="center" colspan="6">
+								        				<br/><br/>
+								        				<input type="button"  
+								        					   ondblclick="return false;" 
+								        					   id="btnSave" 
+								        					   name="btnSave" 
+								        					   value="บันทึก"  
+								        					   class="btn action-add-btn btn-success" 
+								        					   onclick="lp_save_page();" /> &nbsp;&nbsp;&nbsp;
+								        				<button ondblclick="return false;" 
+								        						id="btnCancel" 
+								        						name="btnCancel"   
+								        						class="btn btn-danger"  
+								        						onclick="lp_reset_page();">ยกเลิก</button>  
+								        			</td>
+								        		</tr>
+					             			</table>	
+					            		</div>
+									</section>
+								</div> 
+							</div>
+						</section>
+					</section>
+				</section>  
+				<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
 			</section>
-		</section>  
-		<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+ 		</section>
 	</section>
- </section>
-</section>
 	<div align="center" class="FreezeScreen" style="display:none;">
         <center>
         	<img id="imgProgress" valign="center" src="<%=imgURL%>/loading36.gif" alt="" />

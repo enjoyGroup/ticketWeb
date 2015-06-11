@@ -167,6 +167,7 @@ public class SeatSummaryReservationServlet extends EnjoyStandardSvc {
 				beanDb.setBookingPrices(EnjoyUtils.convertFloatToDisplay(beanDb.getBookingPrices(), 2));
 			}
 			
+			this.form.setResultSize(String.valueOf(sumDetailReservationList.size()));
 			this.form.setSumBookingPrices(EnjoyUtils.convertFloatToDisplay(String.valueOf(sumBookingPrices), 2));
 			
 		}catch(Exception e){

@@ -221,9 +221,10 @@ public class DisplayMatchDetailDao {
 									+ " and a.bookingTypeId = c.bookingTypeId"
 									+ " and a.matchId 		= d.matchId"
 									+ " and a.bookingTypeId = e.bookingTypeId"
+									+ " and a.season 		= d.season"
 									+ " and a.matchId 		= '" + matchId + "'"
 								+ " GROUP BY a.matchId, b.fieldZoneName, e.bookingTypeId, e.bookingTypeName"
-								+ " ORDER BY a.matchId, b.fieldZoneName, e.bookingTypeId, e.bookingTypeName;";
+								+ " ORDER BY a.matchId desc, b.fieldZoneName desc, e.bookingTypeId desc, e.bookingTypeName desc";
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("matchId"			, new StringType());

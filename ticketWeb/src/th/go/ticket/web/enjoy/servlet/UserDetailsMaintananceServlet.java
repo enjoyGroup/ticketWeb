@@ -75,6 +75,8 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
  				this.checkDupUserId();
  			}else if(pageAction.equals("save")){
  				this.onSave();
+ 			}else if(pageAction.equals("resetPass")){
+ 				this.resetPass();
  			}
  			
  			session.setAttribute(FORM_NAME, this.form);
@@ -376,6 +378,87 @@ public class UserDetailsMaintananceServlet extends EnjoyStandardSvc {
 			session			= null;
 			
 			logger.info("[onSave][End]");
+		}
+	}
+	
+	private void resetPass() throws EnjoyException{
+		logger.info("[resetPass][Begin]");
+		
+		int					userUniqueId		= 0;
+		String				userName			= null;
+		String				userSurname			= null;
+		String 				userId 				= null;
+		String				userEmail			= null;
+		String				pwd					= null;
+		String				pwdEncypt			= null;
+		SessionFactory 		sessionFactory		= null;
+		Session 			session				= null;
+		JSONObject 			obj 				= null;
+		UserDetailsBean 	userDetailsBean		= null;
+		SendMail			sendMail			= null;
+		String				fullName			= null;
+		
+		try{
+			userName 					= EnjoyUtil.nullToStr(request.getParameter("userName"));
+			userSurname 				= EnjoyUtil.nullToStr(request.getParameter("userSurname"));
+			userId 						= EnjoyUtil.nullToStr(request.getParameter("userId"));
+			userEmail 					= EnjoyUtil.nullToStr(request.getParameter("userEmail"));
+			userUniqueId 				= EnjoyUtil.parseInt(request.getParameter("userUniqueId"));
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			obj 						= new JSONObject();
+			userDetailsBean				= new UserDetailsBean();
+			sendMail					= new SendMail();
+			
+			logger.info("[onSave] userId 				:: " + userId);
+			logger.info("[onSave] userEmail 			:: " + userEmail);
+			logger.info("[onSave] userUniqueId 			:: " + userUniqueId);
+			
+			//Random new password (8 chars)
+			pwd							= EnjoyUtil.genPassword(8);
+			
+			//Encypt password
+			pwdEncypt					= EnjoyEncryptDecrypt.enCryption(userId, pwd);
+			userDetailsBean.setUserUniqueId(userUniqueId);
+			userDetailsBean.setPwd(pwdEncypt);
+			
+			session.beginTransaction();
+			
+			this.dao.changePassword(session, userDetailsBean);
+			
+			/*Begin send new password to email*/
+			fullName = userName + " " + userSurname;
+			sendMail.sendMail(fullName, userId, pwd, userEmail);
+			/*End send new password to email*/
+			
+			
+			
+			session.getTransaction().commit();
+			
+			obj.put(STATUS, 			SUCCESS);
+			
+		}catch(EnjoyException e){
+			session.getTransaction().rollback();
+			obj.put(STATUS, 		ERROR);
+			obj.put(ERR_MSG, 		e.getMessage());
+		}catch(Exception e){
+			session.getTransaction().rollback();
+			logger.info(e.getMessage());
+			e.printStackTrace();
+			obj.put(STATUS, 		ERROR);
+			obj.put(ERR_MSG, 		"resetPass is error");
+		}finally{
+			
+			session.flush();
+			session.clear();
+			session.close();
+			
+			this.enjoyUtil.writeMSG(obj.toString());
+			
+			sessionFactory	= null;
+			session			= null;
+			
+			logger.info("[resetPass][End]");
 		}
 	}
 	

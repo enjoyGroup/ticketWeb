@@ -4,12 +4,37 @@
 	final String servURL1		= Constants.SERV_URL;
 	UserDetailsBean userDeatil 	= (UserDetailsBean) request.getSession().getAttribute("userBean");
 %>
+	<style>
+		.fixs{
+			position: fixed;
+			margin-top: 0px;
+			margin-left:0px;
+			width: 100%;
+			background: black;
+			z-index: 9999;
+		}
+	</style>
 	<script>
 		$(document).ready(function(){
+			
+			var h = $(document).height();
+			
+			$('#menu1').ptMenu();
+			$(window).scroll(function(){//alert($(window).scrollTop());
+		        if($(window).scrollTop() > 10){
+		        	document.getElementById("m1").className 			= "fixs";
+		        	document.getElementById("headwrap").style.display 	= "none";
+		        	$('body').css('height', h);
+		        }else{
+		        	document.getElementById("m1").className 			= "";
+		        	document.getElementById("headwrap").style.display 	= "block";
+		        }
+		    });
+			
 			$('#logOut').click(function(){ 
 				try{
 					if(confirm("ต้องการออกจากระบบ?")){   
-						window.location.replace('/ticketWeb');
+						window.location.replace('<%=servURL1%>');
 					}	
 				}catch(err){
 					alert("logOut :: " + err);
@@ -18,13 +43,13 @@
 			});		
 		});
 	</script>
-<div class="headwrap">
-	<div class="row">
-    	<div class="brand span4">
-        	<img src="/ticketWeb/images/logo2.png" >
+<div class="headwrap" id="headwrap">
+	<div class="row" style="position: relative;">
+    	<div class="brand span4" style="padding-left: 15px;">
+        	<img src="<%=servURL1%>/images/logo2.png" />
         </div>
         
-        <div class="span8 user"  style="margin-right:4%;">
+        <div class="span8 user"  style="position: absolute;margin-right: 0px;width: 95%;">
         	<div class="font14"><img src="<%=servURL1%>/images/icon-user.jpg" alt="">ชื่อผู้ใช้งาน <span class="text_white"><%=userDeatil.getUserName() %>&nbsp;&nbsp;<%=userDeatil.getUserSurname() %></span></div>
             <div class="font12"></div>
             
@@ -35,7 +60,7 @@
         </div>
     </div><!-- container -->
 </div><!-- headwrap -->
-<div align="left">
+<div align="left" id="m1">
   <ul id="menu1">
 	<%
 		UserPrivilegeBean 			userPrivilegeBean 		= null;
@@ -43,7 +68,7 @@
 		for(int i=0;i<userDeatil.getUserPrivilegeList().size();i++){		
 			userPrivilegeBean = userDeatil.getUserPrivilegeList().get(i);
 	%>
-			<li><a href="#"><%=userPrivilegeBean.getPrivilegeName()%></a>
+			<li style="width: 165px;"><a href="#"><%=userPrivilegeBean.getPrivilegeName()%></a>
 				<ul>
 					<%
 					for(int j=0;j<userPrivilegeBean.getPagesDetail().size();j++){
@@ -58,7 +83,9 @@
 	<%		
 		}
 	%>
- 	<li><a href="/ticketWeb/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
+	<%if(!userDeatil.getUserId().equals(Constants.ADMIN)){ %>
+ 	<li><a href="<%=servURL1%>/EnjoyGenericSrv?service=servlet.ChangePasswordServlet&pageAction=new">เปลี่ยนรหัสผ่าน</a></li>
+ 	<%} %>
  	<li><a href="#" id="logOut" name="logOut" >ออกจากระบบ</a></li>
   	<!-- 
 	<li><a href="#">รายงาน</a>
@@ -91,5 +118,14 @@
 	</li>
 	 -->	
 </ul>
-<script>$('#menu1').ptMenu();</script>
 </div>
+
+
+
+
+
+
+
+
+
+

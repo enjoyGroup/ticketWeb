@@ -5,10 +5,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.hibernate.CacheMode;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -61,59 +61,142 @@ public class UserDetailsDao {
 //		}
 //	}
 	
+//	public UserDetailsBean userSelect(String userId, String pass){
+//		logger.info("[UserDetailsDao][userSelect][Begin]");
+//		
+//		UserDetailsBean 	userDetailsBean = null;
+//		SessionFactory 		sessionFactory	= null;
+//		Session 			session			= null;
+//		List<Userdetail> 	userdetailList	= null;
+//		Userdetail 			userdetail		= null;
+//		String				hql				= null;
+//        String				passWord		= null;
+//		int					maxRecord		= 0;
+//		DateFormat 			dateFormat		= null;
+//        Date 				date			= null;
+//		
+//		
+//		try{
+//		    passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
+//logger.info("pass ==> " + passWord);
+//		    sessionFactory 	= HibernateUtil.getSessionFactory();
+//			session 		= sessionFactory.openSession();
+//			hql				= "from Userdetail where userId = '" + userId + "'";
+////			hql				= "from Userdetail where userId = '" + userId + "' and userPassword = '" + passWord + "'";
+//			userdetailList 	= session.createQuery(hql).list();
+//			maxRecord       = userdetailList.size();
+//			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
+//		    date 	   		= new Date();
+//			
+//			for(int i=0;i<maxRecord;i++){
+//				userdetail 		= userdetailList.get(i);
+//				userDetailsBean	= new UserDetailsBean();
+//				
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserUniqueId() 		:: " + userdetail.getUserUniqueId());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserId() 				:: " + userdetail.getUserId());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserName() 			:: " + userdetail.getUserName());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserSurname() 			:: " + userdetail.getUserSurname());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserPrivilege() 		:: " + userdetail.getUserPrivilege());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserLevel() 			:: " + userdetail.getUserLevel());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserStatus() 			:: " + userdetail.getUserStatus());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getFlagChangePassword() 	:: " + userdetail.getFlagChangePassword());
+//				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserEmail() 			:: " + userdetail.getUserEmail());
+//				
+//				userDetailsBean.setUserUniqueId			(userdetail.getUserUniqueId());
+//				userDetailsBean.setUserId				(userdetail.getUserId());
+//				userDetailsBean.setPwd					(userdetail.getUserPassword());
+//				userDetailsBean.setUserName				(userdetail.getUserName());
+//				userDetailsBean.setUserSurname			(userdetail.getUserSurname());
+//				userDetailsBean.setUserPrivilege		(userdetail.getUserPrivilege());
+//				userDetailsBean.setUserLevel			(userdetail.getUserLevel());
+//				userDetailsBean.setUserStatus			(userdetail.getUserStatus());
+//				userDetailsBean.setFlagChangePassword	(userdetail.getFlagChangePassword());
+//				userDetailsBean.setCurrentDate			(dateFormat.format(date));
+//				userDetailsBean.setUserEmail			(userdetail.getUserEmail());
+//			}
+//			
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}finally{
+//			session.close();
+//			sessionFactory	= null;
+//			session			= null;
+//			userdetailList	= null;
+//			userdetail		= null;
+//			hql				= null;
+//	        passWord		= null;
+//			logger.info("[UserDetailsDao][userSelect][End]");
+//		}
+//		
+//		return userDetailsBean;
+//	}
+	
 	public UserDetailsBean userSelect(String userId, String pass){
-		logger.info("[UserDetailsDao][userSelect][Begin]");
+		logger.info("[userSelect][Begin]");
 		
 		UserDetailsBean 	userDetailsBean = null;
 		SessionFactory 		sessionFactory	= null;
 		Session 			session			= null;
-		List<Userdetail> 	userdetailList	= null;
-		Userdetail 			userdetail		= null;
 		String				hql				= null;
         String				passWord		= null;
-		int					maxRecord		= 0;
 		DateFormat 			dateFormat		= null;
         Date 				date			= null;
-		
+        SQLQuery 			query 			= null;
+        List<Object[]>		list			= null;
+        Object[] 			row 			= null;
 		
 		try{
 		    passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
-logger.info("pass ==> " + passWord);
 		    sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-//			hql				= "from Userdetail where userId = '" + userId + "'";
-			hql				= "from Userdetail where userId = '" + userId + "' and userPassword = '" + passWord + "'";
-			userdetailList 	= session.createQuery(hql).list();
-			maxRecord       = userdetailList.size();
+			hql				= "select * from userdetails where userId = '" + userId + "'";
+//			hql				= "select * from userdetails where userId = '" + userId + "' and userPassword = '" + passWord + "'";
+			query			= session.createSQLQuery(hql);
 			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
 		    date 	   		= new Date();
-			
-			for(int i=0;i<maxRecord;i++){
-				userdetail 		= userdetailList.get(i);
-				userDetailsBean	= new UserDetailsBean();
+		    
+		    query.addScalar("userUniqueId"			, new StringType());
+		    query.addScalar("userId"				, new StringType());
+		    query.addScalar("userName"				, new StringType());
+		    query.addScalar("userSurname"			, new StringType());
+		    query.addScalar("userEmail"				, new StringType());
+		    query.addScalar("userPrivilege"			, new StringType());
+		    query.addScalar("userLevel"				, new StringType());
+		    query.addScalar("userStatus"			, new StringType());
+		    query.addScalar("flagChangePassword"	, new StringType());
+		    
+		    list		 	= query.list();
+		    
+		    logger.info("[userSelect] hql :: " + hql);
+			logger.info("[userSelect] list :: " + list);
+		    
+		    if(list!=null && list.size() > 0){
 				
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserUniqueId() 		:: " + userdetail.getUserUniqueId());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserId() 				:: " + userdetail.getUserId());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserName() 			:: " + userdetail.getUserName());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserSurname() 			:: " + userdetail.getUserSurname());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserPrivilege() 		:: " + userdetail.getUserPrivilege());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserLevel() 			:: " + userdetail.getUserLevel());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserStatus() 			:: " + userdetail.getUserStatus());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getFlagChangePassword() 	:: " + userdetail.getFlagChangePassword());
-				logger.debug("[UserDetailsDao][userSelect] userdetail.getUserEmail() 			:: " + userdetail.getUserEmail());
+		    	row 				= list.get(0);
+				userDetailsBean 	= new UserDetailsBean();
 				
-				userDetailsBean.setUserUniqueId			(userdetail.getUserUniqueId());
-				userDetailsBean.setUserId				(userdetail.getUserId());
-				userDetailsBean.setPwd					(userdetail.getUserPassword());
-				userDetailsBean.setUserName				(userdetail.getUserName());
-				userDetailsBean.setUserSurname			(userdetail.getUserSurname());
-				userDetailsBean.setUserPrivilege		(userdetail.getUserPrivilege());
-				userDetailsBean.setUserLevel			(userdetail.getUserLevel());
-				userDetailsBean.setUserStatus			(userdetail.getUserStatus());
-				userDetailsBean.setFlagChangePassword	(userdetail.getFlagChangePassword());
+				logger.info("[userSelect] userUniqueId 			:: " + row[0]);
+				logger.info("[userSelect] userId 				:: " + row[1]);
+				logger.info("[userSelect] userName 				:: " + row[2]);
+				logger.info("[userSelect] userSurname 			:: " + row[3]);
+				logger.info("[userSelect] userEmail 			:: " + row[4]);
+				logger.info("[userSelect] userPrivilege 		:: " + row[5]);
+				logger.info("[userSelect] userLevel 			:: " + row[6]);
+				logger.info("[userSelect] userStatus 			:: " + row[7]);
+				logger.info("[userSelect] flagChangePassword 	:: " + row[8]);
+				
+				userDetailsBean.setUserUniqueId			(Integer.parseInt(row[0].toString()));
+				userDetailsBean.setUserId				(EnjoyUtils.nullToStr(row[1].toString()));
+				userDetailsBean.setUserName				(EnjoyUtils.nullToStr(row[2].toString()));
+				userDetailsBean.setUserSurname			(EnjoyUtils.nullToStr(row[3].toString()));
+				userDetailsBean.setUserEmail			(EnjoyUtils.nullToStr(row[4].toString()));
+				userDetailsBean.setUserPrivilege		(EnjoyUtils.nullToStr(row[5].toString()));
+				userDetailsBean.setUserLevel			(EnjoyUtils.nullToStr(row[6].toString()));
+				userDetailsBean.setUserStatus			(EnjoyUtils.nullToStr(row[7].toString()));
+				userDetailsBean.setFlagChangePassword	(EnjoyUtils.nullToStr(row[8].toString()));
 				userDetailsBean.setCurrentDate			(dateFormat.format(date));
-				userDetailsBean.setUserEmail			(userdetail.getUserEmail());
 			}
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -121,11 +204,9 @@ logger.info("pass ==> " + passWord);
 			session.close();
 			sessionFactory	= null;
 			session			= null;
-			userdetailList	= null;
-			userdetail		= null;
 			hql				= null;
 	        passWord		= null;
-			logger.info("[UserDetailsDao][userSelect][End]");
+			logger.info("[userSelect][End]");
 		}
 		
 		return userDetailsBean;
@@ -207,6 +288,7 @@ logger.info("pass ==> " + passWord);
 		UserDetailsBean			userDetailsBean			= null;
 		Object[] 				row 					= null;
 		List<UserDetailsBean> 	listUserDetailsBean 	= new ArrayList<UserDetailsBean>();
+		HashMap					hashTable				= new HashMap();
 		String[]				arrPrivilegeCode		= null;			
 		String					privilegeName			= "";
 		
@@ -222,7 +304,8 @@ logger.info("pass ==> " + passWord);
 										+ ", a.flagChangePassword"
 										+ ", b.userStatusName"
 								+ "	from userdetails a, refuserstatus b "
-								+ "	where a.userStatus = b.userStatusCode ";
+								+ "	where a.userStatus = b.userStatusCode "
+								+ " 	and a.userId <> 'admin'";
 			
 			if(!userdetailForm.getUserName().equals("")){
 				hql += " and CONCAT(a.userName, ' ', a.userSurname) like ('" + userdetailForm.getUserName() + "%')";
@@ -255,8 +338,9 @@ logger.info("pass ==> " + passWord);
 				logger.info("[getListUserdetail] list.size() :: " + list.size());
 				
 				for(int i=0;i<list.size();i++){
-					row 				= list.get(0);
+					row 				= list.get(i);
 					userDetailsBean 	= new UserDetailsBean();
+					privilegeName   	= "";
 					
 					logger.info("[getListUserdetail] userUniqueId 		:: " + row[0]);
 					logger.info("[getListUserdetail] userId 			:: " + row[1]);
@@ -575,6 +659,36 @@ logger.info("pass ==> " + passWord);
 		}
 		
 		return result;
+	}
+	
+	public void changePassword(Session session, UserDetailsBean userDetailsBean) throws EnjoyException{
+		logger.info("[changePassword][Begin]");
+		
+		String							hql									= null;
+		Query 							query 								= null;
+		int 							result								= 0;
+		
+		
+		try{
+			hql				= "update  Userdetail set userPassword 		= :userPassword"
+										+ " where userUniqueId = :userUniqueId";
+			
+			query = session.createQuery(hql);
+			query.setParameter("userPassword"		, userDetailsBean.getPwd());
+			query.setParameter("userUniqueId"		, userDetailsBean.getUserUniqueId());
+			
+			result = query.executeUpdate();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เกิดข้อผิดพลาดในการอัพเดทข้อมูล");
+		}finally{
+			
+			hql									= null;
+			query 								= null;
+			logger.info("[changePassword][End]");
+		}
 	}
 	
 	

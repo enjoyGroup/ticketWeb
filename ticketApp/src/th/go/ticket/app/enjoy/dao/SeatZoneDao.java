@@ -72,12 +72,15 @@ public class SeatZoneDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<SeatZoneBean>();
 			
-			hql				= "SELECT b.matchId, b.season, b.awayTeamNameTH "
-								+ "FROM eventmatch b "
-								+ "where "
+			hql				= "SELECT b.matchId, b.season, b.awayTeamNameTH"
+								+ " FROM eventmatch b"
+								+ " where"
 //									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('25570101', '%Y%m%d')"
-									+ "STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('" + EnjoyUtils.currDateThai() + "', '%Y%m%d')"
-								+ " order by b.season, b.matchId asc";
+									+ " STR_TO_DATE(b.matchDate, '%Y%m%d') >= STR_TO_DATE('" + EnjoyUtils.currDateThai() + "', '%Y%m%d')"
+								+ " order by b.season desc, b.matchId desc";
+			
+			logger.info("[seasonList] hql :: " + hql);
+			
 			query			= session.createSQLQuery(hql);
 			
 			query.addScalar("matchId"			, new StringType());

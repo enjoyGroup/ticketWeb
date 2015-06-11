@@ -196,7 +196,7 @@ public class EventMatchDao {
 			}catch(Exception e){
 				e.printStackTrace();
 				logger.info(e.getMessage());
-				throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”");
+				throw new EnjoyException("เน€เธ�โ�ฌเน€เธ�๏ฟฝเน€เธ�เธ”เน€เธ�โ€�เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ”เน€เธ�โ€�เน€เธ�๏ฟฝเน€เธ�เธ…เน€เธ�เธ’เน€เธ�โ€�");
 			}finally{  
 				sqlQuery 							= null;
 				sql                                 = null;
@@ -346,6 +346,79 @@ public class EventMatchDao {
 		
 		return matchId;
 	}
+	
+	public int validateMatchUpdate(EventMatchBean eventMatchBean) throws EnjoyException{
+		logger.info("[validateMatch][Begin]"); 
+		String							sql									= null;   
+		SQLQuery 						sqlQuery 							= null;   
+		List<Integer>                   list                                = null;
+		Integer                         count 							    = null;
+		SessionFactory 		   sessionFactory		    = null;
+		Session 			   session				    = null;
+		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			sql             = "SELECT COUNT(*) as count from Eventmatch  WHERE matchId != "+ eventMatchBean.getMatchId()
+					          + " and awayTeamNameTH = '" +eventMatchBean.getAwayTeamNameTH()+"'";
+			sqlQuery		= session.createSQLQuery(sql); 
+			sqlQuery.addScalar("count"	, new IntegerType());
+			list            =  sqlQuery.list(); 
+			System.out.println("list.get(0): "+list.get(0));
+			if(list !=null && list.size() > 0){
+				count = list.get(0);
+				logger.info("validateMatch order of count ::  "+ count);  
+			}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("เน€เธ�เธดเธ”เธ�เน�เธญเธ�เธดเธ”เธ�เธฅเธฒเธ”เน�เธ�เธ�เธฒเธฃเธ�เธฑเธ�เธ—เธถเธ�เธ�เน�เธญเธกเธนเธฅ");
+		}finally{  
+			sqlQuery 							= null;
+			sql                                 = null;
+			list                                = null;  
+			logger.info("[validateMatch][End]");
+		}
+		
+	return count;
+}
+	
+	public int validateMatch(EventMatchBean eventMatchBean) throws EnjoyException{
+		logger.info("[validateMatch][Begin]"); 
+		String							sql									= null;   
+		SQLQuery 						sqlQuery 							= null;   
+		List<Integer>                   list                                = null;
+		Integer                         count 							    = null;
+		SessionFactory 		   sessionFactory		    = null;
+		Session 			   session				    = null;
+		try{ 
+			sessionFactory 				= HibernateUtil.getSessionFactory();
+			session 					= sessionFactory.openSession();
+			sql             = "SELECT COUNT(*) as count from Eventmatch WHERE awayTeamNameTH = '" +eventMatchBean.getAwayTeamNameTH() +"'" 
+							+ " and season = " + eventMatchBean.getSeason() ;
+			sqlQuery		= session.createSQLQuery(sql); 
+			sqlQuery.addScalar("count"	, new IntegerType());
+			list            =  sqlQuery.list(); 
+			System.out.println("list.get(0): "+list.get(0));
+			if(list !=null && list.size() > 0){
+				count = list.get(0);
+				logger.info("validateMatch order of count ::  "+ count); 
+				 
+			}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e.getMessage());
+			throw new EnjoyException("Match is duplicate");
+		}finally{  
+			sqlQuery 							= null;
+			sql                                 = null;
+			list                                = null;  
+			logger.info("[validateMatch][End]");
+		}
+		
+	return count;
+}
 	 
 	public void saveEventMatch(List<EventMatchBean> eventMatchBeanList,String getDelList )throws EnjoyException{
 		SessionFactory 		   sessionFactory		    = null;
@@ -373,12 +446,26 @@ public class EventMatchDao {
 				} 
 			}
 			
+			int count = 0;
+					
 			for(EventMatchBean eventMatchBean:eventMatchBeanList){
 				logger.info("eventMatchBean :: "+eventMatchBean.toString());
 				if(eventMatchBean.getStatus().equals("N")){   
-					this.insertEventMatch(session,eventMatchBean);   
+					this.insertEventMatch(session,eventMatchBean);  
+//					count = this.validateMatch(session,eventMatchBean);
+//					if(count > 0){
+//						throw new EnjoyException("Match is duplicate");
+//					}else{
+//						this.insertEventMatch(session,eventMatchBean);  
+//					}
 				}else if(eventMatchBean.getStatus().equals("U")){ 
 					this.updateEventMatch(session,eventMatchBean);  
+//					count = this.validateMatchUpdate(session,eventMatchBean);
+//					if(count > 0){
+//						throw new EnjoyException("Match is duplicate");
+//				 	}else{
+//				 		this.updateEventMatch(session,eventMatchBean);  
+//				 	}
 				}
 			}
 			

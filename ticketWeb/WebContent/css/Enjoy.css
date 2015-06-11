@@ -42,5 +42,15 @@
    opacity: 0.30;/* Good browsers */
 }
 
+.txt-unSelect{
+    font-weight: normal;
+    color: black;
+}
+
+.txt-select{
+    font-weight: bolder;
+    color: red;
+}
+
 
 

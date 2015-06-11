@@ -95,7 +95,8 @@
 						.apply(
 								$element,
 								[
-								 'ERROR::The select file type is invalid. File must be "' + settings.valid_extensions.join(', ') + '".'
+								 {status:"ERROR",
+								  errMsg:"ไฟล์เลือกได้เฉพาะ " + settings.valid_extensions.join(', ') + " เท่านั้น"}
 								 , settings.params 
 								]);
 					} else {

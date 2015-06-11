@@ -48,11 +48,11 @@
         	var status				= null;
         	var errMsg				= null;
 	        
-	        try{
+	        try{//alert(ao_val);
 	        	jsonObj = ao_val;
         		status	= jsonObj.status;
         		
-        		//alert(status);
+        		//alert(status);alert(jsonObj.errMsg);
         		if(status=="SUCCESS"){
         			location.reload();
         		}else{
@@ -89,18 +89,21 @@
 										<section class="panel panel-default">
 											<div class="panel-body" align="center">
 												<!-- Begin contents -->
-												<div style="margin-top: 30px;" align="center">
-													<table border="0"  width="100%" cellspacing="1" cellpadding="0">
+												<div style="margin-top: 30px;width: 100%;" align="center">
+													<table border="0"  width="100%" cellspacing="1" cellpadding="0" align="center">
 														<tr valign="middle">
 											                <td width="10%">เลือกแผนผังสนาม :</td>
 											                <td width="20%">
-											                    <input type="file" name="datafile" id="datafile" />
+											                    <input type="file" name="datafile" id="datafile" class="btn btn-sm btn-info"/>
 											                </td>
-											                <td width="70%">
-											                    <input type="button" name="btnUpload" id="btnUpload"  value="Upload" class="btn" />
-											                    <input type="reset" name="btnClear" id="btnClear"  value="Clear" class="btn" />
+											                <td width="70%" style="padding-left: 50px;">
+											                    <input type="button" name="btnUpload" id="btnUpload"  value="Upload" class="btn btn-sm btn-primary" />
+											                    <input type="reset" name="btnClear" id="btnClear"  value="Clear" class="btn btn-sm btn-danger" />
 											                </td>
 											            </tr> 
+											            <tr>
+											            	<td>&nbsp;</td>
+											            </tr>
 														<tr>
 											                <td colspan="3" >
 											                    <img alt="<%=uploadImageFieldForm.FILE_NAME%>" 

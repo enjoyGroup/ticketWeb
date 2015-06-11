@@ -72,7 +72,7 @@ public class SeatSummaryReservationDao {
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<SeatSummaryReservationBean>();
 			
-			hql				= "select a.ticketId, a.seatingNo, b.bookingPrices, c.bookingTypeName, d.fieldZoneName"
+			hql				= "select a.ticketId, a.seatingNo, b.bookingPrices, c.bookingTypeName, d.fieldZoneNameTicket"
 								+ " from ticketorder a,  fieldzonedetail b, bookingtype c, fieldzonemaster d"
 								+ " where b.fieldZoneId        	= a.fieldZoneId"
 									+ " and b.bookingTypeId  	= a.bookingTypeId"
@@ -85,11 +85,11 @@ public class SeatSummaryReservationDao {
 								+ " order by a.seatingNo, a.ticketId asc";
 			query			= session.createSQLQuery(hql);
 			
-			query.addScalar("ticketId"			, new StringType());
-			query.addScalar("seatingNo"			, new StringType());
-			query.addScalar("bookingPrices"		, new StringType());
-			query.addScalar("bookingTypeName"	, new StringType());
-			query.addScalar("fieldZoneName"		, new StringType());
+			query.addScalar("ticketId"				, new StringType());
+			query.addScalar("seatingNo"				, new StringType());
+			query.addScalar("bookingPrices"			, new StringType());
+			query.addScalar("bookingTypeName"		, new StringType());
+			query.addScalar("fieldZoneNameTicket"	, new StringType());
 			
 			list		 	= query.list();
 			

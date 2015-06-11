@@ -93,7 +93,7 @@
 			    
 			});
 		
-			$('#btnReset').click(function(){
+			/*$('#btnReset').click(function(){
 				var pageAction			= "new";
 				var lv_params			= gv_service;  
 			 
@@ -112,7 +112,7 @@
 			    }catch(e){
 			    	alert("lp_reset_page :: " + e);
 			    }			    
-			});
+			});*/
 			
 		});
 	</script>
@@ -123,51 +123,62 @@
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
-		<div align="center" style="width:100%;position: absolute;height: 100%;">
-			<section class="scrollable padder">
-				<div class="alert alert-block alert-error fade in">
-	            	<h2 class="alert-heading">เปลี่ยนรหัสผ่าน</h2>
-          		</div>
-	          	<div class="row">
-					<div class="col-sm-12">
-						<section class="panel panel-default">
-							<div class="panel-body">
-								<table border="0" cellpadding="0" cellspacing="5" class="table span12" align="center">
-									<colgroup>
-										<col align="left" width="50%" />
-										<col align="left" />
-									</colgroup>
-									<tr>
-										<td><label class="control-label" style="text-align:right">รหัสผ่านเดิม : </label></td>
-										<td class="no-padd-left">
-											<input type="password" id="oldUserPassword" name="oldUserPassword" />
-										</td>
-									</tr>
-									<tr>
-										<td><label class="control-label" style="text-align:right">รหัสผ่านใหม่ : </label></td>
-										<td class="no-padd-left">
-											<input type="password" id="newUserPassword" name="newUserPassword" />
-										</td>
-									</tr>
-									<tr>
-										<td><label class="control-label" style="text-align:right">ยื่นยันรหัสผ่าน : </label></td>
-										<td class="no-padd-left">
-											<input type="password" id="confirmUserPassword" name="confirmUserPassword" />
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2" align="center">
-											<input type="button" class="btn btn-primary" id="btnSave" name="btnSave" value="บันทึก" />
-											<input type="button" class="btn btn-primary" id="btnReset" name="btnReset" value="เริ่มใหม่" />
-										</td>
-									</tr>
-								</table>
-							</div>
-						</section>
+		<section class="hbox stretch">
+		<section id="content">
+		<section class="vbox">
+		<section class="scrollable padder">
+		<div class="alert alert-block alert-error fade in">
+			<h4 class="alert-heading">เปลี่ยนรหัสผ่าน</h4>
+		</div>	
+		
+		</section>
+		</section>
+		</section>
+		</section>				          	
+			<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+					<div class="panel panel-info">
+						<div class="panel-heading">
+							<h4 class="panel-title">เปลี่ยนรหัสผ่าน</h4>
+						</div>
+           				<div class="panel-body">
+               					<div class="col-md-2 col-lg-2 " align="center">
+									<img src="/ticketWeb/images/em_man.png" class="img-circle">
+								</div>
+               						<div class=" col-md-8 col-lg-8 "> 
+										<table class="table" style="border-bottom-color: white;">
+											<tr>
+												<td><label class="control-label" style="text-align:right">รหัสผ่านเดิม<span style="color: red;"><b>*</b></span> : </label></td>
+												<td class="no-padd-left">
+													<input type="password" id="oldUserPassword" name="oldUserPassword" />
+												</td>
+											</tr>
+											<tr>
+												<td><label class="control-label" style="text-align:right">รหัสผ่านใหม่<span style="color: red;"><b>*</b></span> : </label></td>
+												<td class="no-padd-left">
+													<input type="password" id="newUserPassword" name="newUserPassword" />
+												</td>
+											</tr>
+											<tr>
+												<td><label class="control-label" style="text-align:right">ยื่นยันรหัสผ่าน<span style="color: red;"><b>*</b></span> : </label></td>
+												<td class="no-padd-left">
+													<input type="password" id="confirmUserPassword" name="confirmUserPassword" />
+												</td>
+											</tr>
+										</table>
+										<div style="width:100%; text-align: center;">
+											<span>
+						        				<input type="button" class="btn btn-primary" id="btnSave" name="btnSave" value="บันทึก" />
+												<input type="reset" class="btn btn-primary" id="btnReset" name="btnReset" value="เริ่มใหม่" />
+		     								</span>
+										</div>	                  
+									</div>
+								</div>
+				            </div>          
+						</div>
 					</div>
-				</div>
-			</section>
-		</div>
+				</div>	
 	</form>
 </body>
 </html>

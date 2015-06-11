@@ -6,6 +6,7 @@ final String jsURL 			= Constants.JS_URL;
 final String cssURL 		= Constants.CSS_URL;
 final String imgURL 		= Constants.IMG_URL;
 final String themeURL 		= Constants.THEME_URL;
+final String pagesURL		= Constants.PAGE_URL;
 
 %>
 
@@ -37,6 +38,7 @@ final String themeURL 		= Constants.THEME_URL;
 <link href="<%=cssURL%>/bootstrap-responsive.min.css" rel="stylesheet" />
 <link href="<%=cssURL%>/menu-styles.css" rel="stylesheet" />
 <link href="<%=cssURL%>/Enjoy.css" rel="stylesheet" />
+<link href="<%=cssURL%>/defaultTheme.css" rel="stylesheet" />
 
 <!-- End css -->
 
@@ -67,7 +69,7 @@ final String themeURL 		= Constants.THEME_URL;
 <!-- End JS -->
 
 
-
+<script type="text/javascript" src="<%=jsURL%>/jquery.fixedheadertable.js"></script>
 <script type="text/javascript" src="<%=jsURL%>/jquery.ui.potato.menu.js"></script>
 <link rel=stylesheet href="<%=cssURL%>/jquery.ui.potato.menu.css">
 <link rel=stylesheet href="<%=cssURL%>/menu.css">

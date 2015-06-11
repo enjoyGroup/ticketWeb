@@ -3,16 +3,33 @@ package th.go.ticket.app.enjoy.bean;
  
  
 public class FieldzonemasterBean {
-	 
-	private int fieldZoneId; 
-	private String fieldZoneName; 
-	private int rows; 
-	private int seating; 
+	private int fieldZoneId;
+
+	private String fieldZoneName;
+
+	private int rows;
+
+	private int seating;
+
 	private int totalSeating;
-	private String fieldZoneNameTicket; 
+	 
+	private String nameRow;
+	
+	private int typeRowName; 
+	
+	private String fieldZoneNameTicket;
+	
 	private int startSeatingNo;
 	
 	public FieldzonemasterBean() {  
+		this.fieldZoneName = "";
+		this.rows = 0;
+		this.seating = 0;
+		this.totalSeating = 0;
+		this.nameRow = "";
+		this.typeRowName = 1;
+		this.fieldZoneNameTicket ="";
+		this.startSeatingNo = 0;
 	}
 
 	public int getFieldZoneId() {
@@ -69,6 +86,22 @@ public class FieldzonemasterBean {
 
 	public void setStartSeatingNo(int startSeatingNo) {
 		this.startSeatingNo = startSeatingNo;
+	}
+
+	public String getNameRow() {
+		return nameRow;
+	}
+
+	public void setNameRow(String nameRow) {
+		this.nameRow = nameRow;
+	}
+
+	public int getTypeRowName() {
+		return typeRowName;
+	}
+
+	public void setTypeRowName(int typeRowName) {
+		this.typeRowName = typeRowName;
 	}
 	
 	

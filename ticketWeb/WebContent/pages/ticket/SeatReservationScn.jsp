@@ -271,10 +271,12 @@
 		function lp_setTicketType(av_ticketTypeIndex, av_bookingTypeId, av_bookingTypeName){
 			
 			var la_btnTicketType 		= null;
+			var la_hidRefBookingType	= null;
 			
 			try{
 				
-				la_btnTicketType 	= document.getElementsByName("btnTicketType");
+				la_btnTicketType 		= document.getElementsByName("btnTicketType");
+				la_hidRefBookingType 	= document.getElementsByName("hidRefBookingType");
 				
 				for(var i=0;i<la_btnTicketType.length;i++){
 					
@@ -282,6 +284,16 @@
 						la_btnTicketType[i].className = "";
 					}else{
 						la_btnTicketType[i].className = "btn-unSelect";
+					}
+					
+				}
+				
+				for(var i=0;i<la_hidRefBookingType.length;i++){
+					
+					if(la_hidRefBookingType[i].value==av_bookingTypeId){
+						la_hidRefBookingType[i].parentNode.className = "txt-select";
+					}else{
+						la_hidRefBookingType[i].parentNode.className = "txt-unSelect";
 					}
 					
 				}
@@ -563,10 +575,12 @@
 									  	<div class="container ">
    											<div class="span12 sim-planel round padd-all-4">
 												<!-- start : options -->
-											    <div class="row no-padd-all">
-       												<div class='span12'>
-														ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneNameTicket()%>
-       												</div>
+											    <div class="panel panel-info">
+											    	<div class="panel-heading">
+														<h4 class="panel-title">
+															ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneName()%>
+														</h4>
+													</div>
      											</div>
      											<!-- end : options -->
      											<!-- start : seat -->
@@ -599,9 +613,9 @@
 												</div>
 												<%}else{ %>
 												<div class="span8 round line-gray padd-all-4 no-marg-left">
-													<div class="seat-holder" id="-1">
+													<div class="seat-holder" id="-1" align="center" style="background: url('<%=imgURL%>/field.png');background-position: left 0%;height:60vh;padding-top: 50px;">
 														<!-- แบบไม่เลือกที่นั่ง -->
-														<span>รออี๊ดเอารุปมาใส่</span>
+														<img src="<%=imgURL%>/CHN300_2.png" border="0" />
 													</div>
 												</div>
 												<%} %>
@@ -649,7 +663,17 @@
 																    	%>
 				    													<tr>
 				    														<td align="left">
-				    															<%=ticketTypeBean.getBookingTypeName()%>&nbsp;&nbsp;:&nbsp;&nbsp; 
+				    														<%if(seatReservationForm.getFlagAlterSeat().equals("1")){ %>
+				    															<span class="<%=ticketTypeBean.getClassTxt()%>" >
+				    																<%=ticketTypeBean.getBookingTypeName()%>
+				    																<input type="hidden" name="hidRefBookingType" value="<%=ticketTypeBean.getBookingTypeId()%>" />
+				    															</span>
+				    														<%}else{ %>
+				    															<span class="txt-unSelect">
+				    																<%=ticketTypeBean.getBookingTypeName()%>
+				    															</span>
+				    														<%}%>
+				    															&nbsp;&nbsp;:&nbsp;&nbsp; 
 				    														</td>
 				    														<td align="left">
 				    															<%=ticketTypeBean.getBookingPrices()%>&nbsp;&nbsp;
@@ -673,7 +697,7 @@
 																    		<td align="right">
 																    			<input type="button" id="btnMinus<%=ticketTypeBean.getBookingTypeId()%>" name="btnMinus" onclick="lp_setNumTicketType('0', '<%=ticketTypeBean.getBookingTypeId()%>');" class="btn" style="width: 30px;" value="-" <%if(seatReservationForm.getFlagAlterSeat().equals("1") || ticketTypeBean.getNumTicketType().equals("0")){ %> disabled="disabled" <%} %> />
 																    		</td>
-																    		<td align="right">
+																    		<td align="right" style="white-space: nowrap;">
 																    			&nbsp;&nbsp;<%=ticketTypeBean.getBookingTypeName()%>&nbsp;:&nbsp;
 																    		</td>
 																    		<td align="left">

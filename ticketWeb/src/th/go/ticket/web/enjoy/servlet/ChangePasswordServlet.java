@@ -111,6 +111,8 @@ public class ChangePasswordServlet extends EnjoyStandardSvc {
 			session 			= sessionFactory.openSession();
 			obj 				= new JSONObject();
 			
+			session.beginTransaction();
+			
 			oldUserPassword		= EnjoyUtils.nullToStr(this.request.getParameter("oldUserPassword"));
 			newUserPassword		= EnjoyUtils.nullToStr(this.request.getParameter("newUserPassword"));
 			userDetailsBean		= this.userBean;
@@ -122,7 +124,6 @@ public class ChangePasswordServlet extends EnjoyStandardSvc {
 				throw new EnjoyException(userDetailsBean.getErrMsg());				
 			}
 			
-			session.beginTransaction();
 			userDetailsBean.setPwd(newUserPassword);
 logger.info("userDetailsBean.getPwd() ==> " + userDetailsBean.getPwd());
 logger.info("userDetailsBean.getUserUniqueId() ==> " + userDetailsBean.getUserUniqueId());

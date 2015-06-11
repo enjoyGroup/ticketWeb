@@ -1,5 +1,7 @@
 package th.go.ticket.app.enjoy.bean;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Id;
 
  
@@ -8,13 +10,14 @@ public class FieldZoneDetailBean {
 	  
 	private int fieldZoneId; 
 	private int seq; 
-	private double bookingPrices; 
+	private String bookingPrices; 
 	private int bookingTypeId;
 	private String bookingTypeName;
 	private boolean status;
 	private String statusPage;
 
 	public FieldZoneDetailBean() {  
+		this.seq = 1;   
 	}
 
 	public int getFieldZoneId() {
@@ -32,12 +35,13 @@ public class FieldZoneDetailBean {
 	public void setSeq(int seq) {
 		this.seq = seq;
 	}
+ 
 
-	public double getBookingPrices() {
+	public String getBookingPrices() {
 		return bookingPrices;
 	}
 
-	public void setBookingPrices(double bookingPrices) {
+	public void setBookingPrices(String bookingPrices) {
 		this.bookingPrices = bookingPrices;
 	}
 
