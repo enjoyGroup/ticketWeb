@@ -408,7 +408,7 @@
 						</div>
            				<div class="panel-body">
                					<div class="col-md-2 col-lg-2 " align="center">
-									<img src="/ticketWeb/images/add_user.png" class="img-circle">
+									<img src="<%=imgURL%>/add_user.png" class="img-circle">
 								</div>
                						<div class=" col-md-8 col-lg-8 "> 
 										<table class="table" style="border-bottom-color: white;">

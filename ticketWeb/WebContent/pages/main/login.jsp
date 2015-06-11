@@ -144,7 +144,7 @@
 		    <div class="row">
 		        <div class="col-md-offset-5 col-md-3">
 		            <div class="form-login">
-		           	<img src="/ticketWeb/images/chinat_fc.png">
+		           	<img src="<%=imgURL%>/CHN300_1.png">
 		            <input id="username"  name="username" type="text"  maxlength="20" class="form-control input-sm chat-input" placeholder="username"  onkeydown="lp_changeEnterToTab_forPWD();" />
 		            </br>
 		            <input id="user_pwd"  name="user_pwd"  type="password"  maxlength="50" class="form-control input-sm chat-input" placeholder="password" onkeydown="lp_changeEnterToTab_forPWD();" />

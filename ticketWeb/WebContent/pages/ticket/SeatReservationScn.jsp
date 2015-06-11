@@ -575,10 +575,12 @@
 									  	<div class="container ">
    											<div class="span12 sim-planel round padd-all-4">
 												<!-- start : options -->
-											    <div class="row no-padd-all">
-       												<div class='span12'>
-														ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneName()%>
-       												</div>
+											    <div class="panel panel-info">
+											    	<div class="panel-heading">
+														<h4 class="panel-title">
+															ปี :&nbsp;<%=seatReservationForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatReservationForm.getAwayTeamNameTH()%>&nbsp;โซน&nbsp;<%=seatReservationForm.getFieldZoneName()%>
+														</h4>
+													</div>
      											</div>
      											<!-- end : options -->
      											<!-- start : seat -->
@@ -611,9 +613,9 @@
 												</div>
 												<%}else{ %>
 												<div class="span8 round line-gray padd-all-4 no-marg-left">
-													<div class="seat-holder" id="-1">
+													<div class="seat-holder" id="-1" align="center" style="background: url('<%=imgURL%>/field.png');background-position: left 0%;height:60vh;padding-top: 50px;">
 														<!-- แบบไม่เลือกที่นั่ง -->
-														<span>รออี๊ดเอารุปมาใส่</span>
+														<img src="<%=imgURL%>/CHN300_2.png" border="0" />
 													</div>
 												</div>
 												<%} %>

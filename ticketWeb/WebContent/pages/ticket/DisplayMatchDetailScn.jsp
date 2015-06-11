@@ -115,9 +115,13 @@
 											<div class="panel-body" align="left">
 												<!-- Begin contents -->
 												<div align="left">
-													<div id="seasonTitle" style="font-weight: bold;">
-														<%=displayMatchDetailForm.getAwayTeamName()%>
-													</div><br/><br/>
+													<div class="panel panel-info">
+												    	<div class="panel-heading" align="left">
+															<h4 class="panel-title"  id="seasonTitle">
+																<%=displayMatchDetailForm.getAwayTeamName()%>
+															</h4>
+														</div>
+	     											</div>
 													
 													<%
 													List<DisplayMatchDetailBean>	headerTicketTypeList = displayMatchDetailForm.getHeaderTicketTypeList();

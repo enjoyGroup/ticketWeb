@@ -14,7 +14,7 @@
 		<div id="menu" style="width: 100%;background: black;">
 			<%@ include file="/pages/menu/menu.jsp"%>
 		</div>
-		<div style="background: url('/ticketWeb/images/bg_001.png');background-repeat:repeat-x; ;background-position: left 20%;height:100vh;">
+		<div style="background: url('<%=imgURL%>/bg_001.png');background-repeat:repeat-x; ;background-position: left 20%;height:100vh;">
 			
 		</div>
 	</form>

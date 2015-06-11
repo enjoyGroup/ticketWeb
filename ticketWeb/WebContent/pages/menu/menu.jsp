@@ -46,7 +46,7 @@
 <div class="headwrap" id="headwrap">
 	<div class="row" style="position: relative;">
     	<div class="brand span4" style="padding-left: 15px;">
-        	<img src="<%=servURL1%>/images/logo2.png" >
+        	<img src="<%=servURL1%>/images/logo2.png" />
         </div>
         
         <div class="span8 user"  style="position: absolute;margin-right: 0px;width: 95%;">
