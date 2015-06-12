@@ -149,8 +149,8 @@ public class UserDetailsDao {
 		    passWord		= EnjoyEncryptDecrypt.enCryption(userId, pass);
 		    sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
-			hql				= "select * from userdetails where userId = '" + userId + "'";
-//			hql				= "select * from userdetails where userId = '" + userId + "' and userPassword = '" + passWord + "'";
+//			hql				= "select * from userdetails where userId = '" + userId + "'";
+			hql				= "select * from userdetails where userId = '" + userId + "' and userPassword = '" + passWord + "'";
 			query			= session.createSQLQuery(hql);
 			dateFormat 		= new SimpleDateFormat("dd/MM/yyyy");
 		    date 	   		= new Date();
@@ -187,6 +187,7 @@ public class UserDetailsDao {
 				
 				userDetailsBean.setUserUniqueId			(Integer.parseInt(row[0].toString()));
 				userDetailsBean.setUserId				(EnjoyUtils.nullToStr(row[1].toString()));
+				userDetailsBean.setPwd					(passWord);
 				userDetailsBean.setUserName				(EnjoyUtils.nullToStr(row[2].toString()));
 				userDetailsBean.setUserSurname			(EnjoyUtils.nullToStr(row[3].toString()));
 				userDetailsBean.setUserEmail			(EnjoyUtils.nullToStr(row[4].toString()));

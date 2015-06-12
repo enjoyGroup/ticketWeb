@@ -119,14 +119,14 @@ public class ChangePasswordServlet extends EnjoyStandardSvc {
 			
 			oldUserPassword		= EnjoyEncryptDecrypt.enCryption(userDetailsBean.getUserId(), oldUserPassword); // เอารหัสผ่านเดิมเข้ารหัส และนำไปเทียบว่าเท่ากับค่าเดิมหรือไม่
 			newUserPassword		= EnjoyEncryptDecrypt.enCryption(userDetailsBean.getUserId(), newUserPassword); 
+logger.info("oldUserPassword ==> " + oldUserPassword);
+logger.info("userDetailsBean.getPwd() ==> " + userDetailsBean.getPwd());
 			if (! oldUserPassword.equals(userDetailsBean.getPwd())) {
 				userDetailsBean.setErrMsg("รหัสผ่านเดิมไม่ถูกต้อง");
 				throw new EnjoyException(userDetailsBean.getErrMsg());				
 			}
 			
 			userDetailsBean.setPwd(newUserPassword);
-logger.info("userDetailsBean.getPwd() ==> " + userDetailsBean.getPwd());
-logger.info("userDetailsBean.getUserUniqueId() ==> " + userDetailsBean.getUserUniqueId());
 			this.dao.updateUserPassword(session, userDetailsBean);
 			
 			obj.put(STATUS, 			SUCCESS);

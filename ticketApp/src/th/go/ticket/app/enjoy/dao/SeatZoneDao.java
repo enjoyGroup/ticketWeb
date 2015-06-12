@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StringType;
 
-import th.go.ticket.app.enjoy.bean.DetailRevenueOfYearBean;
 import th.go.ticket.app.enjoy.bean.SeatZoneBean;
 import th.go.ticket.app.enjoy.exception.EnjoyException;
 import th.go.ticket.app.enjoy.utils.EnjoyLogger;
@@ -132,14 +131,16 @@ public class SeatZoneDao {
 		String							hql									= null;
 		List<Object[]>			 		list								= null;
 		SQLQuery 						query 								= null;
-		
+		int								startSeat							= 0;
+		int								endSeat								= 0;
+		String							ticketName							= null;
 		
 		try{
 			sessionFactory 	= HibernateUtil.getSessionFactory();
 			session 		= sessionFactory.openSession();
 			returnList		= new ArrayList<SeatZoneBean>();
 			
-			hql				= "SELECT fieldZoneId, fieldZoneName, fieldZoneNameTicket"
+			hql				= "SELECT fieldZoneId, fieldZoneName, fieldZoneNameTicket, startSeatingNo, seating"
 								+ " FROM fieldzonemaster"
 								+ " order by fieldZoneId asc";
 			query			= session.createSQLQuery(hql);
@@ -147,6 +148,8 @@ public class SeatZoneDao {
 			query.addScalar("fieldZoneId"			, new StringType());
 			query.addScalar("fieldZoneName"			, new StringType());
 			query.addScalar("fieldZoneNameTicket"	, new StringType());
+			query.addScalar("startSeatingNo"		, new StringType());
+			query.addScalar("seating"				, new StringType());
 			
 			list		 	= query.list();
 			
@@ -157,9 +160,17 @@ public class SeatZoneDao {
 				logger.info("[getFieldZoneMaster] fieldZoneId 			:: " + row[0].toString());
 				logger.info("[getFieldZoneMaster] fieldZoneName		 	:: " + row[1].toString());
 				logger.info("[getFieldZoneMaster] fieldZoneNameTicket	:: " + row[2].toString());
+				logger.info("[getFieldZoneMaster] startSeatingNo		:: " + row[3].toString());
+				logger.info("[getFieldZoneMaster] seating				:: " + row[4].toString());
 				
+				startSeat	= Integer.parseInt(row[3].toString());
+				ticketName  = row[1].toString();
+				if (startSeat > 0) {
+					endSeat		= (startSeat + Integer.parseInt(row[4].toString())) + 1;
+					ticketName  = ticketName + "(ที่นั่ง " + String.valueOf(startSeat) + "-" + String.valueOf(endSeat) + ")";
+				}
 				returnObj.setFieldZoneId			(row[0].toString());
-				returnObj.setFieldZoneName			(row[1].toString());
+				returnObj.setFieldZoneName			(ticketName);
 				returnObj.setFieldZoneNameTicket	(row[2].toString()==null || row[2].toString().equals("")?row[1].toString():row[2].toString());
 				
 				returnList.add(returnObj);

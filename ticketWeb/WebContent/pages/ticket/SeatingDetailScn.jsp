@@ -264,7 +264,7 @@
 		        };
 			 
 		        cell1.className	= lv_class; 
-				cell1.innerHTML =  "<a href='#'>+เพิ่ม zone ที่นั่ง</a>";
+				cell1.innerHTML =  "<a href='#'>เพิ่ม zone ที่นั่ง</a>";
 				  
 				
 			}catch(e){
@@ -294,7 +294,7 @@
 		
        function lp_changeZone(av_zone,av_zoneId){
 
-   	    if (confirm("ยืนยันการเปลี่ยนปีการแข่งขัน ?") == false) {
+   	    if (confirm("ยืนยันการเปลี่ยน Zone การแข่งขัน ?") == false) {
    	    	 return false;
    	    }  
    	    
@@ -790,7 +790,7 @@
 			try{    
 			//alert(lv_length);
 				if(lv_length <= 2){
-					alert("กรุณาระบุ Match อย่างน้อย 1 รายการ ");
+					alert("กรุณาระบุประเภทตั๋ว อย่างน้อย 1 รายการ ");
 					return false;
 				}else{
 					
@@ -1099,7 +1099,7 @@
 					              								<td>   
 													                 <td style='width:10%;padding:0px !important'> 
 												                      <table class="table sim-panel-result-table" id="result_zone">
-																		<tr><th>ปีการแข่งขัน</th> </tr>
+																		<tr><th>Zone ที่นั่ง</th> </tr>
 																		<%
 																		List<FieldzonemasterBean>  list	=  seatingDetailForm.getZoneMasterList();
 																		 
