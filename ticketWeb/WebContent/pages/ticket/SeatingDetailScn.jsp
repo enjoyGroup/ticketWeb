@@ -172,7 +172,7 @@
 		function lp_readOnly_field(){
 			var lo_table        = document.getElementById("result_zone");   
 			var lv_length 		= lo_table.rows.length; 
-			alert(lv_length);
+			//alert(lv_length);
 			if(lv_length == 2){
 				var la_idName = new Array("fieldZoneName","nameTicket","rows","seating","startNo","nameRowInd1","nameRowInd2","nameRow");
 				var lo_obj    = null;
