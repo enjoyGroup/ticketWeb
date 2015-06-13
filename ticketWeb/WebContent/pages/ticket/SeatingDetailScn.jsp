@@ -58,8 +58,9 @@
 		$(document).ready(function(){ 
 			$('#menu1').ptMenu();
 			gv_service 	= "service=" + $('#service').val();    
- 
-			
+      	    
+			lp_readOnly_field();
+		/* 	
 			if($("#hidUserLevel").val()  == "9"){
 				if(($("#fieldZoneName").val()=="") || ($("#nameTicket").val()=="")||  ($("#nameRow").val()=="")){
 					$("#btnSave").prop('disabled',true); 
@@ -87,7 +88,7 @@
 		        	$("#btnAdd").removeAttr('disabled');
 		        }
 			}
-			
+			 */
 	        
 			$(".bookingTypeNameClass").live("focus",function(){
 				$(this).autocomplete({
@@ -165,6 +166,48 @@
 
 				
 		});
+		
+
+		
+		function lp_readOnly_field(){
+			var lo_table        = document.getElementById("result_zone");   
+			var lv_length 		= lo_table.rows.length; 
+			alert(lv_length);
+			if(lv_length == 2){
+				var la_idName = new Array("fieldZoneName","nameTicket","rows","seating","startNo","nameRowInd1","nameRowInd2","nameRow");
+				var lo_obj    = null;
+				try{
+					$("#btnSave").prop('disabled',true); 
+					$('#btnCancel').prop("disabled",true); 
+					$('#btnAdd').prop("disabled",true); 
+					for(var i=0;i<la_idName.length;i++){
+			            lo_obj          = eval('document.getElementById("' + la_idName[i] + '")'); 
+			            lo_obj.readOnly = true;  
+					}
+				}catch(e){
+					alert("lp_readOnly_field :: " + e); 
+				}
+		   }
+
+		}
+		
+		function lp_not_readOnly_field(){
+			var la_idName = new Array("fieldZoneName","nameTicket","rows","seating","startNo","nameRowInd1","nameRowInd2","nameRow");
+			var lo_obj    = null;
+			try{
+				$("#btnSave").prop('disabled',true); 
+				$('#btnCancel').prop("disabled",true); 
+				$('#btnAdd').prop("disabled",true); 
+				for(var i=0;i<la_idName.length;i++){
+		            lo_obj          = eval('document.getElementById("' + la_idName[i] + '")'); 
+		            lo_obj.readOnly = false;  
+				}
+			}catch(e){
+				alert("lp_not_readOnly_field :: " + e); 
+			}
+
+		}
+		
 		
 		function lp_onblur_bookingTypeName(ao_obj){
 		//alert(ao_obj.value);   
@@ -276,6 +319,7 @@
 			$("#btnSave").attr('disabled','disabled');
 			$("#btnCancel").attr('disabled','disabled');
 			$("#btnAdd").attr('disabled','disabled');
+			lp_not_readOnly_field();
 			gv_mode          = "NewZone";
 			document.getElementById("hidZoneName").value = "";
 			document.getElementById("hidZoneId").value = "";
@@ -662,8 +706,7 @@
 			 
 		}
 		
-		function lp_save_page(){ 
-       	    //alert("lp_validate_data():"+lp_validate_data());  
+		function lp_save_page(){  
 		    if(!lp_validate_data()){
 				return;
 			}  
@@ -770,22 +813,20 @@
 			var lv_flag1           = false;
 		    var lv_flag2           = false;
 			  
-			if(lv_userLevel == "9"){
-				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="") 
+			//if(lv_userLevel == "9"){
+				/* if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="") 
 						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
 					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
 					return false;
-				}
+				} */
 			    
-			}else{
-				if((lv_rows<=0) || (lv_seating<=0) || (lv_totalSeating<=0) 
-						|| (lv_startNo<=0) || (lv_fieldZoneName=="") 
-						|| (lv_nameTicket=="") || (lv_rowName=="") 
-						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
+			//}else{
+				if((lv_rows<=0) && (lv_seating<=0) && (lv_totalSeating<=0) && (lv_startNo<=0) && (lv_fieldZoneName=="") && (lv_nameTicket=="") 
+						&& ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
 					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
 					return false;
 				}
-			}
+			//}
 		
 			try{    
 			//alert(lv_length);
@@ -866,34 +907,36 @@
 				lo_totalSeating			= document.getElementById("totalSeating");
 				lv_startNo
 				lo_nameInd              = document.getElementsByName("nameRowInd");
-				lv_startNo              = document.getElementById("startNo").value;
-				//$("control_id").attr("checked",true);
-			 	
+				lv_startNo              = document.getElementById("startNo").value; 
 				lv_rows 			    = lo_rows.value;
 		   	
-				if((lo_rows.value<=0) && (lo_seating.value<=0) && (lv_startNo<=0) ) { 
+				if((lo_rows.value != "0")) { 
+					//alert("lo_rows.value != 0");
 		   			document.getElementById("nameRowInd2").checked = true;
-					document.getElementById("nameRowInd1").checked = false;
-					$("#nameRow").prop('disabled',true);//ไม่ปิด
+					document.getElementById("nameRowInd1").checked = false; 
+					//document.getElementById("nameRow").style.readonly = true;
 					$('#nameRowInd1').prop("disabled",true); 
 					$('#nameRowInd2').prop("disabled",true); 
-				}else if(lv_rows==0){ 
+					$("#nameRow").attr('disabled','disabled');
+				}else if(lv_rows== "0"){ 
+					//alert("lo_rows.lv_rows ==0");
+					document.getElementById("nameRowInd1").style.readonly = false;
+					document.getElementById("nameRowInd2").style.readonly = false;
 					document.getElementById("nameRowInd1").checked = true;
 					document.getElementById("nameRowInd2").checked = false;
 					document.getElementById("nameRow").value = ""; 
+				    document.getElementById("seating").value = "0";
+					document.getElementById("startNo").value = "0";
+					document.getElementById("totalSeating").value = "0";
 					$('#nameRow').removeProp("disabled"); 
-				}else if(lv_rows>0){ 
-					document.getElementById("nameRowInd2").checked = true;
-					document.getElementById("nameRowInd1").checked = false; 
-					generateNameOfRows();
-					$("#nameRow").attr('disabled','disabled');
-				}
+				} 
 				
 				lv_seating 			    = lo_seating.value;
-				lv_totalSeating			= lv_rows * lv_seating; 
-				
+				lv_totalSeating			= lv_rows * lv_seating;  
 				lo_totalSeating.value 	= lv_totalSeating;  
 				generateNameOfRows();
+				 
+				
 			}catch(e){
 				alert("lp_calTotalSeating :: " + e);
 			}
@@ -997,38 +1040,17 @@
 			var lv_nameTicket		= document.getElementById("nameTicket").value;
 			var lv_rows 			= document.getElementById("rows").value;
 			var lv_seating 			= document.getElementById("seating").value;
-			var lv_startNo 			= document.getElementById("startNo").value;
-			var lv_totalSeating 	= document.getElementById("totalSeating").value;
-			var lv_rowName 			= document.getElementById("nameRow").value;
+			var lv_startNo 			= document.getElementById("startNo").value; 
 			
-			var lv_userLevel        = document.getElementById("hidUserLevel").value;
-			
-			if(lv_userLevel == "9"){
-				if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="")){
-					$("#btnSave").attr('disabled','disabled');
-					$("#btnCancel").attr('disabled','disabled');
-					$("#btnAdd").attr('disabled','disabled');
-		 
-				}else{ 
+			//(lv_rows=="0") && (lv_seating=="0") && (lv_startNo=="0") &&  
+			if((lv_fieldZoneName!="") && (lv_nameTicket!="")){ 
 					$("#btnSave").removeAttr('disabled');
 		        	$("#btnCancel").removeAttr('disabled');
 		        	$("#btnAdd").removeAttr('disabled');
-		    		/* $("#btnSave").prop('disabled',false); 
-					$('#btnCancel').prop("disabled",false); 
-					$('#btnAdd').prop("disabled",false);  */
-				}
-			    
 			}else{
-				if((lv_rows<=0) || (lv_seating<=0) || (lv_totalSeating<=0) || (lv_startNo<=0) || (lv_fieldZoneName=="") 
-						|| (lv_nameTicket=="") || (lv_rowName=="")){
-					$("#btnSave").attr('disabled','disabled');
-					$("#btnCancel").attr('disabled','disabled');
-					$("#btnAdd").attr('disabled','disabled');
-				}else{
-				   	$("#btnSave").removeAttr('disabled');
-		        	$("#btnCancel").removeAttr('disabled');
-		        	$("#btnAdd").removeAttr('disabled');
-				}
+				$("#btnSave").attr('disabled','disabled');
+				$("#btnCancel").attr('disabled','disabled');
+				$("#btnAdd").attr('disabled','disabled');
 			}
 		}
   

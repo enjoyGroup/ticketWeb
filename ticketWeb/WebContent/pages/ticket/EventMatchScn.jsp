@@ -131,11 +131,8 @@
 			var row 		 	= null;
 			var cell1 		 	= null; 
 			var lo_hidSeason 	= null;
-			var lv_class		= "";
-			var lv_click		= "";
-			
-		
-			    
+			var lv_class		= ""; 
+			 
 			try{
 				lo_table 		= document.getElementById("result_season");
 				lv_length 		= lo_table.rows.length;
@@ -144,7 +141,7 @@
 				lo_hidSeason 	= document.getElementById("hidSeason");
 				
 				cell1.align		= "center"; 
-				cell1.title		= av_season; 
+			 	cell1.title		= av_season; 
 				
 				if(av_season==lo_hidSeason.value){
 					lv_class 	= "unLink";
@@ -156,11 +153,10 @@
 						
 			        };
 				}
-				
 				cell1.className	= lv_class; 
 				cell1.innerHTML = av_season; 
 				  
-				
+	//alert(lo_table.rows.length);			
 			}catch(e){
 				alert("lp_addTableSeason :: " + e);
 			}
@@ -240,7 +236,7 @@
 						        //  alert(JSON.stringify(jsonObj.detail));
 		            			
 		            			$.each(jsonObj.seasonList, function(idx, obj) {
-		            				//alert(obj.season);
+		            		//alert(obj.season);
 		            				lp_addTableSeason(obj.season);
 		            			});  
 		            			
@@ -722,9 +718,9 @@
 											<h4 class="panel-title">รายละเอียด Match การแข่งขัน</h4>
 										</div>
 										<div class="panel-body">
-						        			<table style='width:100%;' class='table'>
+						        			<table style='width:100%;'   border="0">
 												<tr>
-						              				<td style='width:12%;padding:0px !important'>
+						              				<%-- <td style='width:12%;padding:0px !important'>
 						              					<div style="min-width: 205px;">
 						              						<span class="label label-inverse" style="width: 100%;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
 																<B>ปีการแข่งขัน</B>
@@ -737,18 +733,17 @@
 												 					List<String>  list			=   eventMatchForm.getSeasonList();
 												 
 												  					if(list.size()>0){
-																	for(int i=0;i<list.size();i++){
+															for(int i=0;i<list.size();i++){
 													
 																%>
-															 	<tr>
-															 
+															 	<tr> 
 															 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
 															 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
 																			<%=list.get(i)%>
 																		</td>	
 															 		<%}else{%>
 															 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																		<%=list.get(i)%>
+																			<%=list.get(i)%>
 																		</td>
 															 		<%}%>
 																</tr> 
@@ -766,7 +761,42 @@
 																</tr>
 									 						</table>
 									 					</div>
-									 				</td>
+									 				</td> --%>
+									 				<td style='width:10%;padding:0px;vertical-align: top;'>   
+									                      <table class="table sim-panel-result-table" id="result_season">
+															<tr><th><B>ปีการแข่งขัน</B></th> </tr>
+															<%
+										 					List<String>  list			=   eventMatchForm.getSeasonList();
+										 
+										  					if(list.size()>0){
+																for(int i=0;i<list.size();i++){
+										
+															%>
+														 	<tr> 
+														 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
+														 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
+																		<%=list.get(i)%>
+																	</td>	
+														 		<%}else{%>
+														 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
+																		<%=list.get(i)%>
+																	</td>
+														 		<%}%>
+															</tr> 
+															<% } 
+											 				} %>
+								 							<tr>
+								 								<td align="center" class="link" onclick="lp_add_row_season();">
+								 									<a href="#">
+									 									<span>
+																			<B>+เพิ่มปีการแข่งขัน</B>
+																		</span>
+																		<br/>
+																	</a>
+																</td>
+															</tr>
+												 		</table> 
+									   				</td>
 						                   			<td style='width:80%;padding:0px !important;vertical-align: top;'>
 									                    <div style="padding:10px;" >
 									                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
