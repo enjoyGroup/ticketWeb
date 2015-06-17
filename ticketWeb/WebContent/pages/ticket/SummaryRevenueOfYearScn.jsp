@@ -14,6 +14,11 @@
 		.headerRow:hover{
 		    cursor: pointer;
 		}
+		
+		div.dhtmlx_window_active,
+		div.dhx_modal_cover_dv {
+    		position: fixed !important;
+		}	
 	</style>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	<script type="text/javascript">
@@ -112,8 +117,9 @@
 										<section class="panel panel-default">
 											<div class="panel-body" align="center">
 												<!-- Begin contents -->
-												<div  class="row col-md-6 col-md-offset-2 custyle">
-														<table class="table" id="tbl_result" style="width:50%;border:1px solid #ccc" border="1" bordercolor="#A2F9D4">
+												<div  class=" row col-md-6 col-md-offset-2 custyle">
+													<div class="datagrid" style="width:70%;border:1px solid #ccc">
+														<table class="tablex" id="tbl_result" style="" border="1">
 															<thead>
 																<tr style="background-color:#A2F9D4;">
 															    	<th style="width: 10%; text-align: center;">ลำดับ</th>
@@ -154,6 +160,7 @@
 																<%} %>
 															</tbody>
 														</table>
+													</div>
 													</div>
 													<div id="columnchart_values" class="row col-md-6 col-md-offset-2 custyle"></div>
 												<!-- End contents -->

@@ -1105,13 +1105,13 @@
    				<section class="hbox stretch">
 	 				<section id="content">
 						<section class="vbox">
-							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
-	            					<h4 class="alert-heading">กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</h4>
-	          					</div>
+							<section class="scrollable padder"> 
 								<div class="row" style="padding-left: 15px;">
 									<div class="col-sm-12">
 										<section class="panel panel-default">
+											<div class="alert alert-block alert-error fade in">
+	            								<h4 class="alert-heading">กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</h4> 
+	          								</div>
 											<div class="panel-body">
 						        				<table style='width:100%;' border="0">
 													<tr>
@@ -1121,7 +1121,7 @@
 					              								<td>   
 													                 <td style='width:10%;padding:0px !important'> 
 												                      <table class="table sim-panel-result-table" id="result_zone">
-																		<tr><th>Zone ที่นั่ง</th> </tr>
+																		<tr><th style="background-color:#90EBFC;">Zone ที่นั่ง</th> </tr>
 																		<%
 																		List<FieldzonemasterBean>  list	=  seatingDetailForm.getZoneMasterList();
 																		 
@@ -1358,7 +1358,8 @@
 				                   						</td>
 				                 					</tr>
 				             					</table>
-				             				</div>	
+				             				</div>
+				             					
 										</section>
 									</div>
 								</div>

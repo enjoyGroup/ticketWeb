@@ -707,18 +707,15 @@
    			<section class="hbox stretch">
 	 			<section id="content">
 					<section class="vbox">
-						<section class="scrollable padder">
-							<div class="alert alert-block alert-error fade in">
-				            	<h4 class="panel-title">เพิ่ม Match การแข่งขัน</h4>
-				          	</div>
-							<div class="row">
+						<section class="scrollable padder"> 
+							<div class="row" style="padding-left: 15px;">
 								<div class="col-sm-12">
 									<section class="panel panel-info">
-										<div class="panel-heading">
+										<div class="alert alert-block alert-error fade in"> 
 											<h4 class="panel-title">รายละเอียด Match การแข่งขัน</h4>
 										</div>
 										<div class="panel-body">
-						        			<table style='width:100%;'   border="0">
+						        			<table style='width:90%;'   border="0">
 												<tr>
 						              				<%-- <td style='width:12%;padding:0px !important'>
 						              					<div style="min-width: 205px;">
@@ -764,7 +761,7 @@
 									 				</td> --%>
 									 				<td style='width:10%;padding:0px;vertical-align: top;'>   
 									                      <table class="table sim-panel-result-table" id="result_season">
-															<tr><th><B>ปีการแข่งขัน</B></th> </tr>
+															<tr><th  style="background-color:#90EBFC;"><B>ปีการแข่งขัน</B></th> </tr>
 															<%
 										 					List<String>  list			=   eventMatchForm.getSeasonList();
 										 
@@ -890,7 +887,7 @@
 				</section>  
 				<a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
 			</section>
- 		</section>
+  
 	</section>
 	<div align="center" class="FreezeScreen" style="display:none;">
         <center>

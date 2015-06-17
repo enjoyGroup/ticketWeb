@@ -317,30 +317,34 @@
 													<tr>
 														<td align="left" valign="top">
 															<div style="width:200px;height:30px;background-color: rgb(68, 194, 122);border-left-width: 5px;-webkit-border-radius: 4px;border-left-color: #2b542c;" align="center" class="error-notice" >
-																<span class='topic-head'><B>ฤดูกาลแข่งขัน</B></span><br/>
-																<table class="table sim-panel-result-table" id="seasonTab" border="0" style="width:200px;" align="left">
-																	<%
-																	List<String>  list			=   detailRevenueOfYearForm.getSeasonList();
-																	 
-																	if(list.size()>0){
-																		for(int i=0;i<list.size();i++){
-																		
-																		%>
-																		 <tr class="oaerror success">
+																<span span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																	<B>ฤดูกาลแข่งขัน</B>
+																</span><br/>
+																<div  id='cssmenu' style="min-height:auto;background:#000000;">
+																	<table class="table sim-panel-result-table" id="seasonTab" style="margin-top: 0 !important;" >
+																		<%
+																		List<String>  list			=   detailRevenueOfYearForm.getSeasonList();
 																		 
-																		 	<%if(list.get(i).equals(detailRevenueOfYearForm.getSeason())){%>
-																		 		<td class="unLink" align="center" title="<%=list.get(i)%>" >
-																					<%=list.get(i)%>
-																				</td>	
-																		 	<%}else{%>
-																		 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																					<%=list.get(i)%>
-																				</td>
-																		 	<%}%>
-																		</tr> 
-																		<% } 
-																	} %>
-																</table>
+																		if(list.size()>0){
+																			for(int i=0;i<list.size();i++){
+																			
+																			%>
+																			 <tr class="oaerror success">
+																			 
+																			 	<%if(list.get(i).equals(detailRevenueOfYearForm.getSeason())){%>
+																			 		<td class="unLink"align="center" title="<%=list.get(i)%>">
+																						<%=list.get(i)%>
+																					</td>	
+																			 	<%}else{%>
+																			 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>" >
+																						<%=list.get(i)%>
+																					</td>
+																			 	<%}%>
+																			</tr> 
+																			<% } 
+																		} %>
+																	</table>
+																</div>
 															</div>
 														</td>
 														<td align="left" valign="top">
@@ -349,44 +353,46 @@
             														<div id="seasonTitle" class="panel-heading">
 																		<h6 class="panel-title">ปี : <%=detailRevenueOfYearForm.getSeason() %></h6>
 																	</div>
-																	<table class="table" id="resultTab" style="width:100%;">
-																		<thead>
-																			<tr id="headRow">
-																				<th width="10%" style="text-align: center;"><B>ลำดับ</B></th>
-																				<th width="30%" style="text-align: center;"><B>Match การแข่งขัน</B></th>
-																				<th width="30%" style="text-align: center;"><B>จำนวนคนเข้าดู</B></th>
-																				<th width="30%" style="text-align: center;"><B>จำนวนเงิน</B></th>
-																			</tr>
-																		</thead>
-																		<tbody>
-																		<%
-																		List<DetailRevenueOfYearBean>  	detailList			= detailRevenueOfYearForm.getDetailList();
-																		DetailRevenueOfYearBean			detail				= null;
-																		int								seq					= 0;
-																		 
-																		if(detailList.size()>0){
-																			for(int i=0;i<detailList.size();i++){
-																				detail = detailList.get(i);
-																				seq++;
-																			%>
-																			 <tr class="rowSelect" onclick="lp_getReportByTicketType('<%=detailRevenueOfYearForm.getSeason()%>', '<%=detail.getMatchId()%>', '<%=detail.getAwayTeamNameTH()%>');">
-																				<td align="center">
-																					<B><%=seq%></B>
-																				</td>
-																				<td align="center">
-																					<%=detail.getAwayTeamNameTH()%>
-																				</td>
-																				<td align="center">
-																					<%=detail.getTotalSeating()%>
-																				</td>
-																				<td align="right">
-																					<%=EnjoyUtils.convertFloatToDisplay(detail.getBookingPrices(), 2) %>
-																				</td>
-																			</tr> 
-																			<% } 
-																		} %>
-																	</tbody>
-																</table>
+																	<div class="datagrid">
+																		<table class="table" id="resultTab" style="width:100%;">
+																				<thead>
+																					<tr id="headRow">
+																						<th width="10%" style="text-align: center;"><B>ลำดับ</B></th>
+																						<th width="30%" style="text-align: center;"><B>Match การแข่งขัน</B></th>
+																						<th width="30%" style="text-align: center;"><B>จำนวนคนเข้าดู</B></th>
+																						<th width="30%" style="text-align: center;"><B>จำนวนเงิน</B></th>
+																					</tr>
+																				</thead>
+																				<tbody>
+																				<%
+																				List<DetailRevenueOfYearBean>  	detailList			= detailRevenueOfYearForm.getDetailList();
+																				DetailRevenueOfYearBean			detail				= null;
+																				int								seq					= 0;
+																				 
+																				if(detailList.size()>0){
+																					for(int i=0;i<detailList.size();i++){
+																						detail = detailList.get(i);
+																						seq++;
+																					%>
+																					 <tr class="rowSelect" onclick="lp_getReportByTicketType('<%=detailRevenueOfYearForm.getSeason()%>', '<%=detail.getMatchId()%>', '<%=detail.getAwayTeamNameTH()%>');">
+																						<td align="center">
+																							<B><%=seq%></B>
+																						</td>
+																						<td align="center">
+																							<%=detail.getAwayTeamNameTH()%>
+																						</td>
+																						<td align="center">
+																							<%=detail.getTotalSeating()%>
+																						</td>
+																						<td align="right">
+																							<%=EnjoyUtils.convertFloatToDisplay(detail.getBookingPrices(), 2) %>
+																						</td>
+																					</tr> 
+																					<% } 
+																				} %>
+																			</tbody>
+																		</table>
+																	</div>
 																</div>
 															</div>
 															<div id="piechart" style="width: 900px; height: 500px;"></div>
