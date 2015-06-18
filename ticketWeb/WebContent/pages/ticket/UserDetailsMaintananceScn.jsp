@@ -494,7 +494,8 @@
 								        			}
 								        			
 								        		} %>
-										</table>	                  
+										</table>	
+										<br/>              
 									</div>
 									<div>
 										<span class="pull-right">

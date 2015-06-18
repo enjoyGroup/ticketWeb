@@ -1,6 +1,7 @@
 package th.go.ticket.web.enjoy.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -175,10 +176,13 @@ public class DisplayMatchDetailServlet extends EnjoyStandardSvc {
 			
 			obj 					= new JSONObject();
 			matchJSONArray	 		= new JSONArray();
-			fieldZoneNameList		= this.form.getFieldZoneNameList();
-			detailOfMatchMap		= this.form.getDetailOfMatchMap();
-			sumTatalMoneyMap		= this.form.getSumTatalMoneyMap();
-			headerTicketTypeList	= this.dao.genHeaderTicketType(matchId);//gen header
+//			fieldZoneNameList		= this.form.getFieldZoneNameList();
+//			detailOfMatchMap		= this.form.getDetailOfMatchMap();
+//			sumTatalMoneyMap		= this.form.getSumTatalMoneyMap();
+			fieldZoneNameList		= new ArrayList<String>();
+			detailOfMatchMap		= new Hashtable();
+			sumTatalMoneyMap		= new Hashtable();
+			headerTicketTypeList	= this.dao.genHeaderTicketType(matchId, season);//gen header
 			matchJSONArray			= new JSONArray();
 			
 			this.form.setAwayTeamName("ปี : " + season + " แข่งขันกับ " + awayTeamName);
@@ -189,7 +193,7 @@ public class DisplayMatchDetailServlet extends EnjoyStandardSvc {
 //			logger.info("[onLoad] Header.size :: " + this.form.getHeaderTicketTypeList().size());
 			
 			/*Begin set detail*/
-			detailOfMatchList = this.dao.detailOfMatch(matchId);
+			detailOfMatchList = this.dao.detailOfMatch(matchId, season);
 			
 			for(DisplayMatchDetailBean beanDetail:detailOfMatchList){
 				
@@ -234,6 +238,10 @@ public class DisplayMatchDetailServlet extends EnjoyStandardSvc {
 			
 			obj.put("fieldZoneNameList", 			matchJSONArray);
 			/*End เก็บ json object season*/
+			
+			this.form.setFieldZoneNameList(fieldZoneNameList);
+			this.form.setDetailOfMatchMap(detailOfMatchMap);
+			this.form.setSumTatalMoneyMap(sumTatalMoneyMap);
 			
 			this.form.setJsonString(obj.toString());
 			

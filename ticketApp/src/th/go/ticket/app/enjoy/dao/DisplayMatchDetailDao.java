@@ -125,7 +125,7 @@ public class DisplayMatchDetailDao {
 		return returnList;
 	}
 	
-	public List<DisplayMatchDetailBean> genHeaderTicketType(String matchId) throws EnjoyException{
+	public List<DisplayMatchDetailBean> genHeaderTicketType(String matchId, String season) throws EnjoyException{
 		logger.info("[genHeaderTicketType][Begin]");
 		
 		List<DisplayMatchDetailBean> 	returnList 							= null;
@@ -146,7 +146,9 @@ public class DisplayMatchDetailDao {
 								+ " FROM ticketorder a, bookingtype b, eventmatch s"
 								+ " WHERE a.bookingTypeId 	= b.bookingTypeId"
 									+ " and a.matchId 		= " + matchId
+									+ " and a.season 		= " + season
 									+ " and s.matchId 		= a.matchId"
+									+ " and s.season 		= a.season"
 									+ " and a.ticketStatus 	<> 'R'"
 								+ " GROUP BY a.matchId, b.bookingTypeName";
 			query			= session.createSQLQuery(hql);
@@ -157,6 +159,7 @@ public class DisplayMatchDetailDao {
 			
 			list		 	= query.list();
 			
+			logger.info("[detailRevenueByYear] hql 			:: " + hql);
 			for(Object[] row : list){
 				returnObj = new DisplayMatchDetailBean();
 				
@@ -192,7 +195,7 @@ public class DisplayMatchDetailDao {
 		return returnList;
 	}
 	
-	public List<DisplayMatchDetailBean> detailOfMatch(String matchId) throws EnjoyException{
+	public List<DisplayMatchDetailBean> detailOfMatch(String matchId, String season) throws EnjoyException{
 		logger.info("[detailOfMatch][Begin]");
 		
 		List<DisplayMatchDetailBean> 	returnList 							= null;
@@ -223,6 +226,8 @@ public class DisplayMatchDetailDao {
 									+ " and a.bookingTypeId = e.bookingTypeId"
 									+ " and a.season 		= d.season"
 									+ " and a.matchId 		= '" + matchId + "'"
+									+ " and a.season 		= '" + season + "'"
+									+ " and a.ticketStatus 	<> 'R'"
 								+ " GROUP BY a.matchId, b.fieldZoneName, e.bookingTypeId, e.bookingTypeName"
 								+ " ORDER BY a.matchId desc, b.fieldZoneName desc, e.bookingTypeId desc, e.bookingTypeName desc";
 			query			= session.createSQLQuery(hql);
@@ -236,6 +241,7 @@ public class DisplayMatchDetailDao {
 			
 			list		 	= query.list();
 			
+			logger.info("[detailOfMatch] hql 			:: " + hql);
 			for(Object[] row : list){
 				returnObj = new DisplayMatchDetailBean();
 				

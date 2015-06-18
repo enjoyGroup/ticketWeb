@@ -184,7 +184,7 @@
 																	}else{
 															%>
 																		<td style="text-align: center;">0</td>
-																		<td style="text-align: center;">0.00</td>
+																		<td style="text-align: right;">0.00</td>
 															<%
 																	}
 																}

@@ -21,14 +21,17 @@
 			
 			$('#menu1').ptMenu();
 			$(window).scroll(function(){//alert($(window).scrollTop());
+				
+				h = $(document).height();
+				
 		        if($(window).scrollTop() > 10){
 		        	document.getElementById("m1").className 			= "fixs";
 		        	document.getElementById("headwrap").style.display 	= "none";
-		        	$('body').css('height', h);
 		        }else{
 		        	document.getElementById("m1").className 			= "";
 		        	document.getElementById("headwrap").style.display 	= "block";
 		        }
+		        $('body').css('height', h);
 		    });
 			
 			$('#logOut').click(function(){ 

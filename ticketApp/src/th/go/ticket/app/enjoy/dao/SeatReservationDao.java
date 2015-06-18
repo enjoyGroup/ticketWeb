@@ -133,7 +133,7 @@ public class SeatReservationDao {
 		return returnObj;
 	}
 	
-	public SeatReservationBean getHeaderTicketReservation(String matchId, String fieldZoneId) throws EnjoyException{
+	public SeatReservationBean getHeaderTicketReservation(String matchId, String fieldZoneId, String season) throws EnjoyException{
 		logger.info("[getHeaderTicketReservation][Begin]");
 		
 		SeatReservationBean				returnObj							= null;
@@ -151,6 +151,7 @@ public class SeatReservationDao {
 			hql				= "select b.fieldZoneName, b.fieldZoneNameTicket, a.awayTeamNameTH, a.awayTeamNameEN, a.season,  b.fieldZoneName"
 								+ " from eventmatch a, fieldzonemaster b"
 								+ " where a.matchId 		= '" + matchId + "'"
+									+ " and a.season 		= '" + season + "'"
 									+ " and b.fieldZoneId 	= '" + fieldZoneId + "'";
 			query			= session.createSQLQuery(hql);
 			

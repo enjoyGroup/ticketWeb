@@ -121,7 +121,8 @@
 			            success: function(data){
 		            		gp_progressBarOff();
 	            			alert("บันทึกข้อมูลเรียบร้อยแล้ว");
-	            			window.location.replace('<%=pagesURL%>/CancelSeatScn.jsp');
+	            			$("#btnSearch").click();
+	            			<%--window.location.replace('<%=pagesURL%>/CancelSeatScn.jsp');--%>
 			            }
 			        });
 			    }catch(e){

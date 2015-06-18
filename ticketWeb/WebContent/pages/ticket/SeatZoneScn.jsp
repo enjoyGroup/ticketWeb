@@ -70,8 +70,8 @@
 				params		= "&fieldZoneId=" 			+ av_fieldZoneId 
 							//+ "&fieldZoneName=" 		+ av_fieldZoneName 
 							//+ "&fieldZoneNameTicket=" 	+ av_fieldZoneNameTicket 
-							+ "&matchId=" 				+ $("#matchId").val(); 
-							//+ "&season=" 				+ $("#season").val()
+							+ "&matchId=" 				+ $("#matchId").val()
+							+ "&season=" 				+ $("#season").val();
 							//+ "&awayTeamNameTH=" 		+ $("#awayTeamNameTH").val();
 				//windowName 	= "booking" + $("#matchId").val() + av_fieldZoneId;
 				

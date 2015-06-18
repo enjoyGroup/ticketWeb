@@ -147,10 +147,14 @@
 		            				lp_addTableSeason(obj.season);
 		            			});
 		            			
-		            			$.each(jsonObj.detail, function(idx, obj) {
-		            				//alert(obj.awayTeamName + " " + obj.totalSeating + " " + obj.bookingPrices);
-		            				lp_addTableResultTab(index++, obj.awayTeamName, obj.totalSeating, obj.bookingPrices, obj.matchId);
-		            			});
+		            			if(jsonObj.detail.length <= 0){
+		            				lp_addTableBlank();
+		            			}else{
+			            			$.each(jsonObj.detail, function(idx, obj) {
+			            				//alert(obj.awayTeamName + " " + obj.totalSeating + " " + obj.bookingPrices);
+			            				lp_addTableResultTab(index++, obj.awayTeamName, obj.totalSeating, obj.bookingPrices, obj.matchId);
+			            			});
+		            			}
 		            			
 		            			//วาดกราฟ
 		            			gv_dataFlow = JSON.stringify(jsonObj);
@@ -207,6 +211,7 @@
 				lo_table 		= document.getElementById("seasonTab");
 				lv_length 		= lo_table.rows.length;
 				row 			= lo_table.insertRow(lv_length);
+				row.className	= "oaerror success";
 				cell1 			= row.insertCell(0);
 				lo_hidSeason 	= document.getElementById("hidSeason");
 				
@@ -274,6 +279,32 @@
 				
 			}catch(e){
 				alert("lp_addTableResultTab :: " + e);
+			}
+			
+		}
+		
+		function lp_addTableBlank(){
+			var lo_table		= null;
+			var lv_length 	 	= null;
+			var row 		 	= null;
+			var cell1 		 	= null;
+			
+			try{
+				lo_table 		= document.getElementById("resultTab");
+				lv_length 		= lo_table.rows.length;
+				row 			= lo_table.insertRow(lv_length);
+				
+				cell1 			= row.insertCell(0);
+				
+				cell1.align		= "center";
+				cell1.colSpan	= "4";
+				
+				cell1.innerHTML = "ไม่พบข้อมูลที่ระบุ";
+				
+				
+				
+			}catch(e){
+				alert("lp_addTableBlank :: " + e);
 			}
 			
 		}
@@ -389,7 +420,11 @@
 																						</td>
 																					</tr> 
 																					<% } 
-																				} %>
+																				}else{ %>
+																					<tr>
+																						<td align="center" colspan="4">ไม่พบข้อมูลที่ระบุ</td>
+																					</tr>
+																				<%} %>
 																			</tbody>
 																		</table>
 																	</div>

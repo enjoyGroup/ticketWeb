@@ -107,6 +107,7 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 		
 		String							fieldZoneId				= null;
 		String							matchId					= null;
+		String							season					= null;
 		SeatReservationBean				seatReservationBean 	= null;
 		String[]						rowNames				= null;
 		String							rowName					= null;
@@ -130,13 +131,14 @@ public class SeatReservationServlet extends EnjoyStandardSvc {
 			
 			fieldZoneId 			= EnjoyUtils.nullToStr(this.request.getParameter("fieldZoneId"));
 			matchId 				= EnjoyUtils.nullToStr(this.request.getParameter("matchId"));
+			season 					= EnjoyUtils.nullToStr(this.request.getParameter("season"));
 			rowsMap					= this.form.getRowsMap();
 			mapBookingType			= this.form.getMapBookingType();
 			
 			logger.info("[getZoneDetail] fieldZoneId 				:: " + fieldZoneId);
 			logger.info("[getZoneDetail] matchId 					:: " + matchId);
 			
-			headerTicketReservBean = this.dao.getHeaderTicketReservation(matchId, fieldZoneId);
+			headerTicketReservBean = this.dao.getHeaderTicketReservation(matchId, fieldZoneId, season);
 			
 			this.form.setFieldZoneId(fieldZoneId);
 			this.form.setFieldZoneName(headerTicketReservBean.getFieldZoneName());
