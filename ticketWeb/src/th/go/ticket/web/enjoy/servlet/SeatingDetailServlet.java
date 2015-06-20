@@ -486,7 +486,7 @@ public class SeatingDetailServlet extends EnjoyStandardSvc {
 				bean.setStartSeatingNo(startSeating); 
 				System.out.println("SeatingDetailBean:"+bean.toString());	
 				
-				 
+			 
 				seqLast = this.dao.selectMaxSeq(hidZoneMasterId);
 				System.out.println("seqLast :: "+seqLast);
 				newSeq  = seqLast;

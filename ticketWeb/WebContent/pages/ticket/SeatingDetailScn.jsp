@@ -60,35 +60,7 @@
 			gv_service 	= "service=" + $('#service').val();    
       	    
 			lp_readOnly_field();
-		/* 	
-			if($("#hidUserLevel").val()  == "9"){
-				if(($("#fieldZoneName").val()=="") || ($("#nameTicket").val()=="")||  ($("#nameRow").val()=="")){
-					$("#btnSave").prop('disabled',true); 
-					$('#btnCancel').prop("disabled",true); 
-					$('#btnAdd').prop("disabled",true); 
-				}else{ 
-		        	$("#btnSave").removeAttr('disabled');
-		        	$("#btnCancel").removeAttr('disabled');
-		        	$("#btnAdd").removeAttr('disabled');
-		        }
-			    
-			}else{
-				if(($("#rows").val() <=0) || ($("#seating").val()<=0) 
-						|| ($("#totalSeating").val()<=0) || ($("#startNo").val()<=0)  
-						|| ($("#fieldZoneName").val() =="") 
-						|| ($("#nameTicket").val() =="") 
-						|| ($("#nameRow").val() ==""))
-				{
-					$("#btnSave").attr('disabled','disabled');
-					$("#btnCancel").attr('disabled','disabled');
-					$("#btnAdd").attr('disabled','disabled');
-				}else{ 
-		        	$("#btnSave").removeAttr('disabled');
-		        	$("#btnCancel").removeAttr('disabled');
-		        	$("#btnAdd").removeAttr('disabled');
-		        }
-			}
-			 */
+ 
 	        
 			$(".bookingTypeNameClass").live("focus",function(){
 				$(this).autocomplete({
@@ -188,6 +160,20 @@
 					alert("lp_readOnly_field :: " + e); 
 				}
 		   }
+			
+			  if(document.getElementById("rows").value == 0){
+	        	   $("#nameRowInd1").attr('disabled','disabled');
+	        	   $("#nameRowInd2").attr('disabled','disabled');
+	        	   $("#nameRow").attr('disabled','disabled');
+	          }else{
+	        		$("#nameRowInd1").removeAttr('disabled');
+		        	$("#nameRowInd2").removeAttr('disabled'); 
+	          }
+			  
+			  if(document.getElementById("nameRowInd1").checked == true){
+				   $("#nameRow").attr('disabled','disabled'); 
+			  }
+         
 
 		}
 		
@@ -330,10 +316,20 @@
   		    document.getElementById("totalSeating").value = 0;
 			document.getElementById("nameRow").value ="";
 			document.getElementById("nameRowInd1").checked = true; 
+			document.getElementById("nameRow").style.readonly = false;
+			document.getElementById("nameRowInd1").style.readonly = false;
+			document.getElementById("nameRowInd2").style.readonly = false;
     		lp_deleteTab("result_zone_detail");
     		lp_clear_zone(); 
    
-		
+	   		  if(document.getElementById("rows").value == 0){
+	        	   $("#nameRowInd1").attr('disabled','disabled');
+	        	   $("#nameRowInd2").attr('disabled','disabled');
+	        	   $("#nameRow").attr('disabled','disabled');
+	          }else{
+	        		$("#nameRowInd1").removeAttr('disabled');
+		        	$("#nameRowInd2").removeAttr('disabled'); 
+	          } 
 		}
 		
        function lp_changeZone(av_zone,av_zoneId){
@@ -442,6 +438,15 @@
        		   }else if(av_ind==2){
        			 	ind[1].checked = true; 
        		   }  
+       		   
+       		  if(document.getElementById("rows").value == 0){
+	        	   $("#nameRowInd1").attr('disabled','disabled');
+	        	   $("#nameRowInd2").attr('disabled','disabled');
+	        	   $("#nameRow").attr('disabled','disabled');
+	          }else{
+	        		$("#nameRowInd1").removeAttr('disabled');
+		        	$("#nameRowInd2").removeAttr('disabled'); 
+	          } 
        		    
 			}catch(e){
 				alert("lp_addTableResultTab :: " + e);
@@ -813,20 +818,33 @@
 			var lv_flag1           = false;
 		    var lv_flag2           = false;
 			  
-			//if(lv_userLevel == "9"){
-				/* if((lv_fieldZoneName=="") || (lv_nameTicket=="") || (lv_rowName=="") 
-						|| ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
-					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
+		 
+			if((lv_rows<=0) && (lv_seating<=0) && (lv_totalSeating<=0) && (lv_startNo<=0) && (lv_fieldZoneName=="") && (lv_nameTicket=="") 
+					&& ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
+				alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
+				return false;
+			}
+		 
+		    var lv_value   = null;
+		 
+		    if(lv_rows != 0){ 
+	        	if(lv_rowName == null || lv_rowName == ""){
+	        		alert("จำนวนของชื่อแถวและจำนวนแถวจะต้องเท่ากัน");
 					return false;
-				} */
-			    
-			//}else{
-				if((lv_rows<=0) && (lv_seating<=0) && (lv_totalSeating<=0) && (lv_startNo<=0) && (lv_fieldZoneName=="") && (lv_nameTicket=="") 
-						&& ((document.getElementById("nameRowInd1").checked==false) && (document.getElementById("nameRowInd2").checked==false))){
-					alert("กรุณากรอกรายละเอียด zone ให้ครบถ้วน");
-					return false;
-				}
-			//}
+	        	}
+	        	
+	        	if(lv_rowName != null && lv_rowName != ""){ 
+	        		var parts = lv_rowName.split(",");
+	        	 //alert("parts:"+parts.length);	
+	   				
+	        		if(parts.length != lv_rows){
+	        			alert("จำนวนของชื่อแถวและจำนวนแถวจะต้องเท่ากัน");
+						return false;
+	        		}
+	        	}
+				 
+			}
+			 
 		
 			try{    
 			//alert(lv_length);
@@ -883,8 +901,7 @@
 			lo_price     = document.getElementsByName("bookingTypePrice");
 			lv_price     = lo_price[lv_index-1].value;
 			lv_userLevel = document.getElementById("hidUserLevel").value;
-         //alert(lv_userLevel);	
-         //alert(lv_price);
+    
 			if(lv_price<= "0.00" && lv_userLevel != "9"){ 
 				alert("Admin เท่านั้นที่สามารถใส่เงินเป็น 0 ได้");
 				return;
@@ -910,18 +927,8 @@
 				lv_startNo              = document.getElementById("startNo").value; 
 				lv_rows 			    = lo_rows.value;
 		   	
-				if((lo_rows.value != "0")) { 
-					//alert("lo_rows.value != 0");
-		   			document.getElementById("nameRowInd2").checked = true;
-					document.getElementById("nameRowInd1").checked = false; 
-					//document.getElementById("nameRow").style.readonly = true;
-					$('#nameRowInd1').prop("disabled",true); 
-					$('#nameRowInd2').prop("disabled",true); 
-					$("#nameRow").attr('disabled','disabled');
-				}else if(lv_rows== "0"){ 
-					//alert("lo_rows.lv_rows ==0");
-					document.getElementById("nameRowInd1").style.readonly = false;
-					document.getElementById("nameRowInd2").style.readonly = false;
+				 if(lv_rows== "0"){ 
+					//alert("lo_rows.lv_rows ==0"); 
 					document.getElementById("nameRowInd1").checked = true;
 					document.getElementById("nameRowInd2").checked = false;
 					document.getElementById("nameRow").value = ""; 
@@ -929,6 +936,9 @@
 					document.getElementById("startNo").value = "0";
 					document.getElementById("totalSeating").value = "0";
 					$('#nameRow').removeProp("disabled"); 
+				}else{
+					$("#nameRowInd1").removeAttr('disabled');
+		        	$("#nameRowInd2").removeAttr('disabled'); 
 				} 
 				
 				lv_seating 			    = lo_seating.value;
@@ -949,7 +959,10 @@
 	 
 			 if(lo_nameInd2.checked == true){  
 				document.getElementById("nameRow").value = ""; 
-			}else if(lo_nameInd1.checked == true){  
+				$("#nameRow").removeAttr('disabled');
+				document.getElementById("nameRow").style.readonly = false;
+			}else if(lo_nameInd1.checked == true){ 
+				$("#nameRow").attr('disabled','disabled');
 				generateNameOfRows(); 
 			} 
 		}
@@ -959,16 +972,21 @@
 		        var nameOfRow   = "";
 		        var lv_rows	    = null;
 		        var lo_nameRow  = null;
-		  
+		        document.getElementById("nameRowInd2").checked = false;
+				document.getElementById("nameRowInd1").checked = true; 
+				
 		        try{ 
 		           name         = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 		           lv_rows	    = document.getElementById("rows").value;
 		           lo_nameRow   = document.getElementById("nameRow");
-		           
-		           if(lv_rows > 0 && lv_rows <=26){
-		   			document.getElementById("nameRowInd2").checked = false;
-					document.getElementById("nameRowInd1").checked = true;
-		            // alert(lv_rows);
+		          
+		           if(lv_rows == 0){
+		        	   $("#nameRowInd1").attr('disabled','disabled');
+		        	   $("#nameRowInd2").attr('disabled','disabled');
+		        	   $("#nameRow").attr('disabled','disabled');
+		              return;
+		           }else if(lv_rows > 0 && lv_rows <=26){ 
+		            
 		        	  for(var i = 0 ; i < lv_rows ; i ++){
 		                  //alert(name[i]);
 		        		  if(i==(lv_rows-1)){
@@ -980,11 +998,45 @@
 		        
 		        	  lo_nameRow.value = nameOfRow; 
 		           }else{
-		        	   $('#nameRow').prop("disabled",false); 
+		        	  //var count = Math.ceil(lv_rows/26);
+		        	  var new_lows  = lv_rows - 26;
+		        	  var count = Math.ceil(new_lows/26);
+		        	  var count_all  = 0;
+		        	  var nameOfRow1 = "";
+		        	  var nameOfRow2 = "";
+		        	  
+		        	 //alert("new_lows : "+new_lows);
+		        	 //alert("count : "+count); 
+		        	  
+		        	  for(var i = 0 ; i < 26 ; i ++){
+		        		 nameOfRow1 += name[i] +","; 
+		        	  }
+		        	    
+		      	  	  for(var a = 0 ; a < count ;a++){  
+		        	    for(var b = 0 ; b < new_lows ;b ++){ 
+		        	    	
+		        	    	if(count_all != new_lows){  
+			                     if(b == 26){ 
+			                    	 break;
+			        	         } 
+			                     nameOfRow2 = nameOfRow2 + ","+name[a]+name[b]; 
+		        	    		 count_all++;
+			                   
+		        	        } 
+		                      
+	        		  	}   
+	        			 
+	        		  }
+		        	  //alert("count_all : "+count_all); 	  
+		        	  var nameTotal = nameOfRow1 + nameOfRow2; 
+		        	  lo_nameRow.value = nameTotal;
+		        	 
 		           }
 		        } catch (e) {
 		            alert("generateNameOfRows : "+e);
 		        }
+		        
+		        $("#nameRow").attr('disabled','disabled');
 		            
 		    }
 		
@@ -1080,7 +1132,7 @@
 			
 			if((lv_rows<=0) && (lv_seating<=0) && (lv_startNo<=0) ) {
 				$("#nameRow").attr('disabled','disabled'); 
-				$("#nameRowInd").attr('disabled','disabled'); 
+				//$("#nameRowInd").attr('disabled','disabled'); 
 	   			document.getElementById("nameRowInd2").checked = true;
 				document.getElementById("nameRowInd1").checked = falsse;
 			} 

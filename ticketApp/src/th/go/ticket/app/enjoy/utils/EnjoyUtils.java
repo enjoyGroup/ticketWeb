@@ -102,8 +102,8 @@ public class EnjoyUtils {
             }else{
                 dt      = new SimpleDateFormat(av_currFormat); 
                 date    = dt.parse(av_date); 
-//                dt1     = new SimpleDateFormat(av_toFormat,Locale.US);// เธ�.เธจ.
-                dt1     = new SimpleDateFormat(av_toFormat, new Locale("th", "TH"));//เธ�.เธจ.
+//                dt1     = new SimpleDateFormat(av_toFormat,Locale.US);// เน€เธ�๏ฟฝ.เน€เธ�เธ�.
+                dt1     = new SimpleDateFormat(av_toFormat, new Locale("th", "TH"));//เน€เธ�๏ฟฝ.เน€เธ�เธ�.
                 
                 dateFormat = dt1.format(date);
             }
@@ -218,8 +218,8 @@ public class EnjoyUtils {
         String st_ch;
         int idx,Digit;
 
-        String[] GetNum   = { "เธซเธ�เธถเน�เธ�","เธชเธญเธ�","เธชเธฒเธก","เธชเธตเน�","เธซเน�เธฒ","เธซเธ�","เน€เธ�เน�เธ”","เน�เธ�เธ”","เน€เธ�เน�เธฒ","เธขเธตเน�","เน€เธญเน�เธ”" };
-        String[] GetDigit = { "","เธชเธดเธ�","เธฃเน�เธญเธข","เธ�เธฑเธ�","เธซเธกเธทเน�เธ�","เน�เธชเธ�","เธฅเน�เธฒเธ�"};
+        String[] GetNum   = { "เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ–เน€เธ�๏ฟฝเน€เธ�๏ฟฝ","เน€เธ�เธ�เน€เธ�เธ�เน€เธ�๏ฟฝ","เน€เธ�เธ�เน€เธ�เธ’เน€เธ�เธ�","เน€เธ�เธ�เน€เธ�เธ•เน€เธ�๏ฟฝ","เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ’","เน€เธ�เธ�เน€เธ�๏ฟฝ","เน€เธ�โ�ฌเน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�โ€�","เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�โ€�","เน€เธ�โ�ฌเน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�เธ’","เน€เธ�เธ�เน€เธ�เธ•เน€เธ�๏ฟฝ","เน€เธ�โ�ฌเน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�โ€�" };
+        String[] GetDigit = { "","เน€เธ�เธ�เน€เธ�เธ”เน€เธ�๏ฟฝ","เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ�","เน€เธ�๏ฟฝเน€เธ�เธ‘เน€เธ�๏ฟฝ","เน€เธ�เธ�เน€เธ�เธ�เน€เธ�เธ—เน€เธ�๏ฟฝเน€เธ�๏ฟฝ","เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝ","เน€เธ�เธ…เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�๏ฟฝ"};
 
         CurText = amt;
         Digit = 0;
@@ -227,14 +227,14 @@ public class EnjoyUtils {
         {
            if ( Digit == 6 ){
               Digit = 0;
-              Thai_CurText = "เธฅเน�เธฒเธ�" + Thai_CurText;
+              Thai_CurText = "เน€เธ�เธ…เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�๏ฟฝ" + Thai_CurText;
            }
 
            ch      = CurText.substring(idx-1,idx).toCharArray()[0];
            st_ch   = CurText.substring(idx-1,idx);
            switch (ch){
               case '.' :  Digit = 0;
-                          Thai_CurText = "เธ�เธฒเธ—" + Thai_CurText;
+                          Thai_CurText = "เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�โ€”" + Thai_CurText;
                           break;
               case ',' :  break;
 
@@ -283,12 +283,12 @@ public class EnjoyUtils {
         int pos_dot = CurText.indexOf(".");
         if (Integer.parseInt(CurText.substring(pos_dot+1,CurText.length())) == 0 ){
         	if(amt.equals("0.00")){
-        		Thai_CurText = "เธจเธนเธ�เธขเน�" + Thai_CurText + "เธ–เน�เธงเธ�";
+        		Thai_CurText = "เน€เธ�เธ�เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝ" + Thai_CurText + "เน€เธ�โ€“เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝ";
         	}else{
-        		Thai_CurText = Thai_CurText + "เธ–เน�เธงเธ�";
+        		Thai_CurText = Thai_CurText + "เน€เธ�โ€“เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝ";
         	}
         }else{
-        	Thai_CurText = Thai_CurText + "เธชเธ•เธฒเธ�เธ�เน�";
+        	Thai_CurText = Thai_CurText + "เน€เธ�เธ�เน€เธ�โ€ขเน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�๏ฟฝ";
         }
         return Thai_CurText;
     }
@@ -302,23 +302,23 @@ public class EnjoyUtils {
         try {
         	if (!dateThai.equals(""))
 			{	
-	            tblMonth.put("1", "เธกเธ�เธฃเธฒเธ�เธก");
-	            tblMonth.put("2", "เธ�เธธเธกเธ เธฒเธ�เธฑเธ�เธ�เน�");
-	            tblMonth.put("3", "เธกเธตเธ�เธฒเธ�เธก");
-	            tblMonth.put("4", "เน€เธกเธฉเธฒเธขเธ�");
-	            tblMonth.put("5", "เธ�เธคเธฉเธ เธฒเธ�เธก");
-	            tblMonth.put("6", "เธกเธดเธ–เธธเธ�เธฒเธขเธ�");
-	            tblMonth.put("7", "เธ�เธฃเธ�เธ�เธฒเธ�เธก");
-	            tblMonth.put("8", "เธชเธดเธ�เธซเธฒเธ�เธก");
-	            tblMonth.put("9", "เธ�เธฑเธ�เธขเธฒเธขเธ�");
-	            tblMonth.put("10","เธ•เธธเธฅเธฒเธ�เธก");
-	            tblMonth.put("11","เธ�เธคเธจเธ�เธดเธ�เธฒเธขเธ�");
-	            tblMonth.put("12","เธ�เธฑเธ�เธงเธฒเธ�เธก");
+	            tblMonth.put("1", "เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("2", "เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ�เน€เธ�ย เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ‘เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�๏ฟฝ");
+	            tblMonth.put("3", "เน€เธ�เธ�เน€เธ�เธ•เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("4", "เน€เธ�โ�ฌเน€เธ�เธ�เน€เธ�เธ�เน€เธ�เธ’เน€เธ�เธ�เน€เธ�๏ฟฝ");
+	            tblMonth.put("5", "เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ�เน€เธ�ย เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("6", "เน€เธ�เธ�เน€เธ�เธ”เน€เธ�โ€“เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�เธ�เน€เธ�๏ฟฝ");
+	            tblMonth.put("7", "เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("8", "เน€เธ�เธ�เน€เธ�เธ”เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("9", "เน€เธ�๏ฟฝเน€เธ�เธ‘เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ’เน€เธ�เธ�เน€เธ�๏ฟฝ");
+	            tblMonth.put("10","เน€เธ�โ€ขเน€เธ�เธ�เน€เธ�เธ…เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
+	            tblMonth.put("11","เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�เธ”เน€เธ�๏ฟฝเน€เธ�เธ’เน€เธ�เธ�เน€เธ�๏ฟฝ");
+	            tblMonth.put("12","เน€เธ�๏ฟฝเน€เธ�เธ‘เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ’เน€เธ�๏ฟฝเน€เธ�เธ�");
 	
 	            day    = dateThai.substring(6, 8);
 				month  = Integer.parseInt(dateThai.substring(4, 6));
 		        year   = Integer.parseInt(dateThai.substring(0, 4));
-		        dateDisplay = day + " " + tblMonth.get(String.valueOf(month)).toString() +" เธ�.เธจ. " + year;
+		        dateDisplay = day + " " + tblMonth.get(String.valueOf(month)).toString() +" เน€เธ�๏ฟฝ.เน€เธ�เธ�. " + year;
 			} else {
 				dateDisplay = "";			
 			}
@@ -423,7 +423,33 @@ public class EnjoyUtils {
 		
 	}
 	
-	//เน�เธ�เธฅเธ�เธฃเธนเธ�เน�เธ�เธ�เน€เธงเธฅเธฒ Ex av_time = "1725"
+	public static boolean checkRowName(String rowName,int rows){
+		System.out.println("rowName:"+rowName);	
+		System.out.println("rows:"+rows);	
+		
+		boolean flag = false;
+		 String        lv_value   = null;
+		   try {
+	        	if(rowName != null && rowName != ""){	 
+	        		lv_value = rowName.replaceAll("\\s", ""); 
+	        		String[] parts = lv_value.split(",");
+	        		System.out.println("parts:"+parts.length);	
+    				
+	        		if(parts.length != rows){
+	        		   flag = true;
+	        		}
+				}else{
+					 flag = true;
+				}
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        } 
+		   
+	        return flag;
+		
+	}
+	
+	//เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�เธ…เน€เธ�๏ฟฝเน€เธ�เธ�เน€เธ�เธ�เน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�๏ฟฝเน€เธ�โ�ฌเน€เธ�เธ�เน€เธ�เธ…เน€เธ�เธ’ Ex av_time = "1725"
 	public static String formatTime(String av_time) throws Exception{
 		
 		String t_formay		= "00:00";
