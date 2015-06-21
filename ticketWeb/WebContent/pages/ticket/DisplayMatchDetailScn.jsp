@@ -108,20 +108,16 @@
 				<section class="hbox stretch">
 					<section id="content">
 						<section class="vbox">
-							<section class="scrollable padder">
-					          	<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="left">
+							<section class="scrollable padder" style="background:white">
+					          	
+									<div class="main-container">
+										
 												<!-- Begin contents -->
 												<div align="left">
-													<div class="panel panel-info">
-												    	<div class="panel-heading" align="left">
-															<h4 class="panel-title"  id="seasonTitle">
-																<%=displayMatchDetailForm.getAwayTeamName()%>
-															</h4>
-														</div>
-	     											</div>
+													
+	     											<div id="seasonTitle" class="padding-md round-sm season-title-head" style="">
+														<h6 class="panel-title" style="font-size:1.0em"><%=displayMatchDetailForm.getAwayTeamName()%></h6>
+													</div>
 													
 													<%
 													List<DisplayMatchDetailBean>	headerTicketTypeList = displayMatchDetailForm.getHeaderTicketTypeList();
@@ -129,8 +125,10 @@
 													if(headerTicketTypeList!=null && headerTicketTypeList.size() > 0){
 													%>
 													
+													<div class="datagrid">
 													<table class="table sim-panel-result-table" id="resultTab" border="1" style="border: 2; width:100%">
-														<tr>
+														<thead>
+														<tr id="headRow">
 															<th style="text-align: center;" rowspan="2" valign="middle"><B>ลำดับ</B></th>
 															<th style="text-align: center;" rowspan="2"><B>Zone<br/>ที่นั่ง</B></th>
 															
@@ -154,6 +152,7 @@
 																}
 															%>
 														</tr>
+														</thead>
 														
 														<%
 															List<String>				fieldZoneNameList 	= displayMatchDetailForm.getFieldZoneNameList();
@@ -194,8 +193,9 @@
 														</tr>
 														<%}%>
 													</table>
+													</div>
 												</div>
-												<div id="piechart" style="width: 900px; height: 500px;"></div>
+												<div id="piechart" style="width: 100%; height: 500px;" align="center"></div>
 												<%}else{ %>
 													<div style="width: 100%;">
 														<span>ไม่พบข้อมูล</span>
@@ -203,9 +203,7 @@
 												<%} %>
 												<!-- End contents -->
 											</div>
-										</section>
-									</div>
-								</div>
+										
 							</section>
 						</section>
 					</section>

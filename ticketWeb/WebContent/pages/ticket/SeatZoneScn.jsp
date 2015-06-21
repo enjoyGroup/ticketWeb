@@ -163,13 +163,15 @@
 						                  	 				<table style="width: 100%">
 						                  	 					<tr>
 						                  	 						<td style="text-align: center;vertical-align: top;">
-						                  	 							<div class="panel panel-info">
-																	    	<div class="panel-heading" align="left">
-																				<h4 class="panel-title"  id="seasonTitle">
-																					ปี :&nbsp;<%=seatZoneForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatZoneForm.getAwayTeamNameTH()%>
-																				</h4>
-																			</div>
-						     											</div>
+						                  	 							
+						     											
+						     											<div id="seasonTitle" class="padding-md round-sm season-title-head" style="">
+																			<h6 class="panel-title" style="font-size:1.0em">
+																			ปี :&nbsp;<%=seatZoneForm.getSeason()%>&nbsp;แข่งขันกับ&nbsp;<%=seatZoneForm.getAwayTeamNameTH()%>
+																			</h6>
+																		</div>
+																		
+													
 						                  	 							<div class='sim-panel-result' style="padding:10px;">
 									                        				<img alt="<%=seatZoneForm.FILE_NAME%>" 
 														                    	 title="<%=seatZoneForm.FILE_NAME%>"

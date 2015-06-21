@@ -60,19 +60,16 @@
 					<section id="content">
 						<section class="vbox">
 							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
+								<div class="alert alert-block alert-error fade in container">
 					            	<h4 class="alert-heading">รายงานรายได้ตามประเภทตั๋ว</h4>
 					          	</div>
-					          	<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="left">
-												<!-- Begin contents -->
-												<table border="0" width="100%">
-													<tr>
-														<td align="left" valign="top">
-															<div style="width:200px;" align="left">
-																<span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+					          	
+									<div class="container main-container round-sm padding-xl-h">
+										
+												<!-- start : menu -->
+												<div  class=" col-md-2  col2-1st">
+															<div style="width:100%;" align="left">
+																<span class="label label-inverse" style="width: 100%;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
 																	<B>ฤดูกาลแข่งขัน</B>
 																</span>
 																<br/>
@@ -110,23 +107,23 @@
 													                </ul>
 												                </div>
 															</div>
-														</td>
-														<td align="left" valign="top">
+														</div>
+														<!-- end : menu -->
+														<!-- start : content -->
+														<div  class=" col-md-10  col2-1st">
 															<iframe name="ttestt" 
 																	src="<%=servURL%>/EnjoyGenericSrv?service=servlet.DisplayMatchDetailServlet&pageAction=new" 
 																	scrolling="no"  
 																	frameborder="0" 
-																	width="1000" 
+																	width="100%" 
 																	height="1000">
 															</iframe>
-														</td>
-													</tr>
-												</table>
-												<!-- End contents -->
+														</div>
+														<!-- end : content -->
+												
 											</div>
-										</section>
-									</div>
-								</div>
+										
+								
 							</section>
 						</section>
 					</section>

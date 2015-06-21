@@ -230,7 +230,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
 .datagrid table td,
 .datagrid table th {
     padding: 5px 10px;
-    font-size:0.95em !important;
+    font-size:1.05em !important;
 }
 .datagrid table thead th {
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6B6B6B), color-stop(1, #171717));

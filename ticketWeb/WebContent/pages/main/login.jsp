@@ -145,13 +145,13 @@
 		        <div class="col-md-offset-5 col-md-3">
 		            <div class="form-login">
 		           	<img src="<%=imgURL%>/CHN300_1.png">
-		            <input id="username"  name="username" type="text"  maxlength="20" class="form-control input-sm chat-input" placeholder="username"  onkeydown="lp_changeEnterToTab_forPWD();" />
+		            <input id="username"  name="username" type="text"  maxlength="20" class="form-control input-sm chat-input" placeholder="username"  onkeydown="lp_changeEnterToTab_forPWD();" style="margin:4px; margin-top:12px;" />
 		            </br>
-		            <input id="user_pwd"  name="user_pwd"  type="password"  maxlength="50" class="form-control input-sm chat-input" placeholder="password" onkeydown="lp_changeEnterToTab_forPWD();" />
+		            <input id="user_pwd"  name="user_pwd"  type="password"  maxlength="50" class="form-control input-sm chat-input" placeholder="password" onkeydown="lp_changeEnterToTab_forPWD();" style="margin:4px"  />
 		            </br>
 		            <div class="wrapper">
 		            <span class="group-btn">     
-		                <a href="javascript:void(0)" id="btnLogin" class="btn btn-primary btn-md">Login<i class="fa fa-sign-in"></i></a>
+		                <button type="submit" href="javascript:void(0)" id="btnLogin" class="btn btn-primary btn-md">Login &nbsp;<i class="fa fa-sign-in"></i></button>
 		            </span>
 		            </div>
 		            </div>		        
