@@ -226,7 +226,7 @@
 									<div id="seasonTitle" class="padding-md round-sm season-title-head" style="">
 										<h6 class="panel-title" style="font-size:1.0em">ข้อมูลผู้ใช้งานระบบ</h6>
 									</div>
-						
+										<div class="datagrid">
 										<table class="table sim-panel-result-table" id="tbl_result" border="1" width="100%" style="margin-bottom:0px !important">
 														<thead> 
 											               <tr height="26px;">
@@ -279,7 +279,9 @@
 																	<tr height="26px;"><td colspan="6" align="center"><b>ไม่พบข้อมูลที่ระบุ</b></td></tr>
 															<%  } %>  
 														</tbody>
-													</table> 
+													</table>
+													</div>
+												
 									</div>
 
 							</section>

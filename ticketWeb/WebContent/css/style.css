@@ -265,8 +265,9 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
     border-top: 1px solid #646566;
     background: #EBEBEB;
 }
+
 .datagrid table tfoot td {
-    padding: 0;
+    padding: 1;
     font-size: 12px
 }
 .datagrid table tfoot td div {
@@ -286,7 +287,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
     display: inline-block;
     padding: 2px 8px;
     margin: 1px;
-    color: #F5F5F5;
+    color: black;
     border: 1px solid #8C8C8C;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -300,12 +301,17 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
 .datagrid table tfoot ul a:hover {
     text-decoration: none;
     border-color: #7D7D7D;
-    color: #F5F5F5;
+    color: black;
     background: none;
     background-color: #8C8C8C;
 }
 
 .datagrid{ padding:0 !important; margin:0 !important; border:none !important}
+
+
+
+
+
 
 .searchbox input[type="text"] {
   margin: 2px 4px;

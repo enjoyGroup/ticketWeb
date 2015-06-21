@@ -296,14 +296,13 @@
 					<section id="content">
 						<section class="vbox">
 							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
+								<div class="alert alert-block alert-error fade in container">
 					            	<h4 class="alert-heading">เงื่อนไขค้นหาตั๋วฟุตบอล</h4>
 					          	</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="center">
-									        	<table width="800px" border="0" cellpadding="5" cellspacing="5">
+								
+									<div class="container main-container round-sm padding-lg-h">
+									
+									        	<table width="100%" class="user-register-table user-search-table " border="0" cellpadding="5" cellspacing="5">
 									        		<tr>
 									        			<td align="right" width="150px;">
 									        				ฤดูกาลแข่งขัน :&nbsp;
@@ -345,31 +344,30 @@
 									        				เลขที่นั่ง  : &nbsp;
 									        			</td>
 									        			<td align="left" colspan="3">
-									        				<input type='text' id="seatingNoBegin" name='seatingNoBegin' maxlength="10" value="<%=cancelSeatForm.getSeatingNoBegin()%>" />
+									        				<input type='text' id="seatingNoBegin" name='seatingNoBegin date' maxlength="10" value="<%=cancelSeatForm.getSeatingNoBegin()%>" />
 									        				&nbsp; - &nbsp;
-									        				<input type='text' id="seatingNoEnd" name='seatingNoEnd' maxlength="10" value="<%=cancelSeatForm.getSeatingNoEnd()%>" />
+									        				<input type='text' id="seatingNoEnd" name='seatingNoEnd date' maxlength="10" value="<%=cancelSeatForm.getSeatingNoEnd()%>" />
 									        				&nbsp;
 									        				<span id="inValidSpan"></span>
-									        				<input type="button" id="btnSearch" class='btn btn-danger' value='ค้นหา'/>&nbsp;&nbsp;&nbsp;
-									        				<input type="button" id="btnReset" class='btn btn-danger' value='เริ่มค้นใหม่' />
+									        				<input type="button" id="btnSearch" class='btn btn-primary pull-right padding-sm' style="margin-right:12px; padding-right:24px; padding-left:24px;" value='ค้นหา'/>
+										        				<input type="button" id="btnReset" class='btn pull-right padding-sm'  style="margin-right:12px" value='เริ่มใหม่' />
 									        			</td>
 									        		</tr>
 									        	</table>
 								        	</div>
-										</section>
-									</div>
-								</div>
+
 							</section>
+							<br>
 							
 							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
-					            	<h4 class="alert-heading">รายละเอียดตั๋วฟุตบอล</h4>
-					          	</div>
-								<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="center">
-												<div class="height250">
+								
+					          	<div class="container main-container round-sm padding-no" >
+									<div id="seasonTitle" class="padding-md round-sm season-title-head" style="margin-bottom:4px !important">
+										<h6 class="panel-title" style="font-size:1.0em">รายละเอียดตั๋วฟุตบอล</h6>
+									</div>
+									
+								
+												<div class="datagrid round-sm" style="max-height:250px; overflow:auto;border:1px solid #ccc !important">	
 													<table class="sim-panel-result-table" id="tbl_result" border="1" width="100%">
 														<thead> 
 															<tr class="headerRow">
@@ -441,14 +439,12 @@
 														</tbody>
 													</table>	
 												</div>
-											</div>	
-										</section>
 									</div>
 									<div align="center" class="panel-body">
 				        				<input type="button" id="btnSave"   class='btn btn-danger' value='บันทึก'/>&nbsp;&nbsp;&nbsp;
 				        				<input type="button"  id="btnCancel" class='btn btn-danger' value='เริ่มเลือกใหม่' />
 									</div>
-								</div>
+								
 							</section>
 						</section>
 					</section>
