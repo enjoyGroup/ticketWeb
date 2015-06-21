@@ -345,7 +345,7 @@
 												<div  class=" col-md-2  col2-1st">
 												
 															<div style="height:30px;background-color:  #656659;border-left-width: 5px;-webkit-border-radius: 4px;border-left-color: #2b542c;" align="center" class="error-notice" >
-																<span span class="label label-inverse" style="height: 30px;text-align: center;padding-top: 10px;background-color:  #656659;">
+																<span class="label label-inverse" style="height: 30px;text-align: center;padding-top: 10px;background-color:  #656659;">
 																	<B>ฤดูกาลแข่งขัน</B>
 																</span><br/>
 																<div  class='cssmenu-mod' style="">

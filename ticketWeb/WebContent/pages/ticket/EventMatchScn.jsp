@@ -154,7 +154,7 @@
 			        };
 				}
 				cell1.className	= lv_class; 
-				cell1.innerHTML = av_season; 
+				cell1.innerHTML = "<span>"+av_season+"</span>"; 
 				  
 	//alert(lo_table.rows.length);			
 			}catch(e){
@@ -183,7 +183,7 @@
 		        };
 			 
 		        cell1.className	= lv_class; 
-				cell1.innerHTML =  "<a href='#'>+เพิ่มปีการแข่งขัน</a>";
+				cell1.innerHTML =  "<span><a href='#'>+เพิ่มปีการแข่งขัน</a></span>";
 				  
 				
 			}catch(e){
@@ -293,7 +293,7 @@
 					cell1.innerHTML = av_index ;
 					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  class='awayTeamNameTH' maxlength='100' value='"+av_awayTeamNameTH+ "'/>" ;
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  class='awayTeamNameEN' maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
-					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
+					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"' style='width:80%;' name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 					                  "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
 					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' class='matchTime' value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
@@ -316,7 +316,7 @@
 					cell1.innerHTML = av_index ;
 					cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH' class='awayTeamNameTH'  maxlength='100'  value='"+av_awayTeamNameTH+ "'/>" ;
 					cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN' class='awayTeamNameEN'  maxlength='100' value='"+av_awayTeamNameEN+ "'/>" ;
-					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
+					cell4.innerHTML = "<input type='text'  id='matchDate"+ av_index +"'  style='width:80%;' name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value='"+av_matchDate+ "'/>"+
 									 "<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
 					cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime' maxlength='5'  class='matchTime'  value='"+av_matchTime+ "' onblur='gp_validateTime(this);' />";
 					cell6.innerHTML	= "<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" +
@@ -360,7 +360,7 @@
 				cell1.innerHTML = lv_length++ ;
 				cell2.innerHTML = "<input type='text'  id='awayTeamNameTH'  name='awayTeamNameTH'  class='awayTeamNameTH' maxlength='100'  value=''/>" ;
 				cell3.innerHTML = "<input type='text'  id='awayTeamNameEN'  name='awayTeamNameEN'  class='awayTeamNameEN' maxlength='100'  value=''/>" ;
-				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"'  name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
+				cell4.innerHTML = "<input type='text'  id='matchDate"+ lv_length +"' style='width:80%;' name='matchDate'   maxlength='8' class='dateFormat' placeholder='DD/MM/YYYY' onblur='lp_checkFormatdate(this);'  value=''/>"+
 									"<i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer'  onclick = 'lp_dateClick(this);'></i>";
 				cell5.innerHTML = "<input type='text'  id='matchTime'  name='matchTime'  maxlength='5' class='matchTime' value='' onblur='gp_validateTime(this);'/>";
 				cell6.innerHTML	="<input type='button' class='btn action-del-btn btn-danger' style='text-align: center;'  ondblclick='return false;' onclick='lp_del_row_table(this)' value='-'/>" + 
@@ -708,60 +708,22 @@
 	 			<section id="content">
 					<section class="vbox">
 						<section class="scrollable padder"> 
-							<div class="row" style="padding-left: 15px;">
-								<div class="col-sm-12">
-									<section class="panel panel-info">
-										<div class="alert alert-block alert-error fade in"> 
-											<h4 class="panel-title">รายละเอียด Match การแข่งขัน</h4>
-										</div>
-										<div class="panel-body">
-						        			<table style='width:90%;'   border="0">
-												<tr>
-						              				<%-- <td style='width:12%;padding:0px !important'>
-						              					<div style="min-width: 205px;">
-						              						<span class="label label-inverse" style="width: 100%;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
-																<B>ปีการแข่งขัน</B>
-															</span>
-														<br/>
-						              					</div>
-						                  				<div id='cssmenu' style="min-height:auto;  background:#0A5F8B;" class='sim-panel-result' style="padding:10px;" >
-						                     				 <table class="table sim-panel-result-table" id="result_season" style="margin-top:0px !important">
-																<%
-												 					List<String>  list			=   eventMatchForm.getSeasonList();
-												 
-												  					if(list.size()>0){
-															for(int i=0;i<list.size();i++){
-													
-																%>
-															 	<tr> 
-															 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
-															 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
-																			<%=list.get(i)%>
-																		</td>	
-															 		<%}else{%>
-															 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																			<%=list.get(i)%>
-																		</td>
-															 		<%}%>
-																</tr> 
-																<% } 
-												 				} %>
-									 							<tr>
-									 								<td align="center" class="link" onclick="lp_add_row_season();">
-									 									<a href="#">
-										 									<span>
-																				<B>+เพิ่มปีการแข่งขัน</B>
-																			</span>
-																			<br/>
-																		</a>
-																	</td>
-																</tr>
-									 						</table>
-									 					</div>
-									 				</td> --%>
-									 				<td style='width:10%;padding:0px;vertical-align: top;'>   
+								<div class="alert alert-block alert-error fade in container">
+					            	<h4 class="alert-heading">รายละเอียด Match การแข่งขัน</h4>
+					          	</div>
+					          	
+						
+								<div class="container main-container round-sm padding-xl-h ">
+									
+										
+						        			 <!-- start : menu -->
+												<div  class=" col-md-2  col2-1st cssmenu-mod" >	
 									                      <table class="table sim-panel-result-table" id="result_season">
-															<tr><th  style="background-color:#90EBFC;"><B>ปีการแข่งขัน</B></th> </tr>
+															<tr style="border:none;">
+																<th class="round-sm" style="background-color:  #656659;font-size:1.0em; padding:4px 0px;width:100%; margin:0px !important">
+																	<B style="text-align: center; margin:0px; color:white; font-size:1.0em">ปีการแข่งขัน</B>
+																</th>
+															</tr>
 															<%
 										 					List<String>  list			=   eventMatchForm.getSeasonList();
 										 
@@ -772,11 +734,11 @@
 														 	<tr> 
 														 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
 														 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
-																		<%=list.get(i)%>
+																		<span><%=list.get(i)%></span>
 																	</td>	
 														 		<%}else{%>
 														 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
-																		<%=list.get(i)%>
+																		<span><%=list.get(i)%></span>
 																	</td>
 														 		<%}%>
 															</tr> 
@@ -793,15 +755,19 @@
 																</td>
 															</tr>
 												 		</table> 
-									   				</td>
-						                   			<td style='width:80%;padding:0px !important;vertical-align: top;'>
-									                    <div style="padding:10px;" >
-									                         <input type='text' id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;<span style="color: red;"><b>*</b></span>
+												 		<div style="padding:10px;" >
+												 			<span style="color: red;"><b>*</b></span>
+									                         <input type='text' style="width:135px" id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;
 									                    </div>
-						                    			<br>
-						                  	 			<div class='sim-panel-result' style="padding:10px;">
+									   				</div>
+									   				 <!-- end : menu -->
+									   			
+									   			 <!-- start : table -->	
+									            <div  class=" col-md-10  line-left">
+						                  	 	<div class='sim-panel-result datagrid' style="padding:10px;">
 						                        <table class="table sim-panel-result-table" id="result_match">
-													<tr>
+													<thead>
+													<tr id="headRow">
 							                            <th>ลำดับ</th>
 							                            <th>ทีมคู่แข่งภาษาไทย</th>
 							                            <th>ทีมคู่แข่งภาษาอังกฤษ</th>
@@ -809,6 +775,7 @@
 							                            <th>เวลาที่แข่ง</th>
 							                            <th>Action</th>
 						                          	</tr>
+						                          	</thead>
 												<%
 														List<EventMatchBean>  	detailList			= eventMatchForm.getEventMatchList();
 														EventMatchBean			detail				= null;
@@ -830,7 +797,7 @@
 																			<input type="text" id="awayTeamNameEN" name="awayTeamNameEN" maxlength="100"  class="awayTeamNameEN" value="<%=detail.getAwayTeamNameEN()%>"/>
 																		</td>
 																		<td align="center"> 
-																			 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate"  maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
+																			 <input type="text" id="<%=detail.getMatchDateId()%>" name="matchDate" style="width:80%;" maxlength="8"   class="dateFormat" placeholder="DD/MM/YYYY" onblur="lp_checkFormatdate(this);"  value="<%=detail.getMatchDate()%>"  />
 																			 <i class='fa fa-fw fa-calendar' id='trigger-DateFrom' style='cursor:pointer' onclick ="lp_dateClick(this);"></i>
 																		</td>
 																		<td align="center">
@@ -858,30 +825,29 @@
 																</tr> 
 															</table>
 						               					</div>
-					                   				</td>
-					             				</tr>
-								                <tr>
-								        			<td align="center" colspan="6">
-								        				<br/><br/>
-								        				<input type="button"  
+						               					
+						               					<input type="button"  
 								        					   ondblclick="return false;" 
 								        					   id="btnSave" 
 								        					   name="btnSave" 
 								        					   value="บันทึก"  
-								        					   class="btn action-add-btn btn-success" 
+								        					   class="btn action-add-btn btn-success pull-right" 
+								        					   style="margin-left:12px; padding-right:24px; padding-left:24px;"
 								        					   onclick="lp_save_page();" /> &nbsp;&nbsp;&nbsp;
 								        				<button ondblclick="return false;" 
 								        						id="btnCancel" 
 								        						name="btnCancel"   
-								        						class="btn btn-danger"  
+								        						class="btn btn-danger  pull-right"
+								        						style="margin-left:12px"
 								        						onclick="lp_reset_page();">ยกเลิก</button>  
-								        			</td>
-								        		</tr>
-					             			</table>	
+								        						
+								        						
+						               					</div>
+						               					<!-- end : table -->	
+					                   				
+								        			
 					            		</div>
 									</section>
-								</div> 
-							</div>
 						</section>
 					</section>
 				</section>  
