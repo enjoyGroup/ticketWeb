@@ -211,7 +211,7 @@
 				lo_table 		= document.getElementById("seasonTab");
 				lv_length 		= lo_table.rows.length;
 				row 			= lo_table.insertRow(lv_length);
-				row.className	= "oaerror success";
+				row.className	= "oaerror";
 				cell1 			= row.insertCell(0);
 				lo_hidSeason 	= document.getElementById("hidSeason");
 				
@@ -348,10 +348,10 @@
 													<tr>
 														<td align="left" valign="top">
 															<div style="width:200px;height:30px;background-color: rgb(68, 194, 122);border-left-width: 5px;-webkit-border-radius: 4px;border-left-color: #2b542c;" align="center" class="error-notice" >
-																<span span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color: #656659;">
+																<span span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color:  #656659;">
 																	<B>ฤดูกาลแข่งขัน</B>
 																</span><br/>
-																<div  id='cssmenu' style="min-height:auto;background:#000000;">
+																<div  class='cssmenu-mod' style="">
 																	<table class="table sim-panel-result-table" id="seasonTab" style="margin-top: 0 !important;" >
 																		<%
 																		List<String>  list			=   detailRevenueOfYearForm.getSeasonList();
@@ -360,15 +360,15 @@
 																			for(int i=0;i<list.size();i++){
 																			
 																			%>
-																			 <tr class="oaerror success">
+																			 <tr class="oaerror">
 																			 
 																			 	<%if(list.get(i).equals(detailRevenueOfYearForm.getSeason())){%>
 																			 		<td class="unLink"align="center" title="<%=list.get(i)%>">
-																						<%=list.get(i)%>
+																						<span><%=list.get(i)%></span>
 																					</td>	
 																			 	<%}else{%>
 																			 		<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>" >
-																						<%=list.get(i)%>
+																						<span><%=list.get(i)%></span>
 																					</td>
 																			 	<%}%>
 																			</tr> 
