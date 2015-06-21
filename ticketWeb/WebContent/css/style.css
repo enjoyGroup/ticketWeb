@@ -409,3 +409,11 @@ border-radius: 12px;}
 }
 
 
+
+
+
+.user-register-table tr td{
+	border:none !important; padding:4px !important;  
+}
+
+

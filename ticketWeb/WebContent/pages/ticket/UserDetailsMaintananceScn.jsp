@@ -396,28 +396,31 @@
 		<section id="content">
 		<section class="vbox">
 		<section class="scrollable padder">
-		<div class="alert alert-block alert-error fade in">
+		<div class="alert alert-block alert-error fade in container">
 			<h4 class="alert-heading">ผู้ดูแลระบบ/จัดการผู้ใช้งาน</h4>
 		</div>					          	
-		<div class="container">
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
-					<div class="panel panel-info">
-						<div class="panel-heading">
-							<h4 class="panel-title">เพิ่มผู้ใช้งานระบบ</h4>
+		<div class="container main-container round-sm padding-xl-h">
+
+				<div class="col-sm-12 toppad" >
+					
+						
+						<div id="seasonTitle" class="padding-md round-sm season-title-head" style="">
+							<h6 class="panel-title" style="font-size:1.0em">เพิ่มผู้ใช้งานระบบ</h6>
 						</div>
+																	
+																	
            				<div class="panel-body">
-               					<div class="col-md-2 col-lg-2 " align="center">
-									<img src="<%=imgURL%>/add_user.png" class="img-circle">
+               					<div class="col-md-2 col-md-offset-2 padding-xl " align="center">
+									<img src="<%=imgURL%>/add_user.png" class="img-circle" width="100" style="border:4px solid #ccc">
 								</div>
-               						<div class=" col-md-8 col-lg-8 "> 
-										<table class="table" style="border-bottom-color: white;">
+               						<div class=" col-md-8 line-left"> 
+										<table class="table user-register-table" style="border-bottom-color: white;">
 											<tr>
-								        		<td align="right" width="150px;">
+								        		<td align="right" width="30px">
 													ชื่อ <span style="color: red;"><b>*</b></span> : &nbsp;
 												</td>
-							        			<td align="left" width="350px;">
-							        				<input type='text' id="userName" name='userName' value="<%=userDetailsBean.getUserName() %>" maxlength="50" style="width: 300px;" />
+							        			<td align="left" width="200px">
+							        				<input type='text' id="userName" name='userName' value="<%=userDetailsBean.getUserName() %>" maxlength="50" style="width: 250px;" />
 							        			</td>
 								        	</tr>
 								        	<tr>
@@ -425,7 +428,7 @@
 							        				นามสกุล <span style="color: red;"><b>*</b></span> : &nbsp;
 							        			</td>
 							        			<td align="left">
-							        				<input type='text' id="userSurname" name='userSurname' value="<%=userDetailsBean.getUserSurname() %>" maxlength="100" style="width: 300px;" />
+							        				<input type='text' id="userSurname" name='userSurname' value="<%=userDetailsBean.getUserSurname() %>" maxlength="100" style="width: 250px;" />
 							        			</td>
 							        		</tr>
 							        		<tr>
@@ -433,7 +436,7 @@
 							        				User ID <span style="color: red;"><b>*</b></span> : &nbsp;
 							        			</td>
 							        			<td align="left">
-							        				<input type='text' id="userId" name='userId' value="<%=userDetailsBean.getUserId() %>" onchange="lp_checkDupUserId();" maxlength="20" style="width: 300px;" />
+							        				<input type='text' id="userId" name='userId' value="<%=userDetailsBean.getUserId() %>" onchange="lp_checkDupUserId();" maxlength="20" style="width: 250px;" />
 							        				&nbsp;
 							        				<span id="inValidSpan"></span>
 							        			</td>
@@ -443,7 +446,7 @@
 							        				E-mail <span style="color: red;"><b>*</b></span> : &nbsp;
 							        			</td>
 							        			<td align="left">
-							        				<input type="text" id="userEmail" name="userEmail" value="<%=userDetailsBean.getUserEmail()%>" maxlength="100" style="width: 300px;" />
+							        				<input type="text" id="userEmail" name="userEmail" value="<%=userDetailsBean.getUserEmail()%>" maxlength="100" style="width: 250px;" />
 							        			</td>
 							        		</tr>
 							        		<tr>
@@ -451,7 +454,7 @@
 							        				สถานะ :&nbsp;
 							        			</td>
 							        			<td align="left">
-							        				<select id="userStatus" name="userStatus" style="width: 300px;">
+							        				<select id="userStatus" name="userStatus" style="width: 250px;">
 							        					<% for(RefuserstatusBean beanStatus:refuserstatusCombo){ %>
 							        					<option value="<%=beanStatus.getUserStatusCode()%>" <%if(userDetailsBean.getUserStatus().equals(beanStatus.getUserStatusCode())){ %> selected <%} %> ><%=beanStatus.getUserStatusName()%></option>
 							        					<%} %>
@@ -467,7 +470,7 @@
 							        			</td>
 								        	</tr>
 								        </table>
-								        <table width="500px" border="0" cellpadding="5" cellspacing="5">
+								        <table class="user-register-table" style="margin-left:40px" width="80%" border="0" cellpadding="5" cellspacing="5">
 							        		<tr>
 							        			<td align="left" colspan="4">
 							        				สิทธิ์การใช้ระบบ
@@ -511,8 +514,7 @@
 								</div>
 				            </div>          
 						</div>
-					</div>
-				</div>							    
+						    
 		</section>
 		</section>
 		</section>
