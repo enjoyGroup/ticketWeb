@@ -230,7 +230,7 @@
 				
 				cell1.className	= lv_class;
 				
-				cell1.innerHTML = av_season;
+				cell1.innerHTML = "<span>"+av_season+"</span>";
 				
 				//alert(cell1.outerHTML);
 				
@@ -336,19 +336,16 @@
 					<section id="content">
 						<section class="vbox">
 							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
+								<div class="alert alert-block alert-error fade in container">
 					            	<h4 class="alert-heading">รายงานแสดงรายละเอียดรายได้ประจำปี</h4>
 					          	</div>
-					          	<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="left">
-												<!-- Begin contents -->
-												<table border="0" width="100%">
-													<tr>
-														<td align="left" valign="top">
-															<div style="width:200px;height:30px;background-color: rgb(68, 194, 122);border-left-width: 5px;-webkit-border-radius: 4px;border-left-color: #2b542c;" align="center" class="error-notice" >
-																<span span class="label label-inverse" style="width: 200px;height: 30px;text-align: center;padding-top: 10px;background-color:  #656659;">
+									<div class="container main-container round-sm padding-xl-h">
+										
+											<!-- start : menu -->
+												<div  class=" col-md-2  col2-1st">
+												
+															<div style="height:30px;background-color:  #656659;border-left-width: 5px;-webkit-border-radius: 4px;border-left-color: #2b542c;" align="center" class="error-notice" >
+																<span span class="label label-inverse" style="height: 30px;text-align: center;padding-top: 10px;background-color:  #656659;">
 																	<B>ฤดูกาลแข่งขัน</B>
 																</span><br/>
 																<div  class='cssmenu-mod' style="">
@@ -377,12 +374,17 @@
 																	</table>
 																</div>
 															</div>
-														</td>
-														<td align="left" valign="top">
-															<div class="row">
-        														<div class="panel panel-primary filterable">
-            														<div id="seasonTitle" class="panel-heading">
-																		<h6 class="panel-title">ปี : <%=detailRevenueOfYearForm.getSeason() %></h6>
+															
+															</div>
+															<!-- end : menu -->
+												
+															<!-- start : table -->	
+															<div  class=" col-md-4  col5-2nd">
+															
+															<!-- div class="row">
+        														<div class="panel panel-primary filterable" -->
+            														<div id="seasonTitle" class="padding-md round-sm season-title-head" style="">
+																		<h6 class="panel-title" style="font-size:1.0em">ปี : <%=detailRevenueOfYearForm.getSeason() %></h6>
 																	</div>
 																	<div class="datagrid">
 																		<table class="table" id="resultTab" style="width:100%;">
@@ -427,18 +429,20 @@
 																				<%} %>
 																			</tbody>
 																		</table>
-																	</div>
-																</div>
+																	<!--/div>
+																</div-->
 															</div>
-															<div id="piechart" style="width: 900px; height: 500px;"></div>
-														</td>
-													</tr>
-												</table>
-												<!-- End contents -->
-											</div>
-										</section>
+															
+														</div>
+														<!--end : table -->
+														<!--start : chart -->
+														<div  class=" col-md-6  col5-3rd line-left">
+															<div id="piechart" style="width: 100%; height: 500px;"></div>
+														</div>
+														<!--end : chart -->
+											
 									</div>
-								</div>
+								
 							</section>
 						</section>
 					</section>

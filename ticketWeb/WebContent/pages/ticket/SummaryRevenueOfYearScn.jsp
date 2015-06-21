@@ -112,7 +112,7 @@
 								<div class="container alert alert-block alert-error fade in">
 					            	<h4 class="alert-heading">รายงานสรุปรายได้ประจำปี</h4>
 					          	</div>
-					          	<div class="container main-container round-sm padding-xl ">
+					          	<div class="container main-container round-sm padding-xl-h ">
 					          	
 					          	
 												<div  class=" col-md-6  col6-1st">

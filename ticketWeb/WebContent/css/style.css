@@ -216,6 +216,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
     border-collapse: collapse;
     text-align: left;
     width: 100%;
+	border:1px solid #ccc;
 }
 .datagrid,.datagrid table {
     font: normal 12px/150% Arial, Helvetica, sans-serif;
@@ -229,6 +230,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
 .datagrid table td,
 .datagrid table th {
     padding: 5px 10px;
+    font-size:0.95em !important;
 }
 .datagrid table thead th {
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #6B6B6B), color-stop(1, #171717));
@@ -315,7 +317,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
 }
 
 .trace,.trace *{outline:1px solid red}
-.main-container{height:auto; background:white; padding-bottom:40px}
+.main-container{height:auto; background:white; padding-bottom:40px; /*padding-left:0px !important; padding-right:0px !important*/}
 
 .round-sm{-webkit-border-radius: 4px;
 -moz-border-radius: 4px;
@@ -329,13 +331,25 @@ border-radius: 8px;}
 -moz-border-radius: 12px;
 border-radius: 12px;}
 
-.padding-sm{padding:4px 0px;}
-.padding-md{padding:8px 0px;}
-.padding-lg{padding:12px 0px;}
-.padding-xl{padding:24px 0px;}
+.padding-sm{padding:4px;}
+.padding-md{padding:8px;}
+.padding-lg{padding:12px;}
+.padding-xl{padding:24px;}
 
-.col6-1st.line-right{border-right:1px dotted gray !important;}
-.col6-1st.line-left{border-left:1px dotted gray !important;}
+
+.padding-sm-h{padding:4px 0px;}
+.padding-md-h{padding:8px 0px;}
+.padding-lg-h{padding:12px 0px;}
+.padding-xl-h{padding:24px 0px;}
+
+
+.padding-sm-w{padding:0px 4px}
+.padding-md-w{padding:0px 8px}
+.padding-lg-w{padding:0px 12px}
+.padding-xl-w{padding:0px 24px}
+
+.col6-1st.line-right ,.line-right{border-right:1px dotted gray !important;}
+.col6-1st.line-left ,.line-left{border-left:1px dotted gray !important;}
 
 .col6-2nd.line-right{border-right:1px dotted gray !important;}
 .col6-2nd.line-left{border-left:1px dotted gray !important;}
@@ -384,11 +398,14 @@ border-radius: 12px;}
 }
 
 .cssmenu-mod table tr td span{
-	padding-left:20px;
+	padding-left:20px !important;
 }
 .cssmenu-mod table tr td:hover {
   color: #e94f31;
 }
 
+.season-title-head{
+	background:#3366cc;color:white;
+}
 
 
