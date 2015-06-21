@@ -264,7 +264,7 @@
 				}
 				
 				cell1.className	= lv_class; 
-				cell1.innerHTML = av_zone; 
+				cell1.innerHTML = "<span>"+av_zone+"<span>"; 
 				  
 				
 			}catch(e){
@@ -293,7 +293,7 @@
 		        };
 			 
 		        cell1.className	= lv_class; 
-				cell1.innerHTML =  "<a href='#'>เพิ่ม zone ที่นั่ง</a>";
+				cell1.innerHTML =  "<span><a href='#'>เพิ่ม zone ที่นั่ง</a></span>";
 				  
 				
 			}catch(e){
@@ -1158,22 +1158,25 @@
 	 				<section id="content">
 						<section class="vbox">
 							<section class="scrollable padder"> 
-								<div class="row" style="padding-left: 15px;">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="alert alert-block alert-error fade in">
-	            								<h4 class="alert-heading">กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</h4> 
-	          								</div>
-											<div class="panel-body">
-						        				<table style='width:100%;' border="0">
-													<tr>
-					              					<td style='width:10%;padding:0px;vertical-align: top;'>
-					              						<table>
-					              							<tr>
-					              								<td>   
-													                 <td style='width:10%;padding:0px !important'> 
-												                      <table class="table sim-panel-result-table" id="result_zone">
-																		<tr><th style="background-color:#90EBFC;">Zone ที่นั่ง</th> </tr>
+							<div class="alert alert-block alert-error fade in container">
+					            	<h4 class="alert-heading">กำหนด Zone ที่นั่ง/จำนวนที่นั่ง</h4>
+					          	</div>
+					          	
+					          	
+
+									<div class="container main-container round-sm padding-xl-h">
+								
+						        			
+					              					<!-- start : menu -->
+												<div  class=" col-md-2  col2-1st cssmenu-mod" >	
+												                      <table class="table sim-panel-result-table " id="result_zone">
+																	
+																		<tr style="border:none;">
+																			<th class="round-sm" style="background-color:  #656659;font-size:1.0em; padding:4px 0px;width:100%; margin:0px !important">
+																				<B style="text-align: center; margin:0px; color:white; font-size:1.0em">Zone ที่นั่ง</B>
+																			</th>
+																		</tr>
+															
 																		<%
 																		List<FieldzonemasterBean>  list	=  seatingDetailForm.getZoneMasterList();
 																		 
@@ -1183,30 +1186,33 @@
 																				 <tr> 
 																				 	<%if(list.get(i).equals(seatingDetailForm.getFieldzonemasterName())){%>
 																				 		<td class="unLink" align="center" title="<%=list.get(i).getFieldZoneName()%>" >
-																							<%=list.get(i).getFieldZoneName()%>
+																							<span><%=list.get(i).getFieldZoneName()%></span>
 																						</td>	
 																				 	<%}else{%>
 																				 		<td class="link" onclick="lp_changeZone('<%=list.get(i).getFieldZoneName()%>','<%=list.get(i).getFieldZoneId()%>');"  align="center" title="<%=list.get(i)%>">
-																						   <%=list.get(i).getFieldZoneName()%>
+																						   <span><%=list.get(i).getFieldZoneName()%></span>
 																						</td>
 																				 	<%}%>
 																				</tr> 
 																				<% } 
 																			} %>
-															 			<tr><td align="center" class="link" onclick="lp_add_row_zone();" class="btn btn-success"><a href="#">เพิ่ม zone ที่นั่ง</a></tr>
+															 			<tr><td align="center" class="link" onclick="lp_add_row_zone();" class="btn btn-success"><a href="#"><span>เพิ่ม zone ที่นั่ง</span></a></tr>
 															 		</table>
-					              								</td>
-					              							</tr>
-					              						</table>
-									   				</td>
-						                   				<td style='width:100%;padding:0px !important;text-align: center;vertical-align: top;'>
-						                   					<table width="100%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
+					              									</div>
+									   				 <!-- end : menu -->
+									   				
+									   				
+									   				
+														<!-- start : search -->	
+									            		<div  class=" col-md-10  line-left ">
+									            		<div class="datagrid">	
+														<table class="user-register-table zone-assign-table" width="100%" border="0" cellpadding="5" cellspacing="5" id="result_zone_master">
 						                   					 <% 
 						                   					    FieldzonemasterBean	master	= seatingDetailForm.getFieldzonemasterBean(); 
 															 %>
 						                   						<tr>
-						                   							<td align="right" width="250px;">ชื่อ Zone ที่นั่ง : &nbsp;</td>
-						                   							<td align="left" width="200px;">
+						                   							<td align="right" ><span>ชื่อ Zone ที่นั่ง : &nbsp;</span></td>
+						                   							<td align="left" >
 												        				<input type='text' 
 												        					id="fieldZoneName" 
 												        					name='fieldZoneName' 
@@ -1219,8 +1225,8 @@
 												        			    		value="<%=master.getFieldZoneId()%>"> 
 												        			    &nbsp;<span style="color: red;"><b>*</b></span> 
 												        			</td>
-												        			<td align="right" width="200px;">ชื่อ Zone ที่นั่ง บนตั๋ว: &nbsp;</td>
-						                   							<td align="left" colspan="3" width="600px;">
+												        			<td align="right" ><span>ชื่อ Zoneที่นั่ง บนตั๋ว:&nbsp;</span></td>
+						                   							<td align="left" colspan="3" >
 												        				<input type='text' 
 												        					id="nameTicket" 
 												        					name='nameTicket' 
@@ -1231,8 +1237,8 @@
 												        			</td>
 						                   						</tr>
 												        		<tr>
-												        			<td align="right" width="250px;">จำนวนแถว : &nbsp;</td>
-												        			<td align="left"  width="200px;">
+												        			<td align="right" ><span>จำนวนแถว : &nbsp;</span></td>
+												        			<td align="left"  >
 												        				<input type='text' id="rows" 
 												        				       name='rows' maxlength="50"      
 												        				       class="numberOnly" 
@@ -1240,8 +1246,8 @@
                                                      						   onblur="lp_calTotalSeating();onKeyDownNumber(event),lp_check_data()"/>
                                                      						   &nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="200px;">จำนวนที่นั่งต่อแถว : &nbsp;</td>
-												        			<td align="left"  width="200px;">
+												        			<td align="right" ><span>จำนวนที่นั่งต่อแถว : &nbsp;</span></td>
+												        			<td align="left"  >
 												        				<input  type='text' 
 												        						id="seating" 
 												        						name="seating" 
@@ -1251,8 +1257,8 @@
 												        						onblur="lp_calTotalSeating(),lp_check_data();"/>
 												        						&nbsp;<span style="color: red;"><b>*</b></span>
 												        			</td>
-												        			<td align="right" width="200px;">เลขที่นั่งเริ่มต้น : &nbsp;</td>
-												        			<td align="left" width="200px;">
+												        			<td align="right" ><span>เลขที่นั่งเริ่มต้น : &nbsp;</span></td>
+												        			<td align="left" >
 												        				<input  type='text' 
 												        						id="startNo" 
 												        						name="startNo" 
@@ -1264,7 +1270,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="250px;">จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</td>
+												        			<td align="right" ><span>จำนวนที่นั่งทั้งหมดใน Zone : &nbsp;</span></td>
 												        			<td align="left" colspan="5">
 												        				<input type='text' 
 												        					id="totalSeating" 
@@ -1276,7 +1282,7 @@
 												        			</td>
 												        		</tr>
 												        		<tr>
-												        			<td align="right" width="250px;">ชื่อแถว: &nbsp;</td>
+												        			<td align="right" ><span>ชื่อแถว: &nbsp;</span></td>
 												        			<td align="left">
 												        			 <input type='radio' 
 												        					id="nameRowInd1" 
@@ -1296,7 +1302,7 @@
 												        		</tr>
 												        		<tr></tr>
 												        		<tr> 
-												        			<td align="right" width="250px;">รายชื่อแถว : &nbsp;</td>
+												        			<td align="right" ><span>รายชื่อแถว : &nbsp;</span></td>
 												        			<td align="left"  colspan="3">
 												        				<textarea   id="nameRow" 
 												        							name='nameRow'
@@ -1310,13 +1316,22 @@
 												        			</td>
 												        		</tr>
 												        	</table>
-						                  	 				<table class="table sim-panel-result-table" id="result_zone_detail">
-																	<tr >
+												        	</div>
+												        	<!-- end :search -->
+												        	
+												        	
+												        	<br>
+												        	<!-- start : coontent -->
+												        	<div class="datagrid">
+						                  	 				<table class="table sim-panel-result-table " id="result_zone_detail">
+																	<thead>
+																	<tr id="headRow">
 											                            <th align="center">ลำดับ</th>
 											                            <th align="center">ประเภทตั๋ว</th> 
 											                            <th align="center">ราคา</th> 
 											                            <th align="center">การทำงาน</th>
 										                          	</tr>
+										                          	</thead>
 																<%
 																	List<FieldZoneDetailBean>  	fieldZoneDetail	    = seatingDetailForm.getFieldZoneDetailBeans(); 
 																	FieldZoneDetailBean         fieldZoneDetailBean = null;
@@ -1393,28 +1408,36 @@
 											                       	 	</td>
 																	</tr> 
 																</table>
-																<div> 
-											        				<input  type="button"  
+																
+																
+																<input  type="button"  
 											        						ondblclick="return false;" 
 											        						id="btnSave" 
 											        						name="btnSave" 
 											        						value="บันทึก"  
-											        						class="btn btn-success" 
+											        						class="btn btn-success pull-right" 
+											        						 style="margin-left:12px; padding-right:24px; padding-left:24px;"
 											        						onclick="lp_save_page();"/> &nbsp;&nbsp;&nbsp;
 											        				<button ondblclick="return false;" 
 											        						id="btnCancel" 
 											        						name="btnCancel"   
-											        						class="btn btn-danger"  
+											        						class="btn btn-danger pull-right"
+											        						style="margin-left:12px"  
 											        						onclick="lp_reset_page();">ยกเลิก</button> 
+											        						
+												        		</div>
+												        		<!-- end : coontent -->
+																<br>
+																
+																
+																
 																</div>
-				                   						</td>
-				                 					</tr>
-				             					</table>
+																<!-- end : table -->	
+																
+																
+				                   						
 				             				</div>
-				             					
-										</section>
-									</div>
-								</div>
+				             			
 							</section>
 						</section>
 					</section>  
