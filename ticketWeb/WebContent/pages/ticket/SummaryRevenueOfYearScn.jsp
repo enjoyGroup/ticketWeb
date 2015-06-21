@@ -109,17 +109,15 @@
 					<section id="content">
 						<section class="vbox">
 							<section class="scrollable padder">
-								<div class="alert alert-block alert-error fade in">
+								<div class="container alert alert-block alert-error fade in">
 					            	<h4 class="alert-heading">รายงานสรุปรายได้ประจำปี</h4>
 					          	</div>
-					          	<div class="row">
-									<div class="col-sm-12">
-										<section class="panel panel-default">
-											<div class="panel-body" align="center">
-												<!-- Begin contents -->
-												<div  class=" row col-md-6 col-md-offset-2 custyle">
-													<div class="datagrid" style="width:70%;border:1px solid #ccc">
-														<table class="tablex" id="tbl_result" style="" border="1">
+					          	<div class="container main-container round-sm padding-xl ">
+					          	
+					          	
+												<div  class=" col-md-6  col6-1st">
+													<div class="datagrid" style="/*width:70%;border:1px solid #ccc*/">
+														<table class="tablex" id="tbl_result" style="width:80%;" align="center" border="1">
 															<thead>
 																<tr style="background-color:#A2F9D4;">
 															    	<th style="width: 10%; text-align: center;">ลำดับ</th>
@@ -162,11 +160,9 @@
 														</table>
 													</div>
 													</div>
-													<div id="columnchart_values" class="row col-md-6 col-md-offset-2 custyle"></div>
-												<!-- End contents -->
-											</div>
-										</section>
-									</div>
+												<div class="col6-2nd line-left  col-md-6 " id="columnchart_values" ></div>
+									
+									
 								</div>
 							</section>
 						</section>

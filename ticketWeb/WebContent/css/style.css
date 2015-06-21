@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
-.trace , .trace *{ outline: 1px solid red;}
+/*.trace , .trace *{ outline: 1px solid red;}*/
 body{
 	font-family:Tahoma, Geneva, sans-serif;
 	font-size:14px;
@@ -221,7 +221,7 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
     font: normal 12px/150% Arial, Helvetica, sans-serif;
     background: #fff;
     overflow: hidden;
-    border: 6px solid #646566;
+    /*border: 6px solid #646566;*/
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -303,6 +303,8 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
     background-color: #8C8C8C;
 }
 
+.datagrid{ padding:0 !important; margin:0 !important; border:none !important}
+
 .searchbox input[type="text"] {
   margin: 2px 4px;
 }
@@ -311,3 +313,33 @@ ul.side-panel li:hover,ul.side-panel li.active{cursor:pointer; background: #ccc;
   max-width: 180px;
   margin-left: 4px;
 }
+
+.trace,.trace *{outline:1px solid red}
+.main-container{height:auto; background:white; padding-bottom:40px}
+
+.round-sm{-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;}
+
+.round-md{-webkit-border-radius: 8px;
+-moz-border-radius: 8px;
+border-radius: 8px;}
+
+.round-lg{-webkit-border-radius: 12px;
+-moz-border-radius: 12px;
+border-radius: 12px;}
+
+.padding-sm{padding:4px 0px;}
+.padding-md{padding:8px 0px;}
+.padding-lg{padding:12px 0px;}
+.padding-xl{padding:24px 0px;}
+
+.col6-1st.line-right{border-right:1px dotted gray !important;}
+.col6-1st.line-left{border-left:1px dotted gray !important;}
+
+.col6-2nd.line-right{border-right:1px dotted gray !important;}
+.col6-2nd.line-left{border-left:1px dotted gray !important;}
+
+.col6-1st,.col6-2nd{overflow:hidden}
+
+
