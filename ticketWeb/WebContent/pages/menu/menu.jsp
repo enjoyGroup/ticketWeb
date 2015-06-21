@@ -57,7 +57,7 @@
             <div class="font12"></div>
             
             <ul>
-            	<li class="date">เข้าใช้ระบบ : <span class="text_white"><%=userDeatil.getCurrentDate() %></span> </li>
+            	<li class="date padding-md round-md" style="background:rgba(166, 19, 53, 0.37);border:1px solid rgb(194, 27, 27);">เข้าใช้ระบบ : <span class="text_white"><%=userDeatil.getCurrentDate() %></span> </li>
             </ul>
             
         </div>
