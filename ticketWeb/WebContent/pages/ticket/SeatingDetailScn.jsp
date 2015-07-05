@@ -237,6 +237,7 @@
 			var lv_length 	 	= null;
 			var row 		 	= null;
 			var cell1 		 	= null; 
+			var cell2 		 	= null; 
 			var lo_hidZone   	= null;
 			var lv_class		= "";
 			var lv_click		= "";
@@ -248,7 +249,9 @@
 				row 			= lo_table.insertRow(lv_length);
 				cell1 			= row.insertCell(0);
 				lo_hidZone  	= document.getElementById("hidZoneName");
-				
+				cell2 			= row.insertCell(1);
+				cell2.style     = "display:none;";
+				 
 				cell1.align		= "center"; 
 				cell1.title		= av_zone; 
 				
@@ -265,7 +268,7 @@
 				
 				cell1.className	= lv_class; 
 				cell1.innerHTML = "<span>"+av_zone+"<span>"; 
-				  
+				cell2.innerHTML = av_zone; 
 				
 			}catch(e){
 				alert("lp_addTableZone :: " + e);
@@ -1113,9 +1116,9 @@
              
         	lv_length 	= lo_table.rows.length;
         	
-        	for(var i =0 ; i < lv_length ; i ++){
-            // alert(gp_trim(lo_table.rows[i].cells[0].innerHTML));
-        		if(gp_trim(lv_zone) == gp_trim(lo_table.rows[i].cells[0].innerHTML)){
+        	for(var i =1 ; i < lv_length ; i ++){
+        		//alert(gp_trim(lo_table.rows[i].cells[1].innerHTML.toUpperCase()));
+        		if(gp_trim(lv_zone.toUpperCase()) == gp_trim(lo_table.rows[i].cells[1].innerHTML.toUpperCase())){
         			alert("ไม่สามารถระบุชื่อ zone ซ้ำได้");
         			break;
         		}
@@ -1188,9 +1191,15 @@
 																				 		<td class="unLink" align="center" title="<%=list.get(i).getFieldZoneName()%>" >
 																							<span><%=list.get(i).getFieldZoneName()%></span>
 																						</td>	
+																						<td style="display:none;">
+																							<%=list.get(i).getFieldZoneName()%>
+																						</td>	
 																				 	<%}else{%>
 																				 		<td class="link" onclick="lp_changeZone('<%=list.get(i).getFieldZoneName()%>','<%=list.get(i).getFieldZoneId()%>');"  align="center" title="<%=list.get(i)%>">
 																						   <span><%=list.get(i).getFieldZoneName()%></span>
+																						</td>
+																						<td style="display:none;">
+																							<%=list.get(i).getFieldZoneName()%>
 																						</td>
 																				 	<%}%>
 																				</tr> 

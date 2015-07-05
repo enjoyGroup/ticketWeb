@@ -130,6 +130,7 @@
 			var lv_length 	 	= null;
 			var row 		 	= null;
 			var cell1 		 	= null; 
+			var cell2 		 	= null; 
 			var lo_hidSeason 	= null;
 			var lv_class		= ""; 
 			 
@@ -139,6 +140,8 @@
 				row 			= lo_table.insertRow(lv_length);
 				cell1 			= row.insertCell(0);
 				lo_hidSeason 	= document.getElementById("hidSeason");
+				cell2 			= row.insertCell(1);
+				cell2.style     = "display:none;";
 				
 				cell1.align		= "center"; 
 			 	cell1.title		= av_season; 
@@ -155,6 +158,8 @@
 				}
 				cell1.className	= lv_class; 
 				cell1.innerHTML = "<span>"+av_season+"</span>"; 
+				cell2.innerHTML = av_season;
+				 
 				  
 	//alert(lo_table.rows.length);			
 			}catch(e){
@@ -660,12 +665,12 @@
 		     }
              var lv_length 	= lo_table.rows.length;
         	
-        	for(var i =0 ; i < lv_length ; i ++){
-        		//alert(gp_trim(lo_table.rows[i].cells[0].innerHTML));
-        		if(gp_trim(lv_season) == gp_trim(lo_table.rows[i].cells[0].innerHTML)){
+        	for(var i = 1 ; i < lv_length ; i ++){ 
+       			//alert(gp_trim(lo_table.rows[i].cells[1].innerHTML));
+        		if(gp_trim(lv_season) == gp_trim(lo_table.rows[i].cells[1].innerHTML)){
         			alert("ไม่สามารถเพิ่มปีการแข่งขันซ้ำกับที่มีอยู่แล้วได้");
         			break;
-        		}
+        		} 
         	}
         	
         	
@@ -727,7 +732,7 @@
 															<%
 										 					List<String>  list			=   eventMatchForm.getSeasonList();
 										 
-										  					if(list.size()>0){
+										  					if(list.size()>0){ 
 																for(int i=0;i<list.size();i++){
 										
 															%>
@@ -735,11 +740,17 @@
 														 		<%if(list.get(i).equals(eventMatchForm.getSeason())){%>
 														 			<td class="unLink" align="center" title="<%=list.get(i)%>" >
 																		<span><%=list.get(i)%></span>
-																	</td>	
+																	</td>
+																	<td style="display:none;">
+																		<%=list.get(i)%>
+																	</td>		
 														 		<%}else{%>
 														 			<td class="link" onclick="lp_changeSeason('<%=list.get(i)%>');" align="center" title="<%=list.get(i)%>">
 																		<span><%=list.get(i)%></span>
 																	</td>
+																	<td style="display:none;">
+																		<%=list.get(i)%>
+																	</td>	
 														 		<%}%>
 															</tr> 
 															<% } 
@@ -756,7 +767,7 @@
 															</tr>
 												 		</table> 
 												 		<div style="padding:10px;" >
-												 			<span style="color: red;"><b>*</b></span>
+												 			<span style="color: red;"><b>*</b></span> 
 									                         <input type='text' style="width:135px" id="seasonNew" name='seasonNew' value="<%=eventMatchForm.getSeason()%>" class="inputDisabled" disabled="disabled" onblur="lp_onblur_check_season();"/>&nbsp;
 									                    </div>
 									   				</div>
